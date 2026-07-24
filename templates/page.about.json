@@ -1,0 +1,28 @@
+/*
+ * ------------------------------------------------------------
+ * About Us page template — banner first; more sections later.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "about_banner": {
+      "type": "about-banner",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "border_radius": 0,
+        "border_radius_mob": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "padding_left": 0,
+        "padding_right": 0,
+        "padding_top_mob": 0,
+        "padding_bottom_mob": 0,
+        "padding_left_mob": 0,
+        "padding_right_mob": 0
+      }
+    }
+  },
+  "order": [
+    "about_banner"
+  ]
+}
