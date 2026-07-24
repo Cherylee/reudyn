@@ -1,0 +1,150 @@
+---
+description: reudyn 新模块用全局 --rem（PC 1440 / 移动 750）与 749px 断点做响应式（对齐 Shopify 图片断点）
+globs: sections/**/*.liquid, assets/**/*.css, snippets/**/*.liquid
+alwaysApply: false
+---
+
+# reudyn 响应式开发规范（Shopify 跨境独立站）
+
+## 全局基准
+
+定义在 `assets/base.css`（**改稿宽只改这两个参数**）：
+
+```css
+:root {
+  --reudyn-design-width-pc: 1440;
+  --reudyn-design-width-mob: 750; /* 若移动稿是 375，改成 375 */
+
+  --rem: calc(100vw / var(--reudyn-design-width-pc));
+}
+
+/* 与 Shopify 后台手机图断点一致：≤749 才切移动稿宽 */
+@media screen and (max-width: 749px) {
+  :root {
+    --rem: calc(100vw / var(--reudyn-design-width-mob));
+  }
+}
+```
+
+`≤749px` 时 `--rem` **已全局自动切换**到移动稿宽，新模块不用再手写重置。
+
+## 为什么主断点是 749，不是 768
+
+Shopify 主题与后台图片（`image_tag` / srcset / 手机图）普遍按 **`max-width: 749px`** 判定移动端。
+
+若 CSS 用 `768`、图片用 `749`，在 **750–768** 会出现：移动布局 + PC/平板图（或反过来），裁切与清晰度都会错。
+
+因此新模块：
+
+- **移动端主断点统一 `749px`**（布局 + `--rem` + 与 Shopify 图片一致）
+- **不要再混用 768 / 750 / 990 当新模块主断点**
+- **750–768** 单独做窄屏适配（见下），不要假装还是「完整手机端」或「完整 PC」
+
+## 新开发必须遵守
+
+- **新建 / 大改模块**时，尺寸统一用 `var(--rem)`，不要再写 `* 100vw / 1440` 或 `/ 750`。
+- **现有模块先不改**，除非用户明确要求迁移。
+- **移动端断点统一用 `749px`**；`750–768` 用区间媒体查询做过渡适配。
+
+## PC（默认样式，≥769px）
+
+稿宽 **1440**。设计稿 `N px`：
+
+```css
+font-size: calc(24 * var(--rem));   /* 1440 时 = 24px */
+padding: calc(40 * var(--rem));
+gap: calc(16 * var(--rem));
+```
+
+≥769 走完整 PC；若某模块在 750–768 已写过窄屏覆盖，到 769 再恢复/保持 PC 即可。
+
+## 移动端（≤749px）
+
+先改布局（汉堡、单列、按钮加宽等），尺寸同样用 `var(--rem)`（此时已按 **750** 稿宽计算）：
+
+```css
+@media screen and (max-width: 749px) {
+  .example-title {
+    font-size: calc(32 * var(--rem)); /* 按 750 稿的 32px */
+  }
+
+  .example-grid {
+    display: flex;
+    flex-direction: column;
+  }
+}
+```
+
+说明：
+
+- 不要在模块里再写一遍 `:root { --rem: ... }`，用全局即可。
+- Schema 若已有 `*_mob` / `*_mobile` 固定 px，可继续用；新写的流式尺寸优先 `calc(N * var(--rem))`。
+- 与 Shopify 手机图、主题里已有的 `749` 媒体查询对齐。
+
+## 窄屏过渡（750px–768px）
+
+此区间：**已离开 Shopify 手机图断点**，但仍偏窄，不宜直接套完整桌面多列。
+
+```css
+@media screen and (min-width: 750px) and (max-width: 768px) {
+  /* 在此做适配：例如收紧间距、减少列数、限制容器宽、字号微调等 */
+  .example-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .example-section {
+    padding-inline: calc(24 * var(--rem)); /* 此时 --rem 仍为 1440 基准 */
+  }
+}
+```
+
+约定：
+
+- **`--rem` 仍用 PC（1440）基准**（与 `≤749` 的切换点一致，避免和图片断点再拆一套）。
+- **布局**：按设计需要做「缩小版 PC」或「放大版平板」，不要复制一整份 `≤749` 移动样式（那会再次和手机图错位）。
+- 仅当该模块在 750–768 确实挤、且设计有稿时，才加这段；没有问题可不写。
+
+## 断点约定（新模块）
+
+| 范围 | 用途 |
+|------|------|
+| 默认（无 media）/ `≥769px` | PC / 大屏，`--rem` = 1440 基准 |
+| `min-width: 750px` and `max-width: 768px` | 窄屏过渡：微调布局与间距；`--rem` = 1440 基准；**不要当手机端** |
+| `max-width: 749px` | 手机端：改布局；`--rem` = 750 基准；与 Shopify 手机图一致 |
+
+## 关于竖屏 `orientation: portrait`
+
+**新模块不要单独用 `orientation: portrait` 当主断点**，一般**不会影响正常手机竖屏布局**。
+
+原因：
+
+- 手机竖屏宽度通常 **&lt; 749**（如 375 / 390 / 430），`max-width: 749px` 已经会套上移动端样式。
+- `orientation: portrait` 只看「高 &gt; 宽」，**不看宽度**：大平板竖屏（如 iPad 834px 宽）也会进 portrait，却不适合直接当手机布局；手机横屏宽度可能 **&gt; 749**，只写 portrait 也管不到横屏。
+
+所以：
+
+| 场景 | 只用 `max-width: 749px` | 说明 |
+|------|-------------------------|------|
+| 手机竖屏 | ✅ 移动端样式 | 与竖屏目标一致 |
+| 小屏（≤749） | ✅ 移动端样式 | 与 Shopify 图片一致 |
+| 750–768 | ❌ 走过渡 / PC 向 | 用区间查询单独适配 |
+| 大平板竖屏（&gt;768） | ❌ 走 PC 样式 | 通常更合适（多列、宽导航） |
+| 手机横屏（宽常 &gt;749） | ❌ 走 PC / 过渡 | 少见；若也要手机布局见下方 |
+
+**若业务要求「竖屏一律跟 749 移动端一样」**（含较宽的平板竖屏），不要只写 portrait，用「宽度或竖屏」组合，样式复用同一套：
+
+```css
+/* 标准移动端 + 平板竖屏也走同一套移动布局（可选加强） */
+@media screen and (max-width: 749px),
+  screen and (orientation: portrait) and (max-width: 1024px) {
+  /* 与 ≤749 完全相同的移动端规则 */
+}
+```
+
+注意：加 portrait 扩宽后，**750+ 竖屏仍可能拿到非手机图**，图片与布局要单独评估。
+
+默认仍以 **`max-width: 749px` 为主**；只有用户明确要求平板竖屏也强制手机布局时，再加后面的 portrait 条件。旧模块里的 `orientation: portrait` 可保留，不必主动改。
+
+## 注意
+
+- Hover 动效包在 `@media (hover: hover)` 里，避免触控误触。

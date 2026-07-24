@@ -1,0 +1,26 @@
+---
+description: reudyn 新模块统一复用 assets/base.css 中的全局圆角变量
+globs: sections/**/*.liquid, assets/**/*.css, snippets/**/*.liquid
+alwaysApply: false
+---
+
+# reudyn 圆角规范
+
+新模块需要固定圆角时，优先使用 `assets/base.css` 中的全局令牌：
+
+- `--reudyn-radius-xs`：4 设计像素
+- `--reudyn-radius-sm`：8 设计像素
+- `--reudyn-radius-md`：12 设计像素
+- `--reudyn-radius-lg`：24 设计像素
+- `--reudyn-radius-xl`：40 设计像素
+- `--reudyn-radius-full`：胶囊或圆形
+
+示例：
+
+```css
+.card {
+  border-radius: var(--reudyn-radius-lg);
+}
+```
+
+不要在各模块重复定义相同的固定圆角。只有设计明确要求特殊值或需要 Shopify Schema 配置时，才使用 `calc(N * var(--rem))`。

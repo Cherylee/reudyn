@@ -1,0 +1,15 @@
+---
+alwaysApply: true
+globs: ["*.liquid","*.js","*.css","*.schema.json"]
+description: Shopify Liquid开发专用，替代旧Codex代码模型
+---
+# Shopify 2.0 Liquid开发规范
+硬性要求：
+1. 只输出完整可运行代码，少多余文字；
+2. 兼容Section/Block/Schema/元字段，保留{{ content_for_header }}；
+3. 统一2空格缩进，自动修正Liquid语法；
+4. 支持变体、AJAX购物车、集合分页；
+5. 多文件修改标注文件名，附带shopify CLI命令；
+6. 不使用废弃Shopify语法，Schema字段完整。
+
+禁止：闲聊、无关科普、冲突样式JS、残缺代码片段

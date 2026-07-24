@@ -1,0 +1,37 @@
+---
+description: reudyn 样式归属：公共进 base，模块样式跟 section，默认私有复用再上浮
+globs: sections/**/*.liquid, assets/**/*.css, snippets/**/*.liquid
+alwaysApply: true
+---
+
+# reudyn 样式分工原则
+
+## 核心原则
+
+**默认私有，复用再上浮。**
+
+- 公共约定 → `assets/base.css`
+- 业务模块样式 → 各自 `sections/*.liquid`（`{% stylesheet %}` 或配套 CSS）
+- 不要把「说不定以后会复用」的样式提前塞进 `base.css`
+
+## 放 `base.css` 的
+
+- 全局令牌：`--rem`、稿宽、圆角、间距节奏、颜色桥接等
+- 全站复用的基础约定：容器宽、hover 规则、断点语义（749 / 750–768 / ≥769）
+- 跨多个 section 已真实复用的工具类（少而稳）
+
+## 放各自 section 的
+
+- 该模块独有的布局、标题、栅格、动画
+- Schema 驱动的局部变量（颜色、字号、间距）
+- 删掉 section 时应能一并带走的样式
+
+## Snippets
+
+- 尽量不带大段样式
+- 公共 UI 抽 snippet 时：样式要么极薄（只用 base 令牌），要么跟主 section 走
+- 避免散落 orphan CSS
+
+## 上收时机
+
+同一套样式在 **第二个** section 真实复用时，再抽到 `base.css` 或共享 snippet；第一次实现时先写在当前 section。
