@@ -29,6 +29,7 @@
     --about-mission-pl-mob: {{ pad_l_mob }};
   "
 >
+  <div class="about-mission__backdrop" data-about-mission-backdrop aria-hidden="true"></div>
   <div class="about-mission__inner">
     <div class="about-mission__grid">
       <div class="about-mission__col about-mission__col--left">
@@ -127,6 +128,11 @@
     top: 48vh;
     width: 100%;
     margin-inline: auto;
+  }
+
+  /* Mobile backdrop: filled from About banner image via JS */
+  .about-mission__backdrop {
+    display: none;
   }
 
   .about-mission__grid {
@@ -281,26 +287,52 @@
   }
 
   @media screen and (max-width: 749px) {
-    /* Mobile: Mission content height only — transparent so sticky banner blur shows through */
+    /* Mobile: Mission content height only — blurred banner image as section bg */
     .about-mission {
       min-height: 0 !important;
       display: block;
       padding-top: calc(var(--about-mission-pt-mob) * var(--rem));
       padding-right: calc(65 * var(--rem));
-      padding-bottom: calc(109 * var(--rem));
+      padding-bottom: calc(40 * var(--rem));
       padding-left: calc(65 * var(--rem));
       background: transparent;
       background-color: transparent;
+      overflow: hidden;
     }
 
     .shopify-section.about-mission-section {
       min-height: 0 !important;
       background: transparent;
+      overflow: hidden;
+    }
+
+    .about-mission__backdrop {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-color: #e8eef2;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      transform: scale(1.12);
+      filter: blur(14px);
+      -webkit-filter: blur(14px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .about-mission--backdrop-active .about-mission__backdrop {
+      opacity: 1;
+      visibility: visible;
     }
 
     .about-mission__inner {
       position: relative;
       top: auto;
+      z-index: 1;
     }
 
     .about-mission__grid {

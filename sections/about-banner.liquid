@@ -114,6 +114,23 @@
     display: none;
   }
 
+  /* Mobile only: release sticky near Team to shrink empty banner hole */
+  @media screen and (max-width: 749px) {
+    .shopify-section.about-banner-section--released {
+      position: relative;
+      top: auto;
+      z-index: 0;
+    }
+
+    .shopify-section.about-banner-section--released .about-banner__blur {
+      display: none;
+    }
+
+    .shopify-section.about-banner-section--released .about-banner__content {
+      visibility: hidden;
+    }
+  }
+
   .about-banner__inner {
     position: relative;
     width: 100%;

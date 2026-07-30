@@ -112,6 +112,7 @@ class AboutMissionComponent extends HTMLElement {
     this.#bodies = this.querySelectorAll('.about-mission__reveal--body');
     this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
     this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
+    this.#syncMobileBackdrop();
 
     this.classList.add('about-mission--js');
     this.#applyMissionScrub(0);
@@ -154,11 +155,38 @@ class AboutMissionComponent extends HTMLElement {
   #onResize = () => {
     this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
     this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
+    this.#syncMobileBackdrop();
     this.#lastMissionP = -1;
     this.#lastBannerP = -1;
     this.#lastExit = -1;
     if (this.#onScroll) this.#onScroll();
   };
+
+  /** Mobile: reuse About banner image as blurred Mission backdrop */
+  #syncMobileBackdrop() {
+    const layer = this.querySelector('[data-about-mission-backdrop]');
+    if (!(layer instanceof HTMLElement)) return;
+
+    if (!this.#isMobile) {
+      layer.style.backgroundImage = '';
+      return;
+    }
+
+    const img =
+      this.#banner?.querySelector('img.about-banner__img') ??
+      this.#banner?.querySelector('.about-banner__picture img');
+
+    const apply = () => {
+      const src = img instanceof HTMLImageElement ? img.currentSrc || img.src : '';
+      if (!src) return;
+      layer.style.backgroundImage = `url("${src}")`;
+    };
+
+    apply();
+    if (img instanceof HTMLImageElement && !img.complete) {
+      img.addEventListener('load', apply, { once: true });
+    }
+  }
 
   /**
    * @param {number} progress 0–1
@@ -255,34 +283,80 @@ class AboutMissionComponent extends HTMLElement {
     }
   }
 
+  /**
+   * Mobile only: show Mission blurred backdrop during Mission → Team handoff.
+   * @param {boolean} active
+   */
+  #setMissionBackdropActive(active) {
+    this.classList.toggle('about-mission--backdrop-active', Boolean(active) && this.#isMobile);
+  }
+
+  /**
+   * Mobile only: unstick near Team so empty sticky hole stays small.
+   * Mission still uses blurred sticky banner while reading.
+   * @param {boolean} released
+   */
+  #setBannerReleased(released) {
+    if (released === this.#released) return;
+    this.#released = released;
+    this.#bannerSection?.classList.toggle('about-banner-section--released', released);
+
+    if (released && this.#banner) {
+      this.#banner.style.setProperty('--about-banner-progress', '0');
+      this.#lastBannerP = -1;
+    }
+  }
+
   #update() {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
     if (viewportHeight <= 0) return;
 
     const scrollY = getAboutScrollY();
     const sectionTop = this.getBoundingClientRect().top;
+    const sectionBottom = this.getBoundingClientRect().bottom;
     const teamTop = this.#team?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
 
     // True page top (page-wrapper or window): keep hero crisp
     if (scrollY < 8) {
+      this.#setBannerReleased(false);
       this.#setBannerBlurPaused(false);
+      this.#setMissionBackdropActive(false);
       this.#applyMissionScrub(0);
       this.#applyBanner(0, 0);
       return;
     }
 
-    // Keep banner sticky always — Team sits above via z-index + white bg
-    this.#bannerSection?.classList.remove('about-banner-section--released');
-    this.#released = false;
+    if (this.#isMobile) {
+      // Blurred banner bg only during Mission → Team handoff
+      const showBackdrop =
+        sectionBottom < viewportHeight * 0.95 &&
+        sectionBottom > viewportHeight * 0.08 &&
+        teamTop < viewportHeight * 1.05;
+      this.#setMissionBackdropActive(showBackdrop);
 
-    if (this.#team) {
-      const teamCovering = teamTop < viewportHeight * (this.#isMobile ? 0.55 : 0.2);
-      this.#setBannerBlurPaused(teamCovering);
+      // Keep sticky blur through Mission; release as soon as Team peeks /
+      // Mission is nearly gone — shrinks the empty banner hole before Team.
+      const shouldRelease =
+        teamTop < viewportHeight * 0.92 || sectionBottom < viewportHeight * 0.55;
+      this.#setBannerReleased(shouldRelease);
 
-      if (teamCovering) {
+      if (shouldRelease) {
         this.#applyMissionScrub(1);
         this.#applyBanner(1, 1);
         return;
+      }
+    } else {
+      this.#setMissionBackdropActive(false);
+      this.#setBannerReleased(false);
+      if (this.#team) {
+        const teamCovering = teamTop < viewportHeight * 0.2;
+        this.#setBannerBlurPaused(teamCovering);
+
+        if (teamCovering) {
+          this.#applyMissionScrub(1);
+          this.#applyBanner(1, 1);
+          return;
+        }
       }
     }
 
