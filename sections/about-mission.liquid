@@ -90,7 +90,7 @@
         {%- endif -%}
 
         {%- if section.settings.body != blank -%}
-          <div class="about-mission__body about-mission__reveal about-mission__reveal--media rte">
+          <div class="about-mission__body about-mission__reveal about-mission__reveal--body rte">
             {{ section.settings.body }}
           </div>
         {%- endif -%}
@@ -103,10 +103,9 @@
   .about-mission {
     position: relative;
     z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     width: 100%;
+    /* Short sticky runway — avoid many empty wheel ticks before Team */
     min-height: 100svh;
     box-sizing: border-box;
     background: transparent;
@@ -124,6 +123,8 @@
   }
 
   .about-mission__inner {
+    position: sticky;
+    top: 68vh;
     width: 100%;
     margin-inline: auto;
   }
@@ -236,34 +237,19 @@
     margin-bottom: 0;
   }
 
-  /* Scroll reveal only when JS is active; otherwise keep content visible */
+  /* Scroll-scrubbed reveal (Hypershell-style) — no CSS transitions */
   .about-mission--js .about-mission__reveal {
     opacity: 0;
-    transform: translate3d(0, calc(48 * var(--rem)), 0);
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translate3d(0, 56px, 0);
     will-change: opacity, transform;
   }
 
-  .about-mission--js[data-stage='1'] .about-mission__reveal--title,
-  .about-mission--js[data-stage='2'] .about-mission__reveal--title,
-  .about-mission--js[data-stage='3'] .about-mission__reveal--title {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-
-  .about-mission--js[data-stage='2'] .about-mission__reveal--subtitle,
-  .about-mission--js[data-stage='3'] .about-mission__reveal--subtitle {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition-delay: 0.05s;
-  }
-
-  .about-mission--js[data-stage='3'] .about-mission__reveal--media {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition-delay: 0.08s;
+  @media (prefers-reduced-motion: reduce) {
+    .about-mission--js .about-mission__reveal {
+      opacity: 1;
+      transform: none;
+      will-change: auto;
+    }
   }
 
   @media screen and (min-width: 750px) and (max-width: 768px) {
@@ -299,6 +285,11 @@
       padding-right: calc(var(--about-mission-pr-mob) * var(--rem));
       padding-bottom: calc(var(--about-mission-pb-mob) * var(--rem));
       padding-left: calc(var(--about-mission-pl-mob) * var(--rem));
+    }
+
+    .about-mission__inner {
+      position: relative;
+      top: auto;
     }
 
     .about-mission__grid {
@@ -350,14 +341,6 @@
       order: 5;
       font-size: calc(16 * var(--rem));
       line-height: 1.55;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .about-mission__reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
     }
   }
 {% endstylesheet %}

@@ -85,7 +85,10 @@
     width: 100%;
     position: relative;
     z-index: 1;
-    min-height: 100svh;
+    height: calc(100svh - var(--header-group-height, var(--header-height, 0px)));
+    max-height: calc(100svh - var(--header-group-height, var(--header-height, 0px)));
+    box-sizing: border-box;
+    overflow: hidden;
     padding-top: calc(var(--about-banner-pt) * var(--rem));
     padding-right: calc(var(--about-banner-pr) * var(--rem));
     padding-bottom: calc(var(--about-banner-pb) * var(--rem));
@@ -96,78 +99,87 @@
   /* Stick the Shopify section shell so content below can scroll over the banner */
   .shopify-section.about-banner-section {
     position: sticky;
-    top: 0;
+    top: var(--header-group-height, var(--header-height, 0px));
     z-index: 1;
   }
 
   .about-banner__inner {
     position: relative;
     width: 100%;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
     overflow: hidden;
     border-radius: calc(var(--about-banner-radius) * var(--rem));
   }
 
   .about-banner__picture,
   .about-banner__placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
     display: block;
     width: 100%;
+    height: 100%;
     margin: 0;
     padding: 0;
+    border: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
 
   .about-banner__img,
   .about-banner__placeholder-svg {
     display: block;
     width: 100%;
-    height: auto;
-    max-width: 100%;
-    object-fit: contain;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
     object-position: center;
   }
 
   .about-banner__placeholder {
-    width: 100%;
-    min-height: 100svh;
     background: rgb(var(--color-foreground-rgb) / 0.04);
   }
 
   .about-banner__blur {
     position: absolute;
     inset: 0;
+    z-index: 1;
     pointer-events: none;
-    backdrop-filter: blur(calc(var(--about-banner-progress) * 16px));
-    -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 16px));
-    background: rgb(255 255 255 / calc(var(--about-banner-progress) * 0.28));
-    opacity: 1;
-    transition: none;
+    backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
+    -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
+    background: transparent;
   }
 
+  /* Text chip only — never a full-bleed box that can stretch layout */
   .about-banner__content {
     position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: block;
+    width: max-content;
+    max-width: calc(100% - 48 * var(--rem));
+    margin: 0;
+    padding: 0;
+    transform: translate(-50%, -50%);
     pointer-events: none;
-    padding: calc(24 * var(--rem));
     will-change: transform, opacity;
   }
 
   .about-banner__heading {
+    display: block;
+    width: max-content;
+    max-width: 100%;
     margin: 0;
+    padding: 0;
     text-align: center;
     font-family: var(--font-h1--family);
     font-style: var(--font-h1--style);
     font-weight: 700;
-    font-size: calc(64 * var(--rem));
+    font-size: calc(60 * var(--rem));
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: #000;
-    max-width: 18em;
   }
 
   @media screen and (min-width: 750px) and (max-width: 768px) {
@@ -194,10 +206,12 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .about-banner__content,
-    .about-banner__blur {
-      transform: none !important;
+    .about-banner__content {
+      transform: translate(-50%, -50%) !important;
       opacity: 1 !important;
+    }
+
+    .about-banner__blur {
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       background: transparent !important;

@@ -499,16 +499,9 @@
     display: none;
   }
 
-  /* 手机端 / drawer：隐藏搜索、个人中心、购物车（仅隐藏，以后可打开） */
-  @media screen and (max-width: 749px) {
-    #header-component .search-action,
-    #header-component header-actions {
-      display: none;
-    }
-  }
-
-  #header-component[data-menu-style='drawer'] .search-action,
-  #header-component[data-menu-style='drawer'] header-actions {
+  /* 右侧：搜索 / 个人中心 / 购物车 — 暂时隐藏，后续可删除本段恢复 */
+  #header-component .search-action,
+  #header-component header-actions {
     display: none;
   }
 
@@ -814,7 +807,6 @@
     gap: var(--gap-xl);
     justify-content: flex-end;
     grid-area: right;
-    display: none;
 
     .overflow-menu::part(list) {
       justify-content: flex-end;

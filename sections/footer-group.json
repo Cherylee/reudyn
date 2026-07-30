@@ -11,6 +11,54 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
+    "reudyn_footer": {
+      "type": "reudyn-footer",
+      "blocks": {
+        "social_facebook": {
+          "type": "reudyn-footer-social",
+          "settings": {
+            "label": "Facebook",
+            "link": "https://www.facebook.com/"
+          }
+        },
+        "social_twitter": {
+          "type": "reudyn-footer-social",
+          "settings": {
+            "label": "Twitter",
+            "link": "https://x.com/"
+          }
+        },
+        "social_instagram": {
+          "type": "reudyn-footer-social",
+          "settings": {
+            "label": "Instagram",
+            "link": "https://www.instagram.com/"
+          }
+        }
+      },
+      "block_order": [
+        "social_facebook",
+        "social_twitter",
+        "social_instagram"
+      ],
+      "settings": {
+        "menu": "footer",
+        "copyright_text": "Copyright © 2026 reudyn.",
+        "bg_start": "#F0F0F0",
+        "bg_end": "#D8D8D8",
+        "text_color": "#2B2B2B",
+        "muted_color": "#6B6B6B",
+        "line_color": "#3A3A3A",
+        "icon_bg": "#3A3A3A",
+        "icon_color": "#FFFFFF",
+        "padding_top": 64,
+        "padding_bottom": 48,
+        "padding_x": 80,
+        "padding_top_mob": 48,
+        "padding_bottom_mob": 40,
+        "padding_x_mob": 32
+      }
+    },
     "footer_m9NzUG": {
       "type": "footer",
       "blocks": {
@@ -158,6 +206,7 @@
     },
     "footer_utilities_jLGE8U": {
       "type": "footer-utilities",
+      "disabled": true,
       "blocks": {
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
@@ -219,6 +268,7 @@
     }
   },
   "order": [
+    "reudyn_footer",
     "footer_m9NzUG",
     "footer_utilities_jLGE8U"
   ]

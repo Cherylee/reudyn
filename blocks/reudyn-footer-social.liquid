@@ -1,0 +1,62 @@
+{%- liquid
+  assign social_link = block.settings.link
+  assign social_icon = block.settings.icon
+  assign social_label = block.settings.label | default: 'Social'
+-%}
+
+{%- if social_link != blank or request.design_mode -%}
+  <a
+    class="reudyn-footer__social-link{% if social_icon == blank %} reudyn-footer__social-link--empty{% endif %}"
+    {% if social_link != blank %}
+      href="{{ social_link }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    {% else %}
+      role="link"
+      aria-disabled="true"
+    {% endif %}
+    aria-label="{{ social_label | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if social_icon != blank -%}
+      {{
+        social_icon
+        | image_url: width: 96
+        | image_tag:
+          class: 'reudyn-footer__social-img',
+          widths: '40, 60, 80, 96',
+          sizes: 'calc(40 * 100vw / 1440)',
+          alt: social_label,
+          loading: 'lazy'
+      }}
+    {%- elsif request.design_mode -%}
+      <span class="reudyn-footer__social-placeholder" aria-hidden="true">+</span>
+    {%- endif -%}
+  </a>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Social icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon image"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Social",
+      "info": "Used for accessibility (aria-label)."
+    }
+  ]
+}
+{% endschema %}

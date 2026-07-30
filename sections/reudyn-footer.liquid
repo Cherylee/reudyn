@@ -1,0 +1,446 @@
+{%- liquid
+  assign logo = section.settings.logo
+  assign menu = section.settings.menu
+  assign copyright = section.settings.copyright_text
+  if copyright == blank
+    assign year_now = 'now' | date: '%Y'
+    assign copyright = 'Copyright © ' | append: year_now | append: ' reudyn.'
+  endif
+
+  assign bg_start = section.settings.bg_start | default: '#F0F0F0'
+  assign bg_end = section.settings.bg_end | default: '#D8D8D8'
+  assign text_color = section.settings.text_color | default: '#2B2B2B'
+  assign muted_color = section.settings.muted_color | default: '#6B6B6B'
+  assign line_color = section.settings.line_color | default: '#3A3A3A'
+  assign icon_bg = section.settings.icon_bg | default: '#3A3A3A'
+  assign icon_color = section.settings.icon_color | default: '#FFFFFF'
+
+  assign pad_t = section.settings.padding_top | default: 64
+  assign pad_b = section.settings.padding_bottom | default: 48
+  assign pad_x = section.settings.padding_x | default: 80
+
+  assign pad_t_mob = section.settings.padding_top_mob | default: 48
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 40
+  assign pad_x_mob = section.settings.padding_x_mob | default: 32
+-%}
+
+<div
+  class="reudyn-footer"
+  data-reudyn-footer
+  style="
+    --rf-bg-start: {{ bg_start }};
+    --rf-bg-end: {{ bg_end }};
+    --rf-text: {{ text_color }};
+    --rf-muted: {{ muted_color }};
+    --rf-line: {{ line_color }};
+    --rf-icon-bg: {{ icon_bg }};
+    --rf-icon: {{ icon_color }};
+    --rf-pt: {{ pad_t }};
+    --rf-pb: {{ pad_b }};
+    --rf-px: {{ pad_x }};
+    --rf-pt-mob: {{ pad_t_mob }};
+    --rf-pb-mob: {{ pad_b_mob }};
+    --rf-px-mob: {{ pad_x_mob }};
+  "
+>
+  <div class="reudyn-footer__inner">
+    <div class="reudyn-footer__top">
+      <div class="reudyn-footer__brand">
+        <a href="{{ routes.root_url }}" class="reudyn-footer__logo-link">
+          {%- if logo != blank -%}
+            {{
+              logo
+              | image_url: width: 400
+              | image_tag:
+                class: 'reudyn-footer__logo-img',
+                widths: '160, 240, 320, 400',
+                sizes: 'calc(160 * 100vw / 1440)',
+                alt: shop.name,
+                loading: 'lazy'
+            }}
+          {%- elsif settings.logo != blank -%}
+            {{
+              settings.logo
+              | image_url: width: 400
+              | image_tag:
+                class: 'reudyn-footer__logo-img',
+                widths: '160, 240, 320, 400',
+                sizes: 'calc(160 * 100vw / 1440)',
+                alt: shop.name,
+                loading: 'lazy'
+            }}
+          {%- else -%}
+            <span class="reudyn-footer__logo-text">{{ shop.name | upcase }}</span>
+          {%- endif -%}
+        </a>
+      </div>
+
+      <nav class="reudyn-footer__nav" aria-label="Footer">
+        {%- if menu != blank -%}
+          <ul class="reudyn-footer__menu list-unstyled">
+            {%- for link in menu.links -%}
+              <li class="reudyn-footer__menu-item">
+                <a href="{{ link.url }}" class="reudyn-footer__menu-link">
+                  {{- link.title | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- elsif request.design_mode -%}
+          <ul class="reudyn-footer__menu list-unstyled">
+            <li class="reudyn-footer__menu-item">
+              <span class="reudyn-footer__menu-link">Text</span>
+            </li>
+            <li class="reudyn-footer__menu-item">
+              <span class="reudyn-footer__menu-link">Text</span>
+            </li>
+          </ul>
+        {%- endif -%}
+      </nav>
+
+      <div class="reudyn-footer__social">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+
+    <hr class="reudyn-footer__rule">
+
+    <p class="reudyn-footer__copyright">{{ copyright | escape }}</p>
+  </div>
+</div>
+
+{% stylesheet %}
+  .reudyn-footer {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(90deg, var(--rf-bg-start), var(--rf-bg-end));
+    color: var(--rf-text);
+    padding-top: calc(var(--rf-pt) * var(--rem));
+    padding-right: calc(var(--rf-px) * var(--rem));
+    padding-bottom: calc(var(--rf-pb) * var(--rem));
+    padding-left: calc(var(--rf-px) * var(--rem));
+  }
+
+  .shopify-section.reudyn-footer-section {
+    margin: 0;
+  }
+
+  .reudyn-footer__inner {
+    width: 100%;
+    max-width: calc(1440 * var(--rem));
+    margin-inline: auto;
+  }
+
+  .reudyn-footer__top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: calc(32 * var(--rem));
+    min-height: calc(72 * var(--rem));
+  }
+
+  .reudyn-footer__brand {
+    justify-self: start;
+  }
+
+  .reudyn-footer__logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .reudyn-footer__logo-img {
+    display: block;
+    width: auto;
+    height: calc(28 * var(--rem));
+    max-width: calc(200 * var(--rem));
+    object-fit: contain;
+  }
+
+  .reudyn-footer__logo-text {
+    font-family: var(--font-h2--family);
+    font-style: var(--font-h2--style);
+    font-weight: 700;
+    font-size: calc(28 * var(--rem));
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: var(--rf-text);
+  }
+
+  .reudyn-footer__nav {
+    justify-self: center;
+  }
+
+  .reudyn-footer__menu {
+    display: flex;
+    flex-direction: column;
+    gap: calc(12 * var(--rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reudyn-footer__menu-link {
+    font-family: var(--font-paragraph--family);
+    font-style: var(--font-paragraph--style);
+    font-weight: 500;
+    font-size: calc(16 * var(--rem));
+    line-height: 1.3;
+    color: var(--rf-text);
+    text-decoration: none;
+  }
+
+  .reudyn-footer__menu-link:hover {
+    opacity: 0.7;
+  }
+
+  .reudyn-footer__social {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: calc(14 * var(--rem));
+  }
+
+  .reudyn-footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(40 * var(--rem));
+    height: calc(40 * var(--rem));
+    border-radius: 50%;
+    background: var(--rf-icon-bg);
+    color: var(--rf-icon);
+    text-decoration: none;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+  }
+
+  .reudyn-footer__social-link:hover {
+    opacity: 0.8;
+  }
+
+  .reudyn-footer__social-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .reudyn-footer__social-placeholder {
+    font-size: calc(18 * var(--rem));
+    line-height: 1;
+    color: var(--rf-icon);
+    opacity: 0.7;
+  }
+
+  .reudyn-footer__social-link--empty {
+    opacity: 0.55;
+  }
+
+  .reudyn-footer__rule {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: calc(36 * var(--rem)) 0 calc(28 * var(--rem));
+    border: 0;
+    background: var(--rf-line);
+    opacity: 0.85;
+  }
+
+  .reudyn-footer__copyright {
+    margin: 0;
+    font-family: var(--font-paragraph--family);
+    font-style: var(--font-paragraph--style);
+    font-weight: 400;
+    font-size: calc(14 * var(--rem));
+    line-height: 1.4;
+    color: var(--rf-muted);
+  }
+
+  @media screen and (max-width: 749px) {
+    .reudyn-footer {
+      padding-top: calc(var(--rf-pt-mob) * var(--rem));
+      padding-right: calc(var(--rf-px-mob) * var(--rem));
+      padding-bottom: calc(var(--rf-pb-mob) * var(--rem));
+      padding-left: calc(var(--rf-px-mob) * var(--rem));
+    }
+
+    .reudyn-footer__top {
+      grid-template-columns: 1fr;
+      justify-items: start;
+      gap: calc(28 * var(--rem));
+    }
+
+    .reudyn-footer__brand,
+    .reudyn-footer__nav,
+    .reudyn-footer__social {
+      justify-self: start;
+    }
+
+    .reudyn-footer__rule {
+      margin: calc(28 * var(--rem)) 0 calc(20 * var(--rem));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Reudyn footer",
+  "tag": "section",
+  "class": "reudyn-footer-section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Optional. Falls back to theme logo, then shop name."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Select a navigation menu for the center links."
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "Copyright © 2026 reudyn."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_start",
+      "label": "Background start",
+      "default": "#F0F0F0"
+    },
+    {
+      "type": "color",
+      "id": "bg_end",
+      "label": "Background end",
+      "default": "#D8D8D8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2B2B2B"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Copyright text",
+      "default": "#6B6B6B"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Divider",
+      "default": "#3A3A3A"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Social icon background",
+      "default": "#3A3A3A"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Placeholder icon color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Horizontal",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Padding (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_x_mob",
+      "label": "Horizontal",
+      "min": 12,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reudyn-footer-social"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reudyn footer",
+      "category": "t:categories.footer"
+    }
+  ]
+}
+{% endschema %}
