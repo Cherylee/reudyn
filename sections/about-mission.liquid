@@ -57,10 +57,10 @@
               {%- endif -%}
               {{
                 image
-                | image_url: width: 440
+                | image_url: width: 1200
                 | image_tag:
                   class: 'about-mission__img',
-                  widths: '220, 330, 440, 660',
+                  widths: '220, 440, 598, 750, 1200',
                   sizes: '(max-width: 749px) 100vw, calc(220 * 100vw / 1440)',
                   alt: image_alt,
                   loading: 'lazy',
@@ -201,8 +201,8 @@
     font-weight: 700;
     background-image: linear-gradient(
       transparent 52%,
-      #f5e84a 52%,
-      #f5e84a 100%
+      #ffb501 52%,
+      #ffb501 100%
     );
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
@@ -282,9 +282,9 @@
       min-height: 0;
       display: block;
       padding-top: calc(var(--about-mission-pt-mob) * var(--rem));
-      padding-right: calc(var(--about-mission-pr-mob) * var(--rem));
-      padding-bottom: calc(var(--about-mission-pb-mob) * var(--rem));
-      padding-left: calc(var(--about-mission-pl-mob) * var(--rem));
+      padding-right: calc(65 * var(--rem));
+      padding-bottom: calc(109 * var(--rem));
+      padding-left: calc(65 * var(--rem));
     }
 
     .about-mission__inner {
@@ -295,7 +295,7 @@
     .about-mission__grid {
       display: flex;
       flex-direction: column;
-      gap: calc(28 * var(--rem));
+      gap: 0;
     }
 
     .about-mission__col--left {
@@ -309,38 +309,70 @@
 
     .about-mission__title {
       order: 1;
-      margin-bottom: 0;
-      font-size: calc(40 * var(--rem));
+      margin: 0 0 calc(40 * var(--rem));
+      font-size: calc(60 * var(--rem));
+      line-height: 1.2;
     }
 
     .about-mission__headline {
       order: 2;
-      margin-bottom: 0;
-      font-size: calc(30 * var(--rem));
+      margin: 0 0 calc(40 * var(--rem));
+      font-size: calc(40 * var(--rem));
+      line-height: 1.3;
+    }
+
+    .about-mission__headline p {
+      margin: 0;
+    }
+
+    .about-mission__headline p + p {
+      margin-top: calc(24 * var(--rem));
     }
 
     .about-mission__subtitle {
       order: 3;
-      margin-bottom: 0;
-      font-size: calc(16 * var(--rem));
+      margin: 0 0 calc(24 * var(--rem));
+      font-size: calc(24 * var(--rem));
       line-height: 1.55;
+    }
+
+    .about-mission__body {
+      order: 4;
+      margin: 0 0 calc(40 * var(--rem));
+      font-size: calc(24 * var(--rem));
+      line-height: 1.55;
+    }
+
+    .about-mission__subtitle p,
+    .about-mission__body p {
+      margin: 0 0 calc(24 * var(--rem));
+      font-size: calc(24 * var(--rem));
+    }
+
+    .about-mission__subtitle p:last-child,
+    .about-mission__body p:last-child {
+      margin-bottom: 0;
     }
 
     .about-mission__media,
     .about-mission__picture,
-    .about-mission__placeholder,
-    .about-mission__img,
-    .about-mission__placeholder-svg {
-      order: 4;
-      width: calc(440 * var(--rem));
-      height: calc(440 * var(--rem));
+    .about-mission__placeholder {
+      order: 5;
+      width: 100%;
+      height: auto;
       max-width: 100%;
+      margin-inline: auto;
     }
 
-    .about-mission__body {
+    .about-mission__img,
+    .about-mission__placeholder-svg {
       order: 5;
-      font-size: calc(16 * var(--rem));
-      line-height: 1.55;
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: center;
     }
   }
 {% endstylesheet %}
@@ -380,7 +412,7 @@
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Mobile image",
-      "info": "Optional. Shown at max-width 749px."
+      "info": "Optional. Shown at max-width 749px (full width, natural aspect ratio)."
     },
     {
       "type": "header",
@@ -390,7 +422,8 @@
       "type": "richtext",
       "id": "headline",
       "label": "Headline",
-      "default": "<p>Technology isn't about replacing humans. It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>"
+      "info": "Use two paragraphs for the mobile gap between lines.",
+      "default": "<p>Technology isn't about replacing humans.</p><p>It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>"
     },
     {
       "type": "richtext",

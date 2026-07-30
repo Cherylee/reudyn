@@ -101,8 +101,8 @@
               sizes: '(max-width: 749px) 100vw, calc(925 * 100vw / 1440)',
               alt: banner_alt,
               loading: 'lazy',
-              width: 925,
-              height: 269
+              width: banner.width,
+              height: banner.height
           }}
         </picture>
       {%- else -%}
@@ -263,51 +263,83 @@
   }
 
   @media screen and (max-width: 749px) {
+    .shopify-section.about-team-section,
+    .about-team,
+    .about-team__inner {
+      overflow: visible;
+    }
+
     .about-team {
       padding-top: calc(var(--about-team-pt-mob) * var(--rem));
-      padding-right: calc(var(--about-team-pr-mob) * var(--rem));
-      padding-bottom: calc(var(--about-team-pb-mob) * var(--rem));
-      padding-left: calc(var(--about-team-pl-mob) * var(--rem));
+      padding-right: calc(65 * var(--rem));
+      padding-bottom: 0;
+      padding-left: calc(65 * var(--rem));
     }
 
     .about-team__grid {
       display: flex;
       flex-direction: column;
-      gap: calc(28 * var(--rem));
-    }
-
-    .about-team__title {
-      font-size: calc(40 * var(--rem));
-    }
-
-    .about-team__media,
-    .about-team__picture,
-    .about-team__placeholder,
-    .about-team__img,
-    .about-team__placeholder-svg {
-      width: calc(440 * var(--rem));
-      height: calc(440 * var(--rem));
-      max-width: 100%;
-    }
-
-    .about-team__body {
-      font-size: calc(16 * var(--rem));
-      order: 3;
+      gap: 0;
     }
 
     .about-team__title {
       order: 1;
+      margin: 0 0 calc(40 * var(--rem));
+      font-size: calc(60 * var(--rem));
+      line-height: calc(80 * var(--rem));
     }
 
+    /* Design shows only the wide banner image on mobile */
     .about-team__media {
+      display: none;
+    }
+
+    .about-team__body {
       order: 2;
+      margin: 0;
+      font-size: calc(24 * var(--rem));
+      line-height: 1.55;
+    }
+
+    .about-team__body p {
+      margin: 0 0 calc(40 * var(--rem));
+      font-size: calc(24 * var(--rem));
+      line-height: 1.55;
+    }
+
+    .about-team__body p:last-child {
+      margin-bottom: 0;
     }
 
     .about-team__banner {
+      width: 100vw;
+      max-width: 100vw;
+      height: auto;
+      max-height: none;
+      aspect-ratio: auto;
+      margin-top: calc(40 * var(--rem));
+      margin-bottom: 0;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+    }
+
+    .about-team__banner-picture,
+    .about-team__banner-placeholder {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: none;
+    }
+
+    .about-team__banner-img,
+    .about-team__banner-placeholder-svg {
+      display: block;
+      width: 100%;
       max-width: 100%;
       height: auto;
-      aspect-ratio: 925 / 269;
-      margin-top: calc(40 * var(--rem));
+      max-height: none;
+      object-fit: contain;
+      object-position: center;
     }
   }
 {% endstylesheet %}

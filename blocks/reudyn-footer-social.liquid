@@ -21,11 +21,11 @@
     {%- if social_icon != blank -%}
       {{
         social_icon
-        | image_url: width: 96
+        | image_url: width: 144
         | image_tag:
           class: 'reudyn-footer__social-img',
-          widths: '40, 60, 80, 96',
-          sizes: 'calc(40 * 100vw / 1440)',
+          widths: '72, 96, 144',
+          sizes: '(max-width: 749px) calc(72 * 100vw / 750), calc(53 * 100vw / 1440)',
           alt: social_label,
           loading: 'lazy'
       }}

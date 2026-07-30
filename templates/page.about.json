@@ -36,7 +36,7 @@
       "settings": {
         "color_scheme": "scheme-1",
         "title": "Our Mission",
-        "headline": "<p>Technology isn't about replacing humans. It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>",
+        "headline": "<p>Technology isn't about replacing humans.</p><p>It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>",
         "subtitle": "<p>Our curiosity. Our strength. Our freedom to explore. Our ability to become more than we ever imagined.</p>",
         "body": "<p>At Reudyn, we pioneer wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p><p>Technology begins with humanity. It always has. It always will.</p>",
         "padding_top": 100,

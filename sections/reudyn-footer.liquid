@@ -17,7 +17,6 @@
 
   assign pad_t = section.settings.padding_top | default: 64
   assign pad_b = section.settings.padding_bottom | default: 48
-  assign pad_x = section.settings.padding_x | default: 80
 
   assign pad_t_mob = section.settings.padding_top_mob | default: 48
   assign pad_b_mob = section.settings.padding_bottom_mob | default: 40
@@ -37,7 +36,6 @@
     --rf-icon: {{ icon_color }};
     --rf-pt: {{ pad_t }};
     --rf-pb: {{ pad_b }};
-    --rf-px: {{ pad_x }};
     --rf-pt-mob: {{ pad_t_mob }};
     --rf-pb-mob: {{ pad_b_mob }};
     --rf-px-mob: {{ pad_x_mob }};
@@ -117,9 +115,9 @@
     background: linear-gradient(90deg, var(--rf-bg-start), var(--rf-bg-end));
     color: var(--rf-text);
     padding-top: calc(var(--rf-pt) * var(--rem));
-    padding-right: calc(var(--rf-px) * var(--rem));
+    padding-right: calc(241 * var(--rem));
     padding-bottom: calc(var(--rf-pb) * var(--rem));
-    padding-left: calc(var(--rf-px) * var(--rem));
+    padding-left: calc(241 * var(--rem));
   }
 
   .shopify-section.reudyn-footer-section {
@@ -133,15 +131,27 @@
   }
 
   .reudyn-footer__top {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: calc(32 * var(--rem));
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
     min-height: calc(72 * var(--rem));
   }
 
   .reudyn-footer__brand {
-    justify-self: start;
+    flex: 0 0 auto;
+  }
+
+  .reudyn-footer__nav {
+    flex: 0 0 auto;
+    margin-left: calc(128 * var(--rem));
+  }
+
+  .reudyn-footer__social {
+    flex: 0 0 auto;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: calc(14 * var(--rem));
   }
 
   .reudyn-footer__logo-link {
@@ -153,9 +163,9 @@
 
   .reudyn-footer__logo-img {
     display: block;
-    width: auto;
-    height: calc(28 * var(--rem));
-    max-width: calc(200 * var(--rem));
+    width: calc(131 * var(--rem));
+    height: auto;
+    max-width: 100%;
     object-fit: contain;
   }
 
@@ -169,10 +179,6 @@
     color: var(--rf-text);
   }
 
-  .reudyn-footer__nav {
-    justify-self: center;
-  }
-
   .reudyn-footer__menu {
     display: flex;
     flex-direction: column;
@@ -182,7 +188,7 @@
     list-style: none;
   }
 
-  .reudyn-footer__menu-link {
+  .reudyn-footer__nav .reudyn-footer__menu-link {
     font-family: var(--font-paragraph--family);
     font-style: var(--font-paragraph--style);
     font-weight: 500;
@@ -192,23 +198,16 @@
     text-decoration: none;
   }
 
-  .reudyn-footer__menu-link:hover {
+  .reudyn-footer__nav .reudyn-footer__menu-link:hover {
     opacity: 0.7;
-  }
-
-  .reudyn-footer__social {
-    justify-self: end;
-    display: flex;
-    align-items: center;
-    gap: calc(14 * var(--rem));
   }
 
   .reudyn-footer__social-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: calc(40 * var(--rem));
-    height: calc(40 * var(--rem));
+    width: calc(53 * var(--rem));
+    height: calc(53 * var(--rem));
     border-radius: 50%;
     background: var(--rf-icon-bg);
     color: var(--rf-icon);
@@ -243,7 +242,7 @@
     display: block;
     width: 100%;
     height: 1px;
-    margin: calc(36 * var(--rem)) 0 calc(28 * var(--rem));
+    margin: calc(100 * var(--rem)) 0 calc(28 * var(--rem));
     border: 0;
     background: var(--rf-line);
     opacity: 0.85;
@@ -268,19 +267,32 @@
     }
 
     .reudyn-footer__top {
-      grid-template-columns: 1fr;
-      justify-items: start;
+      flex-direction: column;
+      align-items: flex-start;
       gap: calc(28 * var(--rem));
     }
 
-    .reudyn-footer__brand,
     .reudyn-footer__nav,
     .reudyn-footer__social {
-      justify-self: start;
+      margin-left: 0;
+    }
+
+    .reudyn-footer__logo-img {
+      width: calc(220 * var(--rem));
+    }
+
+    .reudyn-footer__nav .reudyn-footer__menu-link {
+      font-size: calc(24 * var(--rem));
+    }
+
+    .reudyn-footer__social-link {
+      width: calc(72 * var(--rem));
+      height: calc(72 * var(--rem));
     }
 
     .reudyn-footer__rule {
-      margin: calc(28 * var(--rem)) 0 calc(20 * var(--rem));
+      margin-top: calc(38 * var(--rem));
+      margin-bottom: calc(20 * var(--rem));
     }
   }
 {% endstylesheet %}
@@ -385,16 +397,6 @@
       "step": 4,
       "unit": "px",
       "default": 48
-    },
-    {
-      "type": "range",
-      "id": "padding_x",
-      "label": "Horizontal",
-      "min": 16,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 80
     },
     {
       "type": "header",
