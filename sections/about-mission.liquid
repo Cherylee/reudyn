@@ -241,7 +241,10 @@
   .about-mission--js .about-mission__reveal {
     opacity: 0;
     transform: translate3d(0, 56px, 0);
-    will-change: opacity, transform;
+  }
+
+  .about-mission--js.about-mission--settled .about-mission__reveal {
+    will-change: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -17,6 +17,8 @@
     "about_banner": {
       "type": "about-banner",
       "settings": {
+        "image": "shopify://shop_images/Mask_group_1.webp",
+        "image_mobile": "shopify://shop_images/Mask_group_2.webp",
         "heading": "Human, amplified.",
         "border_radius": 0,
         "border_radius_mob": 0,
@@ -34,6 +36,8 @@
       "type": "about-mission",
       "settings": {
         "title": "Our Mission",
+        "image": "shopify://shop_images/XAOTOS_1.webp",
+        "image_mobile": "shopify://shop_images/Rectangle_40_2.webp",
         "headline": "<p>Technology isn't about replacing humans.</p><p>It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>",
         "subtitle": "<p>Our curiosity. Our strength. Our freedom to explore. Our ability to become more than we ever imagined.</p>",
         "body": "<p>At Reudyn, we pioneer wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p><p>Technology begins with humanity. It always has. It always will.</p>",
@@ -49,7 +53,10 @@
       "type": "about-team",
       "settings": {
         "title": "Our Team",
+        "image": "shopify://shop_images/1_1.webp",
         "body": "<p>At Reudyn, engineering begins with people.</p><p>Our multidisciplinary team brings together expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics, advancing the future of human augmentation. Backed by long-term collaborations with leading university research labs, our dual-core technology platform is led by experts with decades of experience in motor control systems and in human-machine intelligence. We believe breakthrough technology belongs in everyday life.</p><p>That's why we're turning advanced robotics into wearable technology that helps people move farther, explore more, and experience the world with greater freedom.</p>",
+        "banner_image": "shopify://shop_images/Mask_group_3.webp",
+        "banner_image_mobile": "shopify://shop_images/Mask_group_4.webp",
         "padding_top": 86,
         "padding_bottom": 86,
         "padding_top_mob": 64,

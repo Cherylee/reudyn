@@ -103,6 +103,21 @@
     z-index: 1;
   }
 
+  /* Team entering: drop sticky + kill blur so mobile paints Team and frees GPU */
+  .shopify-section.about-banner-section--released {
+    position: relative;
+    top: auto;
+    z-index: 0;
+  }
+
+  .shopify-section.about-banner-section--released .about-banner__blur {
+    display: none;
+  }
+
+  .shopify-section.about-banner-section--released .about-banner__content {
+    visibility: hidden;
+  }
+
   .about-banner__inner {
     position: relative;
     width: 100%;
@@ -148,6 +163,7 @@
     backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
     -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
     background: transparent;
+    will-change: auto;
   }
 
   /* Text chip only — never a full-bleed box that can stretch layout */
@@ -163,7 +179,6 @@
     padding: 0;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    will-change: transform, opacity;
   }
 
   .about-banner__heading {
@@ -198,6 +213,12 @@
 
     .about-banner__inner {
       border-radius: calc(var(--about-banner-radius-mob) * var(--rem));
+    }
+
+    /* Lighter blur on phones — full 22px backdrop-filter tanks scroll */
+    .about-banner__blur {
+      backdrop-filter: blur(calc(var(--about-banner-progress) * 10px));
+      -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 10px));
     }
 
     .about-banner__content {
