@@ -1,0 +1,454 @@
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign image_alt = image.alt | default: section.settings.title | default: ''
+  assign banner = section.settings.banner_image
+  assign banner_mobile = section.settings.banner_image_mobile
+  assign banner_alt = banner.alt | default: section.settings.title | default: ''
+
+  assign pad_t = section.settings.padding_top | default: 86
+  assign pad_b = section.settings.padding_bottom | default: 86
+
+  assign pad_t_mob = section.settings.padding_top_mob | default: 64
+  assign pad_r_mob = section.settings.padding_right_mob | default: 32
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 64
+  assign pad_l_mob = section.settings.padding_left_mob | default: 32
+-%}
+
+<section
+  class="about-team color-{{ section.settings.color_scheme }}"
+  style="
+    --about-team-pt: {{ pad_t }};
+    --about-team-pb: {{ pad_b }};
+    --about-team-pt-mob: {{ pad_t_mob }};
+    --about-team-pr-mob: {{ pad_r_mob }};
+    --about-team-pb-mob: {{ pad_b_mob }};
+    --about-team-pl-mob: {{ pad_l_mob }};
+  "
+>
+  <div class="about-team__inner">
+    <div class="about-team__grid">
+      {%- if section.settings.title != blank -%}
+        <h2 class="about-team__title">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+
+      <div class="about-team__media">
+        {%- if image != blank -%}
+          <picture class="about-team__picture">
+            {%- if image_mobile != blank -%}
+              <source
+                media="(max-width: 749px)"
+                srcset="
+                  {{ image_mobile | image_url: width: 375 }} 375w,
+                  {{ image_mobile | image_url: width: 550 }} 550w,
+                  {{ image_mobile | image_url: width: 750 }} 750w,
+                  {{ image_mobile | image_url: width: 1100 }} 1100w
+                "
+                sizes="(max-width: 749px) 100vw, calc(220 * 100vw / 1440)"
+                width="{{ image_mobile.width }}"
+                height="{{ image_mobile.height }}"
+              >
+            {%- endif -%}
+            {{
+              image
+              | image_url: width: 440
+              | image_tag:
+                class: 'about-team__img',
+                widths: '220, 330, 440, 660',
+                sizes: '(max-width: 749px) 100vw, calc(220 * 100vw / 1440)',
+                alt: image_alt,
+                loading: 'lazy',
+                width: 220,
+                height: 220
+            }}
+          </picture>
+        {%- else -%}
+          <div class="about-team__placeholder" aria-hidden="true">
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'about-team__placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.body != blank -%}
+        <div class="about-team__body rte">
+          {{ section.settings.body }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="about-team__banner">
+      {%- if banner != blank -%}
+        <picture class="about-team__banner-picture">
+          {%- if banner_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ banner_mobile | image_url: width: 750 }} 750w,
+                {{ banner_mobile | image_url: width: 1100 }} 1100w,
+                {{ banner_mobile | image_url: width: 1500 }} 1500w
+              "
+              sizes="100vw"
+              width="{{ banner_mobile.width }}"
+              height="{{ banner_mobile.height }}"
+            >
+          {%- endif -%}
+          {{
+            banner
+            | image_url: width: 1850
+            | image_tag:
+              class: 'about-team__banner-img',
+              widths: '750, 1100, 1500, 1850',
+              sizes: '(max-width: 749px) 100vw, calc(925 * 100vw / 1440)',
+              alt: banner_alt,
+              loading: 'lazy',
+              width: 925,
+              height: 269
+          }}
+        </picture>
+      {%- else -%}
+        <div class="about-team__banner-placeholder" aria-hidden="true">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'about-team__banner-placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .about-team {
+    position: relative;
+    z-index: 3;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    background-color: #fff;
+    padding-top: calc(var(--about-team-pt) * var(--rem));
+    padding-right: calc(241 * var(--rem));
+    padding-bottom: calc(var(--about-team-pb) * var(--rem));
+    padding-left: calc(241 * var(--rem));
+  }
+
+  .shopify-section.about-team-section {
+    position: relative;
+    z-index: 3;
+    background: #fff;
+  }
+
+  .about-team__inner {
+    width: 100%;
+  }
+
+  .about-team__grid {
+    display: grid;
+    grid-template-columns: calc(220 * var(--rem)) minmax(0, 1fr);
+    grid-template-areas:
+      'title .'
+      'media body';
+    column-gap: calc(77 * var(--rem));
+    row-gap: calc(36 * var(--rem));
+    align-items: start;
+  }
+
+  .about-team__title {
+    grid-area: title;
+    margin: 0;
+    font-family: var(--font-h2--family);
+    font-style: var(--font-h2--style);
+    font-weight: 700;
+    font-size: calc(40 * var(--rem));
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #000;
+  }
+
+  .about-team__media {
+    grid-area: media;
+    width: calc(220 * var(--rem));
+    height: calc(220 * var(--rem));
+  }
+
+  .about-team__picture,
+  .about-team__placeholder {
+    display: block;
+    width: calc(220 * var(--rem));
+    height: calc(220 * var(--rem));
+    margin: 0;
+  }
+
+  .about-team__img,
+  .about-team__placeholder-svg {
+    display: block;
+    width: calc(220 * var(--rem));
+    height: calc(220 * var(--rem));
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .about-team__placeholder {
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .about-team__body {
+    grid-area: body;
+    margin: 0;
+    font-family: var(--font-paragraph--family);
+    font-style: var(--font-paragraph--style);
+    font-weight: var(--font-paragraph--weight);
+    font-size: calc(16 * var(--rem));
+    line-height: calc(20 * var(--rem));
+    color: #000;
+  }
+
+  .about-team__body p {
+    margin: 0 0 calc(16 * var(--rem));
+  }
+
+  .about-team__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-team__banner {
+    width: 100%;
+    max-width: calc(925 * var(--rem));
+    height: calc(269 * var(--rem));
+    margin-top: calc(56 * var(--rem));
+  }
+
+  .about-team__banner-picture,
+  .about-team__banner-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .about-team__banner-img,
+  .about-team__banner-placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center left;
+  }
+
+  .about-team__banner-placeholder {
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-team__grid {
+      grid-template-columns: calc(180 * var(--rem)) minmax(0, 1fr);
+      column-gap: calc(40 * var(--rem));
+    }
+
+    .about-team__media,
+    .about-team__picture,
+    .about-team__placeholder,
+    .about-team__img,
+    .about-team__placeholder-svg {
+      width: calc(180 * var(--rem));
+      height: calc(180 * var(--rem));
+    }
+
+    .about-team__title {
+      font-size: calc(32 * var(--rem));
+    }
+
+    .about-team__banner {
+      height: calc(220 * var(--rem));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-team {
+      padding-top: calc(var(--about-team-pt-mob) * var(--rem));
+      padding-right: calc(var(--about-team-pr-mob) * var(--rem));
+      padding-bottom: calc(var(--about-team-pb-mob) * var(--rem));
+      padding-left: calc(var(--about-team-pl-mob) * var(--rem));
+    }
+
+    .about-team__grid {
+      display: flex;
+      flex-direction: column;
+      gap: calc(28 * var(--rem));
+    }
+
+    .about-team__title {
+      font-size: calc(40 * var(--rem));
+    }
+
+    .about-team__media,
+    .about-team__picture,
+    .about-team__placeholder,
+    .about-team__img,
+    .about-team__placeholder-svg {
+      width: calc(440 * var(--rem));
+      height: calc(440 * var(--rem));
+      max-width: 100%;
+    }
+
+    .about-team__body {
+      font-size: calc(16 * var(--rem));
+      order: 3;
+    }
+
+    .about-team__title {
+      order: 1;
+    }
+
+    .about-team__media {
+      order: 2;
+    }
+
+    .about-team__banner {
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 925 / 269;
+      margin-top: calc(40 * var(--rem));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About team",
+  "tag": "section",
+  "class": "about-team-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Left column"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Our Team"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Displayed at 220×220 (design px × --rem)."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Shown at max-width 749px."
+    },
+    {
+      "type": "header",
+      "content": "Right column"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>At Reudyn, engineering begins with people.</p><p>Our multidisciplinary team brings together expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics, advancing the future of human augmentation. Backed by long-term collaborations with leading university research labs, our dual-core technology platform is led by experts with decades of experience in motor control systems and in human-machine intelligence. We believe breakthrough technology belongs in everyday life.</p><p>That's why we're turning advanced robotics into wearable technology that helps people move farther, explore more, and experience the world with greater freedom.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image",
+      "info": "Displayed at 925×269 (design px × --rem)."
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image_mobile",
+      "label": "Mobile banner image",
+      "info": "Optional. Shown at max-width 749px."
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 86
+    },
+    {
+      "type": "header",
+      "content": "Padding (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mob",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mob",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "About team",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

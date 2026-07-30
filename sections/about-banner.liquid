@@ -1,7 +1,8 @@
 {%- liquid
   assign image = section.settings.image
   assign image_mobile = section.settings.image_mobile
-  assign image_alt = image.alt | default: ''
+  assign image_alt = image.alt | default: section.settings.heading | default: ''
+  assign heading = section.settings.heading
   assign radius = section.settings.border_radius | default: 0
   assign radius_mob = section.settings.border_radius_mob | default: radius
 
@@ -18,6 +19,7 @@
 
 <section
   class="about-banner color-{{ section.settings.color_scheme }}"
+  data-about-banner
   style="
     --about-banner-radius: {{ radius }};
     --about-banner-radius-mob: {{ radius_mob }};
@@ -29,6 +31,7 @@
     --about-banner-pr-mob: {{ pad_r_mob }};
     --about-banner-pb-mob: {{ pad_b_mob }};
     --about-banner-pl-mob: {{ pad_l_mob }};
+    --about-banner-progress: 0;
   "
 >
   <div class="about-banner__inner">
@@ -65,6 +68,14 @@
         {{ 'lifestyle-1' | placeholder_svg_tag: 'about-banner__placeholder-svg' }}
       </div>
     {%- endif -%}
+
+    <div class="about-banner__blur" aria-hidden="true"></div>
+
+    {%- if heading != blank -%}
+      <div class="about-banner__content">
+        <h1 class="about-banner__heading">{{ heading | escape }}</h1>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -72,13 +83,30 @@
   .about-banner {
     display: block;
     width: 100%;
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
     padding-top: calc(var(--about-banner-pt) * var(--rem));
     padding-right: calc(var(--about-banner-pr) * var(--rem));
     padding-bottom: calc(var(--about-banner-pb) * var(--rem));
     padding-left: calc(var(--about-banner-pl) * var(--rem));
+    --about-banner-progress: 0;
+  }
+
+  /* Stick the Shopify section shell so content below can scroll over the banner */
+  .shopify-section.about-banner-section {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .about-banner__inner {
+    position: relative;
+    width: 100%;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     border-radius: calc(var(--about-banner-radius) * var(--rem));
   }
@@ -102,12 +130,50 @@
   }
 
   .about-banner__placeholder {
+    width: 100%;
+    min-height: 100svh;
     background: rgb(var(--color-foreground-rgb) / 0.04);
   }
 
-  .about-banner__placeholder-svg {
-    width: 100%;
-    height: auto;
+  .about-banner__blur {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    backdrop-filter: blur(calc(var(--about-banner-progress) * 16px));
+    -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 16px));
+    background: rgb(255 255 255 / calc(var(--about-banner-progress) * 0.28));
+    opacity: 1;
+    transition: none;
+  }
+
+  .about-banner__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    padding: calc(24 * var(--rem));
+    will-change: transform, opacity;
+  }
+
+  .about-banner__heading {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-h1--family);
+    font-style: var(--font-h1--style);
+    font-weight: 700;
+    font-size: calc(64 * var(--rem));
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #000;
+    max-width: 18em;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-banner__heading {
+      font-size: calc(48 * var(--rem));
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -120,6 +186,21 @@
 
     .about-banner__inner {
       border-radius: calc(var(--about-banner-radius-mob) * var(--rem));
+    }
+
+    .about-banner__heading {
+      font-size: calc(40 * var(--rem));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-banner__content,
+    .about-banner__blur {
+      transform: none !important;
+      opacity: 1 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      background: transparent !important;
     }
   }
 {% endstylesheet %}
@@ -154,6 +235,16 @@
       "id": "image_mobile",
       "label": "Mobile image",
       "info": "Optional. Shown at max-width 749px. Falls back to desktop image if empty."
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Human, amplified."
     },
     {
       "type": "header",

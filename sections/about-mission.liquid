@@ -1,0 +1,500 @@
+<script
+  src="{{ 'about-mission.js' | asset_url }}"
+  type="module"
+></script>
+
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign image_alt = image.alt | default: section.settings.title | default: ''
+
+  assign pad_t = section.settings.padding_top | default: 100
+  assign pad_b = section.settings.padding_bottom | default: 100
+
+  assign pad_t_mob = section.settings.padding_top_mob | default: 64
+  assign pad_r_mob = section.settings.padding_right_mob | default: 32
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 64
+  assign pad_l_mob = section.settings.padding_left_mob | default: 32
+-%}
+
+<about-mission-component
+  class="about-mission color-{{ section.settings.color_scheme }}"
+  data-about-mission
+  style="
+    --about-mission-pt: {{ pad_t }};
+    --about-mission-pb: {{ pad_b }};
+    --about-mission-pt-mob: {{ pad_t_mob }};
+    --about-mission-pr-mob: {{ pad_r_mob }};
+    --about-mission-pb-mob: {{ pad_b_mob }};
+    --about-mission-pl-mob: {{ pad_l_mob }};
+  "
+>
+  <div class="about-mission__inner">
+    <div class="about-mission__grid">
+      <div class="about-mission__col about-mission__col--left">
+        {%- if section.settings.title != blank -%}
+          <h2 class="about-mission__title about-mission__reveal about-mission__reveal--title">
+            {{ section.settings.title | escape }}
+          </h2>
+        {%- endif -%}
+
+        <div class="about-mission__media about-mission__reveal about-mission__reveal--media">
+          {%- if image != blank -%}
+            <picture class="about-mission__picture">
+              {%- if image_mobile != blank -%}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="
+                    {{ image_mobile | image_url: width: 375 }} 375w,
+                    {{ image_mobile | image_url: width: 550 }} 550w,
+                    {{ image_mobile | image_url: width: 750 }} 750w,
+                    {{ image_mobile | image_url: width: 1100 }} 1100w
+                  "
+                  sizes="(max-width: 749px) 100vw, calc(220 * 100vw / 1440)"
+                  width="{{ image_mobile.width }}"
+                  height="{{ image_mobile.height }}"
+                >
+              {%- endif -%}
+              {{
+                image
+                | image_url: width: 440
+                | image_tag:
+                  class: 'about-mission__img',
+                  widths: '220, 330, 440, 660',
+                  sizes: '(max-width: 749px) 100vw, calc(220 * 100vw / 1440)',
+                  alt: image_alt,
+                  loading: 'lazy',
+                  width: 220,
+                  height: 220
+              }}
+            </picture>
+          {%- else -%}
+            <div class="about-mission__placeholder" aria-hidden="true">
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'about-mission__placeholder-svg' }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="about-mission__col about-mission__col--right">
+        {%- if section.settings.headline != blank -%}
+          <div class="about-mission__headline about-mission__reveal about-mission__reveal--title rte">
+            {{ section.settings.headline }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.subtitle != blank -%}
+          <div class="about-mission__subtitle about-mission__reveal about-mission__reveal--subtitle rte">
+            {{ section.settings.subtitle }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.body != blank -%}
+          <div class="about-mission__body about-mission__reveal about-mission__reveal--media rte">
+            {{ section.settings.body }}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</about-mission-component>
+
+{% stylesheet %}
+  .about-mission {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100svh;
+    box-sizing: border-box;
+    background: transparent;
+    background-color: transparent;
+    padding-top: calc(var(--about-mission-pt) * var(--rem));
+    padding-right: calc(241 * var(--rem));
+    padding-bottom: calc(var(--about-mission-pb) * var(--rem));
+    padding-left: calc(241 * var(--rem));
+  }
+
+  .shopify-section.about-mission-section {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+  }
+
+  .about-mission__inner {
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .about-mission__grid {
+    display: grid;
+    grid-template-columns: calc(220 * var(--rem)) minmax(0, 1fr);
+    gap: calc(77 * var(--rem));
+    align-items: start;
+  }
+
+  .about-mission__col {
+    min-width: 0;
+  }
+
+  .about-mission__col--left {
+    width: calc(220 * var(--rem));
+  }
+
+  .about-mission__title {
+    margin: 0 0 calc(109 * var(--rem));
+    font-family: var(--font-h2--family);
+    font-style: var(--font-h2--style);
+    font-weight: 700;
+    font-size: calc(40 * var(--rem));
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #000;
+  }
+
+  .about-mission__media {
+    width: calc(220 * var(--rem));
+    height: calc(220 * var(--rem));
+  }
+
+  .about-mission__picture,
+  .about-mission__placeholder {
+    display: block;
+    width: calc(220 * var(--rem));
+    height: calc(220 * var(--rem));
+    margin: 0;
+  }
+
+  .about-mission__img,
+  .about-mission__placeholder-svg {
+    display: block;
+    width: calc(220 * var(--rem));
+    height: calc(220 * var(--rem));
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .about-mission__placeholder {
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .about-mission__headline {
+    margin: 0 0 calc(77 * var(--rem));
+    font-family: var(--font-h3--family);
+    font-style: var(--font-h3--style);
+    font-weight: 700;
+    font-size: calc(30 * var(--rem));
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #000;
+  }
+
+  .about-mission__headline p {
+    margin: 0;
+  }
+
+  .about-mission__headline strong {
+    font-weight: 700;
+    background-image: linear-gradient(
+      transparent 52%,
+      #f5e84a 52%,
+      #f5e84a 100%
+    );
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding-inline: 0.04em;
+  }
+
+  .about-mission__subtitle,
+  .about-mission__body {
+    font-family: var(--font-paragraph--family);
+    font-style: var(--font-paragraph--style);
+    font-weight: var(--font-paragraph--weight);
+    font-size: calc(16 * var(--rem));
+    line-height: 1.65;
+    color: #000;
+  }
+
+  .about-mission__subtitle {
+    margin: 0 0 calc(20 * var(--rem));
+  }
+
+  .about-mission__body {
+    margin: 0;
+  }
+
+  .about-mission__subtitle p,
+  .about-mission__body p {
+    margin: 0 0 calc(16 * var(--rem));
+  }
+
+  .about-mission__subtitle p:last-child,
+  .about-mission__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Scroll reveal only when JS is active; otherwise keep content visible */
+  .about-mission--js .about-mission__reveal {
+    opacity: 0;
+    transform: translate3d(0, calc(48 * var(--rem)), 0);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .about-mission--js[data-stage='1'] .about-mission__reveal--title,
+  .about-mission--js[data-stage='2'] .about-mission__reveal--title,
+  .about-mission--js[data-stage='3'] .about-mission__reveal--title {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .about-mission--js[data-stage='2'] .about-mission__reveal--subtitle,
+  .about-mission--js[data-stage='3'] .about-mission__reveal--subtitle {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0.05s;
+  }
+
+  .about-mission--js[data-stage='3'] .about-mission__reveal--media {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0.08s;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-mission__grid {
+      grid-template-columns: calc(180 * var(--rem)) minmax(0, 1fr);
+      gap: calc(40 * var(--rem));
+    }
+
+    .about-mission__col--left,
+    .about-mission__media,
+    .about-mission__picture,
+    .about-mission__placeholder,
+    .about-mission__img,
+    .about-mission__placeholder-svg {
+      width: calc(180 * var(--rem));
+      height: calc(180 * var(--rem));
+    }
+
+    .about-mission__title {
+      font-size: calc(32 * var(--rem));
+    }
+
+    .about-mission__headline {
+      font-size: calc(26 * var(--rem));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-mission {
+      min-height: 0;
+      display: block;
+      padding-top: calc(var(--about-mission-pt-mob) * var(--rem));
+      padding-right: calc(var(--about-mission-pr-mob) * var(--rem));
+      padding-bottom: calc(var(--about-mission-pb-mob) * var(--rem));
+      padding-left: calc(var(--about-mission-pl-mob) * var(--rem));
+    }
+
+    .about-mission__grid {
+      display: flex;
+      flex-direction: column;
+      gap: calc(28 * var(--rem));
+    }
+
+    .about-mission__col--left {
+      width: auto;
+    }
+
+    .about-mission__col--left,
+    .about-mission__col--right {
+      display: contents;
+    }
+
+    .about-mission__title {
+      order: 1;
+      margin-bottom: 0;
+      font-size: calc(40 * var(--rem));
+    }
+
+    .about-mission__headline {
+      order: 2;
+      margin-bottom: 0;
+      font-size: calc(30 * var(--rem));
+    }
+
+    .about-mission__subtitle {
+      order: 3;
+      margin-bottom: 0;
+      font-size: calc(16 * var(--rem));
+      line-height: 1.55;
+    }
+
+    .about-mission__media,
+    .about-mission__picture,
+    .about-mission__placeholder,
+    .about-mission__img,
+    .about-mission__placeholder-svg {
+      order: 4;
+      width: calc(440 * var(--rem));
+      height: calc(440 * var(--rem));
+      max-width: 100%;
+    }
+
+    .about-mission__body {
+      order: 5;
+      font-size: calc(16 * var(--rem));
+      line-height: 1.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-mission__reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About mission",
+  "tag": "section",
+  "class": "about-mission-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Left column"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Our Mission"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Displayed at 220×220 (design px × --rem). Keeps aspect ratio inside the box."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Shown at max-width 749px."
+    },
+    {
+      "type": "header",
+      "content": "Right column"
+    },
+    {
+      "type": "richtext",
+      "id": "headline",
+      "label": "Headline",
+      "default": "<p>Technology isn't about replacing humans. It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Our curiosity. Our strength. Our freedom to explore. Our ability to become more than we ever imagined.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>At Reudyn, we pioneer wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p><p>Technology begins with humanity. It always has. It always will.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Padding (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mob",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mob",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "About mission",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

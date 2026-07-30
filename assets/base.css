@@ -13,6 +13,17 @@ body {
 }
 
 :root {
+  --reudyn-design-width-pc: 1440;
+  --reudyn-design-width-mob: 750;
+  --rem: calc(100vw / var(--reudyn-design-width-pc));
+
+  --reudyn-radius-xs: calc(4 * var(--rem));
+  --reudyn-radius-sm: calc(8 * var(--rem));
+  --reudyn-radius-md: calc(12 * var(--rem));
+  --reudyn-radius-lg: calc(24 * var(--rem));
+  --reudyn-radius-xl: calc(40 * var(--rem));
+  --reudyn-radius-full: 9999px;
+
   --hover-lift-amount: 4px;
   --hover-scale-amount: 1.03;
   --hover-subtle-zoom-amount: 1.015;
@@ -23,6 +34,12 @@ body {
   --surface-transition-timing: var(--ease-out-quad);
   --submenu-animation-speed: 360ms;
   --submenu-animation-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@media screen and (max-width: 749px) {
+  :root {
+    --rem: calc(100vw / var(--reudyn-design-width-mob));
+  }
 }
 
 html {
