@@ -17,23 +17,29 @@
         "social_facebook": {
           "type": "reudyn-footer-social",
           "settings": {
-            "label": "Facebook",
-            "link": "https://www.facebook.com/"
-          }
+            "icon": "shopify://shop_images/Group_2.webp",
+            "link": "https://www.facebook.com/",
+            "label": "Facebook"
+          },
+          "blocks": {}
         },
         "social_twitter": {
           "type": "reudyn-footer-social",
           "settings": {
-            "label": "Twitter",
-            "link": "https://x.com/"
-          }
+            "icon": "shopify://shop_images/Group_3.webp",
+            "link": "https://x.com/",
+            "label": "Twitter"
+          },
+          "blocks": {}
         },
         "social_instagram": {
           "type": "reudyn-footer-social",
           "settings": {
-            "label": "Instagram",
-            "link": "https://www.instagram.com/"
-          }
+            "icon": "shopify://shop_images/Group_4.webp",
+            "link": "https://www.instagram.com/",
+            "label": "Instagram"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -42,15 +48,16 @@
         "social_instagram"
       ],
       "settings": {
+        "logo": "shopify://shop_images/logo-3x.webp",
         "menu": "footer",
         "copyright_text": "Copyright © 2026 reudyn.",
-        "bg_start": "#F0F0F0",
-        "bg_end": "#D8D8D8",
-        "text_color": "#2B2B2B",
-        "muted_color": "#6B6B6B",
-        "line_color": "#3A3A3A",
-        "icon_bg": "#3A3A3A",
-        "icon_color": "#FFFFFF",
+        "bg_start": "#f0f0f0",
+        "bg_end": "#d8d8d8",
+        "text_color": "#2b2b2b",
+        "muted_color": "#6b6b6b",
+        "line_color": "#3a3a3a",
+        "icon_bg": "#3a3a3a",
+        "icon_color": "#ffffff",
         "padding_top": 64,
         "padding_bottom": 48,
         "padding_x": 80,
@@ -206,7 +213,6 @@
     },
     "footer_utilities_jLGE8U": {
       "type": "footer-utilities",
-      "disabled": true,
       "blocks": {
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
@@ -255,6 +261,7 @@
         "footer_policy_list_VCdnpa",
         "social_links_Ew63Kq"
       ],
+      "disabled": true,
       "name": "t:names.utilities",
       "settings": {
         "section_width": "page-width",
