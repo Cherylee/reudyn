@@ -103,19 +103,9 @@
     z-index: 1;
   }
 
-  /* Team entering: drop sticky + kill blur so mobile paints Team and frees GPU */
-  .shopify-section.about-banner-section--released {
-    position: relative;
-    top: auto;
-    z-index: 0;
-  }
-
-  .shopify-section.about-banner-section--released .about-banner__blur {
+  /* Team covering: pause blur only — keep sticky so banner never vanishes under Mission */
+  .shopify-section.about-banner-section--blur-paused .about-banner__blur {
     display: none;
-  }
-
-  .shopify-section.about-banner-section--released .about-banner__content {
-    visibility: hidden;
   }
 
   .about-banner__inner {

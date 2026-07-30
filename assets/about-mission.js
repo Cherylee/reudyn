@@ -5,6 +5,17 @@
  */
 
 /**
+ * Desktop (≥990) scrolls `.page-wrapper`; mobile scrolls the window.
+ * @returns {number}
+ */
+function getAboutScrollY() {
+  const wrapper = document.querySelector('.page-wrapper');
+  const wrapperY = wrapper instanceof HTMLElement ? wrapper.scrollTop : 0;
+  const windowY = window.scrollY || document.documentElement.scrollTop || 0;
+  return Math.max(wrapperY, windowY);
+}
+
+/**
  * @returns {EventTarget[]}
  */
 function getAboutScrollTargets() {
@@ -69,8 +80,8 @@ class AboutMissionComponent extends HTMLElement {
   /** @type {EventTarget[]} */
   #targets = [];
 
-  /** Keep in sync with CSS `.about-mission__inner { top: 68vh }` */
-  #stickyVh = 0.68;
+  /** Keep in sync with CSS `.about-mission__inner { top: 48vh }` */
+  #stickyVh = 0.48;
 
   /** @type {boolean} */
   #isMobile = false;
@@ -100,7 +111,7 @@ class AboutMissionComponent extends HTMLElement {
     this.#subs = this.querySelectorAll('.about-mission__reveal--subtitle');
     this.#bodies = this.querySelectorAll('.about-mission__reveal--body');
     this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
-    this.#stickyVh = this.#isMobile ? 0.42 : 0.68;
+    this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
 
     this.classList.add('about-mission--js');
     this.#applyMissionScrub(0);
@@ -142,7 +153,7 @@ class AboutMissionComponent extends HTMLElement {
 
   #onResize = () => {
     this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
-    this.#stickyVh = this.#isMobile ? 0.42 : 0.68;
+    this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
     this.#lastMissionP = -1;
     this.#lastBannerP = -1;
     this.#lastExit = -1;
@@ -232,15 +243,16 @@ class AboutMissionComponent extends HTMLElement {
   }
 
   /**
-   * @param {boolean} released
+   * Pause expensive blur when Team covers the hero.
+   * Never unstick the banner — Mission scrolls over a persistent sticky image.
+   * @param {boolean} paused
    */
-  #setBannerReleased(released) {
-    if (released === this.#released) return;
-    this.#released = released;
-    this.#bannerSection?.classList.toggle('about-banner-section--released', released);
+  #setBannerBlurPaused(paused) {
+    if (paused === this.#released) return;
+    this.#released = paused;
+    this.#bannerSection?.classList.toggle('about-banner-section--blur-paused', paused);
 
-    if (released && this.#banner) {
-      // Freeze blur work while Team is covering the hero
+    if (paused && this.#banner) {
       this.#banner.style.setProperty('--about-banner-progress', '0');
       this.#lastBannerP = -1;
     }
@@ -250,30 +262,48 @@ class AboutMissionComponent extends HTMLElement {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
     if (viewportHeight <= 0) return;
 
-    // Once Team is near, release sticky banner so Team paints cleanly and blur stops
+    const scrollY = getAboutScrollY();
+    const sectionTop = this.getBoundingClientRect().top;
+
+    // True page top (page-wrapper or window): keep hero crisp
+    if (scrollY < 8) {
+      this.#setBannerBlurPaused(false);
+      this.#applyMissionScrub(0);
+      this.#applyBanner(0, 0);
+      return;
+    }
+
+    // Only pause blur once Team actually covers most of the viewport —
+    // do not unstick; banner must stay behind Mission.
     if (this.#team) {
       const teamTop = this.#team.getBoundingClientRect().top;
-      if (teamTop < viewportHeight * 0.88) {
-        this.#setBannerReleased(true);
+      const teamCovering = teamTop < viewportHeight * 0.2;
+      this.#setBannerBlurPaused(teamCovering);
+
+      if (teamCovering) {
         this.#applyMissionScrub(1);
         this.#applyBanner(1, 1);
         return;
       }
-      this.#setBannerReleased(false);
     }
 
     const stickyY = viewportHeight * this.#stickyVh;
     const innerTop = (this.#inner ?? this).getBoundingClientRect().top;
 
-    const fadeStartY = viewportHeight * 0.96;
-    const fadeEndY = stickyY + (this.#isMobile ? 24 : 40);
+    // Appear early: start fading while still below the fold, finish soon after entering
+    const fadeStartY = viewportHeight * (this.#isMobile ? 1.05 : 1.22);
+    const fadeEndY = stickyY + (this.#isMobile ? 12 : 20);
     const raw = 1 - ramp(innerTop, fadeEndY, fadeStartY);
-    const missionP = Math.pow(clamp01(raw), 0.55);
+    const missionP = Math.pow(clamp01(raw), 0.38);
     this.#applyMissionScrub(missionP);
 
-    const sectionTop = this.getBoundingClientRect().top;
-    const bannerP = 1 - ramp(sectionTop, viewportHeight * 0.35, viewportHeight * 1.05);
-    const headingExit = clamp01(bannerP / 0.8);
+    // Banner heading/blur only after Mission has entered the viewport
+    let bannerP = 0;
+    let headingExit = 0;
+    if (sectionTop < viewportHeight * 0.92) {
+      bannerP = 1 - ramp(sectionTop, viewportHeight * 0.35, viewportHeight * 0.92);
+      headingExit = clamp01(bannerP / 0.8);
+    }
     this.#applyBanner(bannerP, headingExit);
   }
 }
