@@ -18,7 +18,7 @@
           "type": "reudyn-footer-social",
           "settings": {
             "icon": "shopify://shop_images/Group_2.webp",
-            "link": "https://www.facebook.com/",
+            "link": "https://www.facebook.com/share/1H66tbfBf4/?mibextid=wwXIfr",
             "label": "Facebook"
           },
           "blocks": {}
@@ -27,7 +27,7 @@
           "type": "reudyn-footer-social",
           "settings": {
             "icon": "shopify://shop_images/Group_3.webp",
-            "link": "https://x.com/",
+            "link": "https://x.com/reudynglobal?s=11",
             "label": "Twitter"
           },
           "blocks": {}
@@ -36,7 +36,7 @@
           "type": "reudyn-footer-social",
           "settings": {
             "icon": "shopify://shop_images/Group_4.webp",
-            "link": "https://www.instagram.com/",
+            "link": "https://www.instagram.com/reudynglobal?igsh=MW0wNDc4bXY0MG9sZQ%3D%3D&utm_source=qr",
             "label": "Instagram"
           },
           "blocks": {}
