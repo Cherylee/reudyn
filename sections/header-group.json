@@ -50,8 +50,8 @@
         }
       },
       "settings": {
-        "logo_position": "left",
-        "menu_position": "left",
+        "logo_position": "center",
+        "menu_position": "right",
         "menu_row": "top",
         "customer_account_menu": "customer-account-main-menu",
         "show_search": true,
