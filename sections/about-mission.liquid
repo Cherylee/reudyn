@@ -18,7 +18,7 @@
 -%}
 
 <about-mission-component
-  class="about-mission color-{{ section.settings.color_scheme }}"
+  class="about-mission"
   data-about-mission
   style="
     --about-mission-pt: {{ pad_t }};
@@ -386,12 +386,6 @@
     "groups": ["header", "footer"]
   },
   "settings": [
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
-    },
     {
       "type": "header",
       "content": "Left column"

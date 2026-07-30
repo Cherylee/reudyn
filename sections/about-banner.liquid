@@ -18,7 +18,7 @@
 -%}
 
 <section
-  class="about-banner color-{{ section.settings.color_scheme }}"
+  class="about-banner"
   data-about-banner
   style="
     --about-banner-radius: {{ radius }};
@@ -236,12 +236,6 @@
     "groups": ["header", "footer"]
   },
   "settings": [
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
-    },
     {
       "type": "header",
       "content": "Image"

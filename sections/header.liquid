@@ -478,7 +478,7 @@
 
   .header {
     /* Set header paddings based on height setting */
-    --header-padding: var(--padding-sm);
+    --header-padding: calc(20 * var(--rem));
     --font-paragraph--line-height: 1;
     --header-content-transition-timing: 0s;
 
@@ -864,7 +864,7 @@
       grid-column: span 3;
       column-gap: 0;
       align-items: center;
-      padding-block: 0;
+      padding-block: calc(20 * var(--rem));
       padding-inline: 0 var(--padding-3xs);
 
       .header-logo {
@@ -899,7 +899,7 @@
     grid-column: span 3;
     column-gap: 0;
     align-items: center;
-    padding-block: 0;
+    padding-block: calc(20 * var(--rem));
     padding-inline: 0 var(--padding-3xs);
 
     .header-logo {

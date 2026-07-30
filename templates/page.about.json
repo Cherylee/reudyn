@@ -17,7 +17,6 @@
     "about_banner": {
       "type": "about-banner",
       "settings": {
-        "color_scheme": "scheme-1",
         "heading": "Human, amplified.",
         "border_radius": 0,
         "border_radius_mob": 0,
@@ -34,7 +33,6 @@
     "about_mission": {
       "type": "about-mission",
       "settings": {
-        "color_scheme": "scheme-1",
         "title": "Our Mission",
         "headline": "<p>Technology isn't about replacing humans.</p><p>It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>",
         "subtitle": "<p>Our curiosity. Our strength. Our freedom to explore. Our ability to become more than we ever imagined.</p>",
@@ -50,7 +48,6 @@
     "about_team": {
       "type": "about-team",
       "settings": {
-        "color_scheme": "scheme-1",
         "title": "Our Team",
         "body": "<p>At Reudyn, engineering begins with people.</p><p>Our multidisciplinary team brings together expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics, advancing the future of human augmentation. Backed by long-term collaborations with leading university research labs, our dual-core technology platform is led by experts with decades of experience in motor control systems and in human-machine intelligence. We believe breakthrough technology belongs in everyday life.</p><p>That's why we're turning advanced robotics into wearable technology that helps people move farther, explore more, and experience the world with greater freedom.</p>",
         "padding_top": 86,
