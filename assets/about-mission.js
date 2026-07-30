@@ -1,11 +1,10 @@
 /**
- * About scroll storytelling — Hypershell-style scrub (scroll-linked).
- * Mobile-safe: avoid per-frame backdrop-filter writes; release sticky banner
- * when Team enters so content stays visible and GPU work stops.
+ * About storytelling — one section, shared sticky banner.
+ * Mission panel scrolls over the stage; blur ramps as mission appears.
+ * Sticky ends with this section, so Team follows without an empty hole.
  */
 
 /**
- * Desktop (≥990) scrolls `.page-wrapper`; mobile scrolls the window.
  * @returns {number}
  */
 function getAboutScrollY() {
@@ -45,19 +44,16 @@ function clamp01(t) {
 
 class AboutMissionComponent extends HTMLElement {
   /** @type {HTMLElement | null} */
-  #banner = null;
+  #stage = null;
 
   /** @type {HTMLElement | null} */
-  #bannerSection = null;
+  #intro = null;
 
   /** @type {HTMLElement | null} */
-  #bannerContent = null;
+  #panel = null;
 
   /** @type {HTMLElement | null} */
   #inner = null;
-
-  /** @type {HTMLElement | null} */
-  #team = null;
 
   /** @type {NodeListOf<HTMLElement> | HTMLElement[]} */
   #titles = [];
@@ -95,24 +91,17 @@ class AboutMissionComponent extends HTMLElement {
   /** @type {number} */
   #lastExit = -1;
 
-  /** @type {boolean} */
-  #released = false;
-
   connectedCallback() {
-    this.#banner = document.querySelector('[data-about-banner]');
-    this.#bannerSection =
-      this.#banner?.closest('.about-banner-section') ??
-      document.querySelector('.shopify-section.about-banner-section');
-    this.#bannerContent = this.#banner?.querySelector('.about-banner__content') ?? null;
+    this.#stage = this.querySelector('[data-about-banner]');
+    this.#intro = this.querySelector('[data-about-intro]');
+    this.#panel = this.querySelector('.about-mission__panel');
     this.#inner = this.querySelector('.about-mission__inner');
-    this.#team = document.querySelector('.about-team');
     this.#titles = this.querySelectorAll('.about-mission__reveal--title');
     this.#media = this.querySelectorAll('.about-mission__reveal--media');
     this.#subs = this.querySelectorAll('.about-mission__reveal--subtitle');
     this.#bodies = this.querySelectorAll('.about-mission__reveal--body');
     this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
     this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
-    this.#syncMobileBackdrop();
 
     this.classList.add('about-mission--js');
     this.#applyMissionScrub(0);
@@ -155,38 +144,11 @@ class AboutMissionComponent extends HTMLElement {
   #onResize = () => {
     this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
     this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
-    this.#syncMobileBackdrop();
     this.#lastMissionP = -1;
     this.#lastBannerP = -1;
     this.#lastExit = -1;
     if (this.#onScroll) this.#onScroll();
   };
-
-  /** Mobile: reuse About banner image as blurred Mission backdrop */
-  #syncMobileBackdrop() {
-    const layer = this.querySelector('[data-about-mission-backdrop]');
-    if (!(layer instanceof HTMLElement)) return;
-
-    if (!this.#isMobile) {
-      layer.style.backgroundImage = '';
-      return;
-    }
-
-    const img =
-      this.#banner?.querySelector('img.about-banner__img') ??
-      this.#banner?.querySelector('.about-banner__picture img');
-
-    const apply = () => {
-      const src = img instanceof HTMLImageElement ? img.currentSrc || img.src : '';
-      if (!src) return;
-      layer.style.backgroundImage = `url("${src}")`;
-    };
-
-    apply();
-    if (img instanceof HTMLImageElement && !img.complete) {
-      img.addEventListener('load', apply, { once: true });
-    }
-  }
 
   /**
    * @param {number} progress 0–1
@@ -232,7 +194,7 @@ class AboutMissionComponent extends HTMLElement {
   }
 
   /**
-   * Blur via CSS var only — never write backdrop-filter inline (mobile GPU killer).
+   * Blur via CSS var only — never write backdrop-filter inline.
    * @param {number} progress 0–1
    * @param {number} headingExit 0–1
    */
@@ -246,64 +208,26 @@ class AboutMissionComponent extends HTMLElement {
     this.#lastBannerP = p;
     this.#lastExit = exit;
 
-    // Lighter blur ramp on mobile; still CSS-driven
-    const blurStart = this.#isMobile ? 0.45 : 0.38;
-    const blurSpan = this.#isMobile ? 0.5 : 0.4;
+    const blurStart = this.#isMobile ? 0.2 : 0.28;
+    const blurSpan = this.#isMobile ? 0.55 : 0.45;
     const blurP = p <= blurStart ? 0 : clamp01((p - blurStart) / blurSpan);
 
-    if (this.#banner) {
-      this.#banner.style.setProperty('--about-banner-progress', blurP.toFixed(3));
-      this.#banner.classList.toggle('about-banner--active', p > 0.02);
+    if (this.#stage) {
+      this.#stage.style.setProperty('--about-banner-progress', blurP.toFixed(3));
+      this.style.setProperty('--about-banner-progress', blurP.toFixed(3));
     }
 
-    if (this.#bannerContent) {
+    if (this.#intro) {
       if (exit >= 0.999) {
-        this.#bannerContent.style.opacity = '0';
-        this.#bannerContent.style.transform = 'translate(-50%, calc(-50% - 42vh))';
-        this.#bannerContent.style.visibility = 'hidden';
+        this.#intro.style.opacity = '0';
+        this.#intro.style.transform = 'translate(-50%, calc(-50% - 42vh))';
+        this.#intro.style.visibility = 'hidden';
       } else {
         const yVh = (-42 * exit).toFixed(2);
-        this.#bannerContent.style.visibility = '';
-        this.#bannerContent.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
-        this.#bannerContent.style.opacity = (1 - exit).toFixed(3);
+        this.#intro.style.visibility = '';
+        this.#intro.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
+        this.#intro.style.opacity = (1 - exit).toFixed(3);
       }
-    }
-  }
-
-  /**
-   * Pause expensive blur when Team covers the hero (desktop keeps sticky).
-   * @param {boolean} paused
-   */
-  #setBannerBlurPaused(paused) {
-    this.#bannerSection?.classList.toggle('about-banner-section--blur-paused', paused);
-
-    if (paused && this.#banner) {
-      this.#banner.style.setProperty('--about-banner-progress', '0');
-      this.#lastBannerP = -1;
-    }
-  }
-
-  /**
-   * Mobile only: show Mission blurred backdrop during Mission → Team handoff.
-   * @param {boolean} active
-   */
-  #setMissionBackdropActive(active) {
-    this.classList.toggle('about-mission--backdrop-active', Boolean(active) && this.#isMobile);
-  }
-
-  /**
-   * Mobile only: unstick near Team so empty sticky hole stays small.
-   * Mission still uses blurred sticky banner while reading.
-   * @param {boolean} released
-   */
-  #setBannerReleased(released) {
-    if (released === this.#released) return;
-    this.#released = released;
-    this.#bannerSection?.classList.toggle('about-banner-section--released', released);
-
-    if (released && this.#banner) {
-      this.#banner.style.setProperty('--about-banner-progress', '0');
-      this.#lastBannerP = -1;
     }
   }
 
@@ -312,70 +236,29 @@ class AboutMissionComponent extends HTMLElement {
     if (viewportHeight <= 0) return;
 
     const scrollY = getAboutScrollY();
-    const sectionTop = this.getBoundingClientRect().top;
-    const sectionBottom = this.getBoundingClientRect().bottom;
-    const teamTop = this.#team?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
-
-    // True page top (page-wrapper or window): keep hero crisp
     if (scrollY < 8) {
-      this.#setBannerReleased(false);
-      this.#setBannerBlurPaused(false);
-      this.#setMissionBackdropActive(false);
       this.#applyMissionScrub(0);
       this.#applyBanner(0, 0);
       return;
     }
 
-    if (this.#isMobile) {
-      // Blurred banner bg only during Mission → Team handoff
-      const showBackdrop =
-        sectionBottom < viewportHeight * 0.95 &&
-        sectionBottom > viewportHeight * 0.08 &&
-        teamTop < viewportHeight * 1.05;
-      this.#setMissionBackdropActive(showBackdrop);
-
-      // Keep sticky blur through Mission; release as soon as Team peeks /
-      // Mission is nearly gone — shrinks the empty banner hole before Team.
-      const shouldRelease =
-        teamTop < viewportHeight * 0.92 || sectionBottom < viewportHeight * 0.55;
-      this.#setBannerReleased(shouldRelease);
-
-      if (shouldRelease) {
-        this.#applyMissionScrub(1);
-        this.#applyBanner(1, 1);
-        return;
-      }
-    } else {
-      this.#setMissionBackdropActive(false);
-      this.#setBannerReleased(false);
-      if (this.#team) {
-        const teamCovering = teamTop < viewportHeight * 0.2;
-        this.#setBannerBlurPaused(teamCovering);
-
-        if (teamCovering) {
-          this.#applyMissionScrub(1);
-          this.#applyBanner(1, 1);
-          return;
-        }
-      }
-    }
+    const panel = this.#panel ?? this;
+    const panelTop = panel.getBoundingClientRect().top;
+    const innerTop = (this.#inner ?? panel).getBoundingClientRect().top;
 
     const stickyY = viewportHeight * this.#stickyVh;
-    const innerTop = (this.#inner ?? this).getBoundingClientRect().top;
-
-    // Appear early: start fading while still below the fold, finish soon after entering
     const fadeStartY = viewportHeight * (this.#isMobile ? 1.05 : 1.22);
     const fadeEndY = stickyY + (this.#isMobile ? 12 : 20);
     const raw = 1 - ramp(innerTop, fadeEndY, fadeStartY);
     const missionP = Math.pow(clamp01(raw), 0.38);
     this.#applyMissionScrub(missionP);
 
-    // Banner heading/blur only after Mission has entered the viewport
+    // Blur + intro exit as mission panel rises over the shared stage
     let bannerP = 0;
     let headingExit = 0;
-    if (sectionTop < viewportHeight * 0.92) {
-      bannerP = 1 - ramp(sectionTop, viewportHeight * 0.35, viewportHeight * 0.92);
-      headingExit = clamp01(bannerP / 0.8);
+    if (panelTop < viewportHeight * 0.98) {
+      bannerP = 1 - ramp(panelTop, viewportHeight * 0.28, viewportHeight * 0.98);
+      headingExit = clamp01(bannerP / 0.75);
     }
     this.#applyBanner(bannerP, headingExit);
   }

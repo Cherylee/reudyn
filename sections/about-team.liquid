@@ -144,10 +144,10 @@
 
   .about-team__grid {
     display: grid;
-    grid-template-columns: calc(220 * var(--rem)) minmax(0, 1fr);
+    grid-template-columns: calc(640 * var(--rem)) minmax(0, 1fr);
     grid-template-areas:
       'title .'
-      'media body';
+      'body media';
     column-gap: calc(77 * var(--rem));
     row-gap: calc(36 * var(--rem));
     align-items: start;
@@ -169,6 +169,8 @@
     grid-area: media;
     width: calc(220 * var(--rem));
     height: calc(220 * var(--rem));
+    justify-self: end;
+    align-self: start;
   }
 
   .about-team__picture,
@@ -195,7 +197,10 @@
 
   .about-team__body {
     grid-area: body;
+    width: 100%;
+    max-width: calc(640 * var(--rem));
     margin: 0;
+    align-self: start;
     font-family: var(--font-paragraph--family);
     font-style: var(--font-paragraph--style);
     font-weight: var(--font-paragraph--weight);
@@ -214,8 +219,8 @@
 
   .about-team__banner {
     width: 100%;
-    max-width: calc(925 * var(--rem));
-    height: calc(269 * var(--rem));
+    max-width: 100%;
+    height: auto;
     margin-top: calc(56 * var(--rem));
   }
 
@@ -223,7 +228,7 @@
   .about-team__banner-placeholder {
     display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
     margin: 0;
   }
 
@@ -231,7 +236,7 @@
   .about-team__banner-placeholder-svg {
     display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
     max-width: 100%;
     object-fit: contain;
     object-position: center left;
@@ -243,8 +248,12 @@
 
   @media screen and (min-width: 750px) and (max-width: 768px) {
     .about-team__grid {
-      grid-template-columns: calc(180 * var(--rem)) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) auto;
       column-gap: calc(40 * var(--rem));
+    }
+
+    .about-team__body {
+      max-width: none;
     }
 
     .about-team__media,
@@ -261,7 +270,7 @@
     }
 
     .about-team__banner {
-      height: calc(220 * var(--rem));
+      height: auto;
     }
   }
 
@@ -299,6 +308,8 @@
 
     .about-team__body {
       order: 2;
+      width: 100%;
+      max-width: none;
       margin: 0;
       font-size: calc(24 * var(--rem));
       line-height: 1.55;

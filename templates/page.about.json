@@ -9,33 +9,18 @@
  */
 /*
  * ------------------------------------------------------------
- * About Us page template — banner, mission, then team.
+ * About Us — unified hero+mission, then team.
  * ------------------------------------------------------------
  */
 {
   "sections": {
-    "about_banner": {
-      "type": "about-banner",
-      "settings": {
-        "image": "shopify://shop_images/Mask_group_1.webp",
-        "image_mobile": "shopify://shop_images/Mask_group_2.webp",
-        "heading": "Human, amplified.",
-        "subheading": "Intelligent support that moves with you.",
-        "border_radius": 0,
-        "border_radius_mob": 0,
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "padding_left": 0,
-        "padding_right": 0,
-        "padding_top_mob": 0,
-        "padding_bottom_mob": 0,
-        "padding_left_mob": 0,
-        "padding_right_mob": 0
-      }
-    },
     "about_mission": {
       "type": "about-mission",
       "settings": {
+        "banner_image": "shopify://shop_images/Mask_group_1.webp",
+        "banner_image_mobile": "shopify://shop_images/Mask_group_2.webp",
+        "heading": "Human, amplified.",
+        "subheading": "Intelligent support that moves with you.",
         "title": "Our Mission",
         "image": "shopify://shop_images/XAOTOS_1.webp",
         "image_mobile": "shopify://shop_images/Rectangle_40_2.webp",
@@ -68,7 +53,6 @@
     }
   },
   "order": [
-    "about_banner",
     "about_mission",
     "about_team"
   ]
