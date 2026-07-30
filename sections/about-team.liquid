@@ -7,7 +7,7 @@
   assign banner_alt = banner.alt | default: section.settings.title | default: ''
 
   assign pad_t = section.settings.padding_top | default: 86
-  assign pad_b = section.settings.padding_bottom | default: 86
+  assign pad_b = section.settings.padding_bottom | default: 100
 
   assign pad_t_mob = section.settings.padding_top_mob | default: 64
   assign pad_r_mob = section.settings.padding_right_mob | default: 32
@@ -117,7 +117,7 @@
 {% stylesheet %}
   .about-team {
     position: relative;
-    z-index: 3;
+    z-index: 5;
     display: block;
     width: 100%;
     box-sizing: border-box;
@@ -132,7 +132,7 @@
 
   .shopify-section.about-team-section {
     position: relative;
-    z-index: 3;
+    z-index: 5;
     background: #fff;
     isolation: isolate;
   }
@@ -425,7 +425,7 @@
       "max": 200,
       "step": 2,
       "unit": "px",
-      "default": 86
+      "default": 100
     },
     {
       "type": "header",

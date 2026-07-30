@@ -255,62 +255,34 @@ class AboutMissionComponent extends HTMLElement {
     }
   }
 
-  /**
-   * Mobile only: unstick banner so Team scrolls up instead of an empty sticky hero.
-   * @param {boolean} released
-   */
-  #setBannerReleased(released) {
-    if (released === this.#released) return;
-    this.#released = released;
-    this.#bannerSection?.classList.toggle('about-banner-section--released', released);
-
-    if (released && this.#banner) {
-      this.#banner.style.setProperty('--about-banner-progress', '0');
-      this.#lastBannerP = -1;
-    }
-  }
-
   #update() {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
     if (viewportHeight <= 0) return;
 
     const scrollY = getAboutScrollY();
     const sectionTop = this.getBoundingClientRect().top;
-    const sectionBottom = this.getBoundingClientRect().bottom;
     const teamTop = this.#team?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
 
     // True page top (page-wrapper or window): keep hero crisp
     if (scrollY < 8) {
-      this.#setBannerReleased(false);
       this.#setBannerBlurPaused(false);
       this.#applyMissionScrub(0);
       this.#applyBanner(0, 0);
       return;
     }
 
-    if (this.#isMobile) {
-      // Mobile only: release sticky once Mission is leaving or Team peeks in
-      const shouldRelease =
-        sectionBottom < viewportHeight * 0.92 || teamTop < viewportHeight * 0.98;
-      this.#setBannerReleased(shouldRelease);
+    // Keep banner sticky always — Team sits above via z-index + white bg
+    this.#bannerSection?.classList.remove('about-banner-section--released');
+    this.#released = false;
 
-      if (shouldRelease) {
+    if (this.#team) {
+      const teamCovering = teamTop < viewportHeight * (this.#isMobile ? 0.55 : 0.2);
+      this.#setBannerBlurPaused(teamCovering);
+
+      if (teamCovering) {
         this.#applyMissionScrub(1);
         this.#applyBanner(1, 1);
         return;
-      }
-    } else {
-      // Desktop: always keep sticky; only pause blur when Team covers
-      this.#setBannerReleased(false);
-      if (this.#team) {
-        const teamCovering = teamTop < viewportHeight * 0.2;
-        this.#setBannerBlurPaused(teamCovering);
-
-        if (teamCovering) {
-          this.#applyMissionScrub(1);
-          this.#applyBanner(1, 1);
-          return;
-        }
       }
     }
 
