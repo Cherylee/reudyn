@@ -281,6 +281,7 @@
   }
 
   @media screen and (max-width: 749px) {
+    /* Mobile: Mission content height only — no leftover sticky runway before Team */
     .about-mission {
       min-height: 0;
       display: block;
@@ -288,6 +289,10 @@
       padding-right: calc(65 * var(--rem));
       padding-bottom: calc(109 * var(--rem));
       padding-left: calc(65 * var(--rem));
+    }
+
+    .shopify-section.about-mission-section {
+      min-height: 0;
     }
 
     .about-mission__inner {

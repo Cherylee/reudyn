@@ -103,9 +103,31 @@
     z-index: 1;
   }
 
-  /* Team covering: pause blur only — keep sticky so banner never vanishes under Mission */
+  /* Team covering: pause blur only — desktop keeps sticky under Mission */
   .shopify-section.about-banner-section--blur-paused .about-banner__blur {
     display: none;
+  }
+
+  /* Mobile-only: drop sticky so Team follows Mission (PC never uses --released) */
+  @media screen and (max-width: 749px) {
+    .shopify-section.about-banner-section--released {
+      position: relative;
+      top: auto;
+      z-index: 0;
+    }
+
+    .shopify-section.about-banner-section--released .about-banner__blur {
+      display: none;
+    }
+
+    .shopify-section.about-banner-section--released .about-banner__content {
+      visibility: hidden;
+    }
+
+    .shopify-section.about-team-section,
+    .about-team {
+      z-index: 5;
+    }
   }
 
   .about-banner__inner {
