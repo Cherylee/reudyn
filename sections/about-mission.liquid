@@ -281,18 +281,21 @@
   }
 
   @media screen and (max-width: 749px) {
-    /* Mobile: Mission content height only — no leftover sticky runway before Team */
+    /* Mobile: Mission content height only — transparent so sticky banner blur shows through */
     .about-mission {
-      min-height: 0;
+      min-height: 0 !important;
       display: block;
       padding-top: calc(var(--about-mission-pt-mob) * var(--rem));
       padding-right: calc(65 * var(--rem));
       padding-bottom: calc(109 * var(--rem));
       padding-left: calc(65 * var(--rem));
+      background: transparent;
+      background-color: transparent;
     }
 
     .shopify-section.about-mission-section {
-      min-height: 0;
+      min-height: 0 !important;
+      background: transparent;
     }
 
     .about-mission__inner {
