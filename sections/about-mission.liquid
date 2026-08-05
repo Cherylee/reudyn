@@ -4,6 +4,12 @@
 ></script>
 
 {%- liquid
+  assign banner = section.settings.banner_image
+  assign banner_mobile = section.settings.banner_image_mobile
+  assign banner_alt = banner.alt | default: section.settings.heading | default: ''
+  assign heading = section.settings.heading
+  assign subheading = section.settings.subheading
+
   assign image = section.settings.image
   assign image_mobile = section.settings.image_mobile
   assign image_alt = image.alt | default: section.settings.title | default: ''
@@ -27,73 +33,128 @@
     --about-mission-pr-mob: {{ pad_r_mob }};
     --about-mission-pb-mob: {{ pad_b_mob }};
     --about-mission-pl-mob: {{ pad_l_mob }};
+    --about-banner-progress: 0;
   "
 >
-  <div class="about-mission__inner">
-    <div class="about-mission__grid">
-      <div class="about-mission__col about-mission__col--left">
-        {%- if section.settings.title != blank -%}
-          <h2 class="about-mission__title about-mission__reveal about-mission__reveal--title">
-            {{ section.settings.title | escape }}
-          </h2>
-        {%- endif -%}
+  {%- comment -%} Shared sticky hero — sticky ends with this section, before Team {%- endcomment -%}
+  <div class="about-mission__stage" data-about-banner>
+    <div class="about-mission__stage-inner">
+      {%- if banner != blank -%}
+        <picture class="about-mission__stage-picture">
+          {%- if banner_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ banner_mobile | image_url: width: 375 }} 375w,
+                {{ banner_mobile | image_url: width: 550 }} 550w,
+                {{ banner_mobile | image_url: width: 750 }} 750w,
+                {{ banner_mobile | image_url: width: 1100 }} 1100w
+              "
+              sizes="100vw"
+              width="{{ banner_mobile.width }}"
+              height="{{ banner_mobile.height }}"
+            >
+          {%- endif -%}
+          {{
+            banner
+            | image_url: width: 3840
+            | image_tag:
+              class: 'about-mission__stage-img',
+              widths: '750, 1100, 1500, 1780, 2000, 2400, 3000, 3840',
+              sizes: '100vw',
+              alt: banner_alt,
+              loading: 'eager',
+              fetchpriority: 'high'
+          }}
+        </picture>
+      {%- else -%}
+        <div class="about-mission__stage-placeholder" aria-hidden="true">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'about-mission__stage-placeholder-svg' }}
+        </div>
+      {%- endif -%}
 
-        <div class="about-mission__media about-mission__reveal about-mission__reveal--media">
-          {%- if image != blank -%}
-            <picture class="about-mission__picture">
-              {%- if image_mobile != blank -%}
-                <source
-                  media="(max-width: 749px)"
-                  srcset="
-                    {{ image_mobile | image_url: width: 375 }} 375w,
-                    {{ image_mobile | image_url: width: 550 }} 550w,
-                    {{ image_mobile | image_url: width: 750 }} 750w,
-                    {{ image_mobile | image_url: width: 1100 }} 1100w
-                  "
-                  sizes="(max-width: 749px) 100vw, calc(220 * 100vw / 1440)"
-                  width="{{ image_mobile.width }}"
-                  height="{{ image_mobile.height }}"
-                >
-              {%- endif -%}
-              {{
-                image
-                | image_url: width: 1200
-                | image_tag:
-                  class: 'about-mission__img',
-                  widths: '220, 440, 598, 750, 1200',
-                  sizes: '(max-width: 749px) 100vw, calc(220 * 100vw / 1440)',
-                  alt: image_alt,
-                  loading: 'lazy',
-                  width: 220,
-                  height: 220
-              }}
-            </picture>
-          {%- else -%}
-            <div class="about-mission__placeholder" aria-hidden="true">
-              {{ 'lifestyle-2' | placeholder_svg_tag: 'about-mission__placeholder-svg' }}
+      <div class="about-mission__blur" data-about-blur aria-hidden="true"></div>
+
+      {%- if heading != blank or subheading != blank -%}
+        <div class="about-mission__intro" data-about-intro>
+          {%- if heading != blank -%}
+            <h1 class="about-mission__heading">{{ heading | escape }}</h1>
+          {%- endif -%}
+          {%- if subheading != blank -%}
+            <p class="about-mission__subheading">{{ subheading | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="about-mission__panel">
+    <div class="about-mission__inner">
+      <div class="about-mission__grid">
+        <div class="about-mission__col about-mission__col--left">
+          {%- if section.settings.title != blank -%}
+            <h2 class="about-mission__title about-mission__reveal about-mission__reveal--title">
+              {{ section.settings.title | escape }}
+            </h2>
+          {%- endif -%}
+
+          <div class="about-mission__media about-mission__reveal about-mission__reveal--media">
+            {%- if image != blank -%}
+              <picture class="about-mission__picture">
+                {%- if image_mobile != blank -%}
+                  <source
+                    media="(max-width: 749px)"
+                    srcset="
+                      {{ image_mobile | image_url: width: 375 }} 375w,
+                      {{ image_mobile | image_url: width: 550 }} 550w,
+                      {{ image_mobile | image_url: width: 750 }} 750w,
+                      {{ image_mobile | image_url: width: 1100 }} 1100w
+                    "
+                    sizes="(max-width: 749px) 100vw, calc(220 * 100vw / 1440)"
+                    width="{{ image_mobile.width }}"
+                    height="{{ image_mobile.height }}"
+                  >
+                {%- endif -%}
+                {{
+                  image
+                  | image_url: width: 1200
+                  | image_tag:
+                    class: 'about-mission__img',
+                    widths: '220, 440, 598, 750, 1200',
+                    sizes: '(max-width: 749px) 100vw, calc(220 * 100vw / 1440)',
+                    alt: image_alt,
+                    loading: 'lazy',
+                    width: 220,
+                    height: 220
+                }}
+              </picture>
+            {%- else -%}
+              <div class="about-mission__placeholder" aria-hidden="true">
+                {{ 'lifestyle-2' | placeholder_svg_tag: 'about-mission__placeholder-svg' }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="about-mission__col about-mission__col--right">
+          {%- if section.settings.headline != blank -%}
+            <div class="about-mission__headline about-mission__reveal about-mission__reveal--title rte">
+              {{ section.settings.headline }}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.subtitle != blank -%}
+            <div class="about-mission__subtitle about-mission__reveal about-mission__reveal--subtitle rte">
+              {{ section.settings.subtitle }}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.body != blank -%}
+            <div class="about-mission__body about-mission__reveal about-mission__reveal--body rte">
+              {{ section.settings.body }}
             </div>
           {%- endif -%}
         </div>
-      </div>
-
-      <div class="about-mission__col about-mission__col--right">
-        {%- if section.settings.headline != blank -%}
-          <div class="about-mission__headline about-mission__reveal about-mission__reveal--title rte">
-            {{ section.settings.headline }}
-          </div>
-        {%- endif -%}
-
-        {%- if section.settings.subtitle != blank -%}
-          <div class="about-mission__subtitle about-mission__reveal about-mission__reveal--subtitle rte">
-            {{ section.settings.subtitle }}
-          </div>
-        {%- endif -%}
-
-        {%- if section.settings.body != blank -%}
-          <div class="about-mission__body about-mission__reveal about-mission__reveal--body rte">
-            {{ section.settings.body }}
-          </div>
-        {%- endif -%}
       </div>
     </div>
   </div>
@@ -105,15 +166,8 @@
     z-index: 2;
     display: block;
     width: 100%;
-    /* Short sticky runway — avoid many empty wheel ticks before Team */
-    min-height: 100svh;
     box-sizing: border-box;
     background: transparent;
-    background-color: transparent;
-    padding-top: calc(var(--about-mission-pt) * var(--rem));
-    padding-right: calc(241 * var(--rem));
-    padding-bottom: calc(var(--about-mission-pb) * var(--rem));
-    padding-left: calc(241 * var(--rem));
   }
 
   .shopify-section.about-mission-section {
@@ -122,9 +176,126 @@
     background: transparent;
   }
 
+  /* Shared sticky hero — unsticks when this section ends (before Team) */
+  .about-mission__stage {
+    position: sticky;
+    top: var(--header-group-height, var(--header-height, 0px));
+    z-index: 1;
+    width: 100%;
+    height: calc(100svh - var(--header-group-height, var(--header-height, 0px)));
+    max-height: calc(100svh - var(--header-group-height, var(--header-height, 0px)));
+    overflow: hidden;
+    --about-banner-progress: 0;
+  }
+
+  .about-mission__stage-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .about-mission__stage-picture,
+  .about-mission__stage-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .about-mission__stage-img,
+  .about-mission__stage-placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .about-mission__stage-placeholder {
+    background: rgb(var(--color-foreground-rgb) / 0.04);
+  }
+
+  .about-mission__blur {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
+    -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
+    background: transparent;
+  }
+
+  .about-mission__intro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    max-width: calc(100% - 48 * var(--rem));
+    margin: 0;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    text-align: center;
+  }
+
+  .about-mission__heading {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-family: var(--font-h1--family);
+    font-style: var(--font-h1--style);
+    font-weight: 700;
+    font-size: calc(60 * var(--rem));
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #000;
+  }
+
+  .about-mission__subheading {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    margin: calc(17 * var(--rem)) 0 0;
+    padding: 0;
+    text-align: center;
+    font-family: var(--font-paragraph--family);
+    font-style: var(--font-paragraph--style);
+    font-weight: 400;
+    font-size: calc(22 * var(--rem));
+    line-height: calc(24 * var(--rem));
+    color: #303030;
+  }
+
+  /* Mission copy scrolls over the shared sticky stage */
+  .about-mission__panel {
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 85svh;
+    padding-top: calc(var(--about-mission-pt) * var(--rem));
+    padding-right: calc(241 * var(--rem));
+    padding-bottom: calc(var(--about-mission-pb) * var(--rem));
+    padding-left: calc(241 * var(--rem));
+    background: transparent;
+  }
+
   .about-mission__inner {
     position: sticky;
-    top: 68vh;
+    top: 48vh;
     width: 100%;
     margin-inline: auto;
   }
@@ -201,8 +372,8 @@
     font-weight: 700;
     background-image: linear-gradient(
       transparent 52%,
-      #ffb501 52%,
-      #ffb501 100%
+      #f5d421 52%,
+      #f5d421 100%
     );
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
@@ -215,7 +386,7 @@
     font-style: var(--font-paragraph--style);
     font-weight: var(--font-paragraph--weight);
     font-size: calc(16 * var(--rem));
-    line-height: 1.65;
+    line-height: calc(22 * var(--rem));
     color: #000;
   }
 
@@ -237,11 +408,13 @@
     margin-bottom: 0;
   }
 
-  /* Scroll-scrubbed reveal (Hypershell-style) — no CSS transitions */
   .about-mission--js .about-mission__reveal {
     opacity: 0;
     transform: translate3d(0, 56px, 0);
-    will-change: opacity, transform;
+  }
+
+  .about-mission--js.about-mission--settled .about-mission__reveal {
+    will-change: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -250,9 +423,24 @@
       transform: none;
       will-change: auto;
     }
+
+    .about-mission__intro {
+      transform: translate(-50%, -50%) !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .about-mission__blur {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
   }
 
   @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-mission__heading {
+      font-size: calc(48 * var(--rem));
+    }
+
     .about-mission__grid {
       grid-template-columns: calc(180 * var(--rem)) minmax(0, 1fr);
       gap: calc(40 * var(--rem));
@@ -278,12 +466,39 @@
   }
 
   @media screen and (max-width: 749px) {
-    .about-mission {
+    .about-mission__blur {
+      backdrop-filter: blur(calc(var(--about-banner-progress) * 10px));
+      -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 10px));
+    }
+
+    .about-mission__intro {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding-inline: calc(65 * var(--rem));
+      align-items: center;
+    }
+
+    .about-mission__heading {
+      width: calc(373 * var(--rem));
+      max-width: 100%;
+      font-size: calc(80 * var(--rem));
+      line-height: calc(80 * var(--rem));
+    }
+
+    .about-mission__subheading {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      align-self: stretch;
+      text-align: center;
+    }
+
+    .about-mission__panel {
       min-height: 0;
-      display: block;
       padding-top: calc(var(--about-mission-pt-mob) * var(--rem));
       padding-right: calc(65 * var(--rem));
-      padding-bottom: calc(109 * var(--rem));
+      padding-bottom: calc(40 * var(--rem));
       padding-left: calc(65 * var(--rem));
     }
 
@@ -388,7 +603,35 @@
   "settings": [
     {
       "type": "header",
-      "content": "Left column"
+      "content": "Hero banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image",
+      "info": "Shared sticky background for hero + mission."
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image_mobile",
+      "label": "Banner image (mobile)",
+      "info": "Optional. Shown at max-width 749px."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Human, amplified."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Intelligent support that moves with you."
+    },
+    {
+      "type": "header",
+      "content": "Mission — left column"
     },
     {
       "type": "text",
@@ -400,17 +643,17 @@
       "type": "image_picker",
       "id": "image",
       "label": "Image",
-      "info": "Displayed at 220×220 (design px × --rem). Keeps aspect ratio inside the box."
+      "info": "Displayed at 220×220 (design px × --rem)."
     },
     {
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Mobile image",
-      "info": "Optional. Shown at max-width 749px (full width, natural aspect ratio)."
+      "info": "Optional. Shown at max-width 749px."
     },
     {
       "type": "header",
-      "content": "Right column"
+      "content": "Mission — right column"
     },
     {
       "type": "richtext",
@@ -433,7 +676,7 @@
     },
     {
       "type": "header",
-      "content": "Padding"
+      "content": "Mission padding"
     },
     {
       "type": "range",
@@ -457,7 +700,7 @@
     },
     {
       "type": "header",
-      "content": "Padding (mobile)"
+      "content": "Mission padding (mobile)"
     },
     {
       "type": "range",

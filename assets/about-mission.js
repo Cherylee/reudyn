@@ -1,9 +1,18 @@
 /**
- * About scroll storytelling — Hypershell-style scrub (scroll-linked).
- * Ref: https://hypershell.cn/pages/about-us
- * Their GSAP ScrollTrigger: text fades with scrub from "top 56%" over ~400px;
- * hero heading exits up + blur overlay ramps with scroll progress.
+ * About storytelling — one section, shared sticky banner.
+ * Mission panel scrolls over the stage; blur ramps as mission appears.
+ * Sticky ends with this section, so Team follows without an empty hole.
  */
+
+/**
+ * @returns {number}
+ */
+function getAboutScrollY() {
+  const wrapper = document.querySelector('.page-wrapper');
+  const wrapperY = wrapper instanceof HTMLElement ? wrapper.scrollTop : 0;
+  const windowY = window.scrollY || document.documentElement.scrollTop || 0;
+  return Math.max(wrapperY, windowY);
+}
 
 /**
  * @returns {EventTarget[]}
@@ -35,19 +44,16 @@ function clamp01(t) {
 
 class AboutMissionComponent extends HTMLElement {
   /** @type {HTMLElement | null} */
-  #banner = null;
+  #stage = null;
 
   /** @type {HTMLElement | null} */
-  #bannerContent = null;
+  #intro = null;
 
   /** @type {HTMLElement | null} */
-  #bannerBlur = null;
+  #panel = null;
 
   /** @type {HTMLElement | null} */
   #inner = null;
-
-  /** @type {HTMLElement | null} */
-  #team = null;
 
   /** @type {NodeListOf<HTMLElement> | HTMLElement[]} */
   #titles = [];
@@ -70,19 +76,32 @@ class AboutMissionComponent extends HTMLElement {
   /** @type {EventTarget[]} */
   #targets = [];
 
-  /** Keep in sync with CSS `.about-mission__inner { top: 68vh }` */
-  #stickyVh = 0.68;
+  /** Keep in sync with CSS `.about-mission__inner { top: 48vh }` */
+  #stickyVh = 0.48;
+
+  /** @type {boolean} */
+  #isMobile = false;
+
+  /** @type {number} */
+  #lastMissionP = -1;
+
+  /** @type {number} */
+  #lastBannerP = -1;
+
+  /** @type {number} */
+  #lastExit = -1;
 
   connectedCallback() {
-    this.#banner = document.querySelector('[data-about-banner]');
-    this.#bannerContent = this.#banner?.querySelector('.about-banner__content') ?? null;
-    this.#bannerBlur = this.#banner?.querySelector('.about-banner__blur') ?? null;
+    this.#stage = this.querySelector('[data-about-banner]');
+    this.#intro = this.querySelector('[data-about-intro]');
+    this.#panel = this.querySelector('.about-mission__panel');
     this.#inner = this.querySelector('.about-mission__inner');
-    this.#team = document.querySelector('.about-team');
     this.#titles = this.querySelectorAll('.about-mission__reveal--title');
     this.#media = this.querySelectorAll('.about-mission__reveal--media');
     this.#subs = this.querySelectorAll('.about-mission__reveal--subtitle');
     this.#bodies = this.querySelectorAll('.about-mission__reveal--body');
+    this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
+    this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
 
     this.classList.add('about-mission--js');
     this.#applyMissionScrub(0);
@@ -105,7 +124,7 @@ class AboutMissionComponent extends HTMLElement {
     for (const target of this.#targets) {
       target.addEventListener('scroll', this.#onScroll, { passive: true });
     }
-    window.addEventListener('resize', this.#onScroll, { passive: true });
+    window.addEventListener('resize', this.#onResize, { passive: true });
     this.#update();
   }
 
@@ -114,24 +133,31 @@ class AboutMissionComponent extends HTMLElement {
       for (const target of this.#targets) {
         target.removeEventListener('scroll', this.#onScroll);
       }
-      window.removeEventListener('resize', this.#onScroll);
     }
+    window.removeEventListener('resize', this.#onResize);
     if (this.#raf) {
       cancelAnimationFrame(this.#raf);
       this.#raf = 0;
     }
   }
 
+  #onResize = () => {
+    this.#isMobile = window.matchMedia('(max-width: 749px)').matches;
+    this.#stickyVh = this.#isMobile ? 0.36 : 0.48;
+    this.#lastMissionP = -1;
+    this.#lastBannerP = -1;
+    this.#lastExit = -1;
+    if (this.#onScroll) this.#onScroll();
+  };
+
   /**
-   * Hypershell text scrub:
-   *   start: top 56%, end: +=400 (pc) / +=300 (mob), opacity = progress
-   * Adapted to sticky rest at 68vh: scrub over ~400px ending at sticky.
    * @param {number} progress 0–1
    */
   #applyMissionScrub(progress) {
     const p = clamp01(progress);
+    if (Math.abs(p - this.#lastMissionP) < 0.004) return;
+    this.#lastMissionP = p;
 
-    // Slight stagger like layered copy entering (still scrub-linked)
     const titleP = clamp01(p / 0.75);
     const mediaP = clamp01((p - 0.04) / 0.75);
     const subP = clamp01((p - 0.08) / 0.75);
@@ -143,6 +169,12 @@ class AboutMissionComponent extends HTMLElement {
     this.#paintReveal(this.#bodies, bodyP, 32);
 
     this.classList.toggle('is-visible', p > 0.02);
+
+    if (p >= 0.999) {
+      this.classList.add('about-mission--settled');
+    } else {
+      this.classList.remove('about-mission--settled');
+    }
   }
 
   /**
@@ -151,47 +183,51 @@ class AboutMissionComponent extends HTMLElement {
    * @param {number} fromY
    */
   #paintReveal(nodes, p, fromY) {
-    const opacity = p;
-    const y = (1 - p) * fromY;
+    const opacity = p.toFixed(3);
+    const y = ((1 - p) * fromY).toFixed(2);
+    const transform = p >= 0.999 ? 'none' : `translate3d(0, ${y}px, 0)`;
     for (let i = 0; i < nodes.length; i++) {
       const el = nodes[i];
-      el.style.opacity = opacity.toFixed(3);
-      el.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+      el.style.opacity = opacity;
+      el.style.transform = transform;
     }
   }
 
   /**
-   * Hypershell hero scrub:
-   *   d = progress/0.8 → heading yPercent -400*d, opacity 1-d
-   *   blur from progress 0.38 over 0.4 → blur 22px, rgba 0.5
-   * @param {number} progress 0–1 overall section progress
+   * Blur via CSS var only — never write backdrop-filter inline.
+   * @param {number} progress 0–1
    * @param {number} headingExit 0–1
    */
   #applyBanner(progress, headingExit) {
     const p = clamp01(progress);
     const exit = clamp01(headingExit);
 
-    // Blur ramp mirrors HS: begins mid-scroll
-    const blurP = p <= 0.38 ? 0 : clamp01((p - 0.38) / 0.4);
+    if (Math.abs(p - this.#lastBannerP) < 0.004 && Math.abs(exit - this.#lastExit) < 0.004) {
+      return;
+    }
+    this.#lastBannerP = p;
+    this.#lastExit = exit;
 
-    if (this.#banner) {
-      this.#banner.style.setProperty('--about-banner-progress', blurP.toFixed(3));
-      this.#banner.classList.toggle('about-banner--active', p > 0.02);
+    const blurStart = this.#isMobile ? 0.2 : 0.28;
+    const blurSpan = this.#isMobile ? 0.55 : 0.45;
+    const blurP = p <= blurStart ? 0 : clamp01((p - blurStart) / blurSpan);
+
+    if (this.#stage) {
+      this.#stage.style.setProperty('--about-banner-progress', blurP.toFixed(3));
+      this.style.setProperty('--about-banner-progress', blurP.toFixed(3));
     }
 
-    // Direct blur paint (stronger, HS-like) in case CSS var alone feels weak
-    if (this.#bannerBlur) {
-      const blurPx = (blurP * 22).toFixed(1);
-      this.#bannerBlur.style.backdropFilter = `blur(${blurPx}px)`;
-      this.#bannerBlur.style.webkitBackdropFilter = `blur(${blurPx}px)`;
-      this.#bannerBlur.style.background = 'transparent';
-    }
-
-    if (this.#bannerContent) {
-      // HS uses yPercent ~-400 of heading height; approximate with vh for sticky hero
-      const yVh = (-42 * exit).toFixed(2);
-      this.#bannerContent.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
-      this.#bannerContent.style.opacity = (1 - exit).toFixed(3);
+    if (this.#intro) {
+      if (exit >= 0.999) {
+        this.#intro.style.opacity = '0';
+        this.#intro.style.transform = 'translate(-50%, calc(-50% - 42vh))';
+        this.#intro.style.visibility = 'hidden';
+      } else {
+        const yVh = (-42 * exit).toFixed(2);
+        this.#intro.style.visibility = '';
+        this.#intro.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
+        this.#intro.style.opacity = (1 - exit).toFixed(3);
+      }
     }
   }
 
@@ -199,30 +235,31 @@ class AboutMissionComponent extends HTMLElement {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
     if (viewportHeight <= 0) return;
 
-    const stickyY = viewportHeight * this.#stickyVh;
-    const innerTop = (this.#inner ?? this).getBoundingClientRect().top;
-
-    // Appear sooner: start as content peeks in, finish ~120–160px before sticky rest
-    const fadeStartY = viewportHeight * 0.96;
-    const fadeEndY = stickyY + (viewportHeight >= 750 ? 40 : 24);
-    const raw = 1 - ramp(innerTop, fadeEndY, fadeStartY);
-    // Front-load opacity so it reads clearly within the first wheel ticks
-    const missionP = Math.pow(clamp01(raw), 0.55);
-    this.#applyMissionScrub(missionP);
-
-    // Banner progress from mission section travel (and keep blur when Team covers)
-    const sectionTop = this.getBoundingClientRect().top;
-    let bannerP = 1 - ramp(sectionTop, viewportHeight * 0.35, viewportHeight * 1.05);
-    let headingExit = clamp01(bannerP / 0.8);
-
-    if (this.#team) {
-      const teamTop = this.#team.getBoundingClientRect().top;
-      if (teamTop < viewportHeight * 0.92) {
-        bannerP = Math.max(bannerP, 1);
-        headingExit = 1;
-      }
+    const scrollY = getAboutScrollY();
+    if (scrollY < 8) {
+      this.#applyMissionScrub(0);
+      this.#applyBanner(0, 0);
+      return;
     }
 
+    const panel = this.#panel ?? this;
+    const panelTop = panel.getBoundingClientRect().top;
+    const innerTop = (this.#inner ?? panel).getBoundingClientRect().top;
+
+    const stickyY = viewportHeight * this.#stickyVh;
+    const fadeStartY = viewportHeight * (this.#isMobile ? 1.05 : 1.22);
+    const fadeEndY = stickyY + (this.#isMobile ? 12 : 20);
+    const raw = 1 - ramp(innerTop, fadeEndY, fadeStartY);
+    const missionP = Math.pow(clamp01(raw), 0.38);
+    this.#applyMissionScrub(missionP);
+
+    // Blur + intro exit as mission panel rises over the shared stage
+    let bannerP = 0;
+    let headingExit = 0;
+    if (panelTop < viewportHeight * 0.98) {
+      bannerP = 1 - ramp(panelTop, viewportHeight * 0.28, viewportHeight * 0.98);
+      headingExit = clamp01(bannerP / 0.75);
+    }
     this.#applyBanner(bannerP, headingExit);
   }
 }

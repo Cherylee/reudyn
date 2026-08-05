@@ -3,6 +3,7 @@
   assign image_mobile = section.settings.image_mobile
   assign image_alt = image.alt | default: section.settings.heading | default: ''
   assign heading = section.settings.heading
+  assign subheading = section.settings.subheading
   assign radius = section.settings.border_radius | default: 0
   assign radius_mob = section.settings.border_radius_mob | default: radius
 
@@ -71,9 +72,14 @@
 
     <div class="about-banner__blur" aria-hidden="true"></div>
 
-    {%- if heading != blank -%}
+    {%- if heading != blank or subheading != blank -%}
       <div class="about-banner__content">
-        <h1 class="about-banner__heading">{{ heading | escape }}</h1>
+        {%- if heading != blank -%}
+          <h1 class="about-banner__heading">{{ heading | escape }}</h1>
+        {%- endif -%}
+        {%- if subheading != blank -%}
+          <p class="about-banner__subheading">{{ subheading | escape }}</p>
+        {%- endif -%}
       </div>
     {%- endif -%}
   </div>
@@ -101,6 +107,28 @@
     position: sticky;
     top: var(--header-group-height, var(--header-height, 0px));
     z-index: 1;
+  }
+
+  /* Team covering: pause blur only — Team covers sticky via z-index + white bg */
+  .shopify-section.about-banner-section--blur-paused .about-banner__blur {
+    display: none;
+  }
+
+  /* Mobile only: release sticky near Team to shrink empty banner hole */
+  @media screen and (max-width: 749px) {
+    .shopify-section.about-banner-section--released {
+      position: relative;
+      top: auto;
+      z-index: 0;
+    }
+
+    .shopify-section.about-banner-section--released .about-banner__blur {
+      display: none;
+    }
+
+    .shopify-section.about-banner-section--released .about-banner__content {
+      visibility: hidden;
+    }
   }
 
   .about-banner__inner {
@@ -148,6 +176,7 @@
     backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
     -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 22px));
     background: transparent;
+    will-change: auto;
   }
 
   /* Text chip only — never a full-bleed box that can stretch layout */
@@ -156,19 +185,21 @@
     top: 50%;
     left: 50%;
     z-index: 2;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: max-content;
     max-width: calc(100% - 48 * var(--rem));
     margin: 0;
     padding: 0;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    will-change: transform, opacity;
+    text-align: center;
   }
 
   .about-banner__heading {
     display: block;
-    width: max-content;
+    width: auto;
     max-width: 100%;
     margin: 0;
     padding: 0;
@@ -180,6 +211,21 @@
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: #000;
+  }
+
+  .about-banner__subheading {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    margin: calc(17 * var(--rem)) 0 0;
+    padding: 0;
+    text-align: center;
+    font-family: var(--font-paragraph--family);
+    font-style: var(--font-paragraph--style);
+    font-weight: 400;
+    font-size: calc(22 * var(--rem));
+    line-height: calc(24 * var(--rem));
+    color: #303030;
   }
 
   @media screen and (min-width: 750px) and (max-width: 768px) {
@@ -200,16 +246,33 @@
       border-radius: calc(var(--about-banner-radius-mob) * var(--rem));
     }
 
+    /* Lighter blur on phones — full 22px backdrop-filter tanks scroll */
+    .about-banner__blur {
+      backdrop-filter: blur(calc(var(--about-banner-progress) * 10px));
+      -webkit-backdrop-filter: blur(calc(var(--about-banner-progress) * 10px));
+    }
+
     .about-banner__content {
-      width: calc(306 * var(--rem));
-      max-width: calc(306 * var(--rem));
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding-inline: calc(65 * var(--rem));
+      align-items: center;
     }
 
     .about-banner__heading {
+      width: calc(373 * var(--rem));
+      max-width: 100%;
+      font-size: calc(80 * var(--rem));
+      line-height: calc(80 * var(--rem));
+    }
+
+    .about-banner__subheading {
       width: 100%;
       max-width: 100%;
-      font-size: calc(60 * var(--rem));
-      line-height: calc(80 * var(--rem));
+      box-sizing: border-box;
+      align-self: stretch;
+      text-align: center;
     }
   }
 
@@ -261,6 +324,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "Human, amplified."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Intelligent support that moves with you."
     },
     {
       "type": "header",
