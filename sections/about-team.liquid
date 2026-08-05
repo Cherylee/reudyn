@@ -7,7 +7,7 @@
   assign banner_alt = banner.alt | default: section.settings.title | default: ''
 
   assign pad_t = section.settings.padding_top | default: 86
-  assign pad_b = section.settings.padding_bottom | default: 100
+  assign pad_b = section.settings.padding_bottom | default: 86
 
   assign pad_t_mob = section.settings.padding_top_mob | default: 64
   assign pad_r_mob = section.settings.padding_right_mob | default: 32
@@ -117,13 +117,12 @@
 {% stylesheet %}
   .about-team {
     position: relative;
-    z-index: 5;
+    z-index: 3;
     display: block;
     width: 100%;
     box-sizing: border-box;
     background: #fff;
     background-color: #fff;
-    isolation: isolate;
     padding-top: calc(var(--about-team-pt) * var(--rem));
     padding-right: calc(241 * var(--rem));
     padding-bottom: calc(var(--about-team-pb) * var(--rem));
@@ -132,10 +131,8 @@
 
   .shopify-section.about-team-section {
     position: relative;
-    z-index: 5;
+    z-index: 3;
     background: #fff;
-    isolation: isolate;
-    transform: translateZ(0);
   }
 
   .about-team__inner {
@@ -144,10 +141,10 @@
 
   .about-team__grid {
     display: grid;
-    grid-template-columns: calc(640 * var(--rem)) minmax(0, 1fr);
+    grid-template-columns: calc(220 * var(--rem)) minmax(0, 1fr);
     grid-template-areas:
       'title .'
-      'body media';
+      'media body';
     column-gap: calc(77 * var(--rem));
     row-gap: calc(36 * var(--rem));
     align-items: start;
@@ -169,8 +166,6 @@
     grid-area: media;
     width: calc(220 * var(--rem));
     height: calc(220 * var(--rem));
-    justify-self: end;
-    align-self: start;
   }
 
   .about-team__picture,
@@ -197,15 +192,12 @@
 
   .about-team__body {
     grid-area: body;
-    width: 100%;
-    max-width: calc(640 * var(--rem));
     margin: 0;
-    align-self: start;
     font-family: var(--font-paragraph--family);
     font-style: var(--font-paragraph--style);
     font-weight: var(--font-paragraph--weight);
     font-size: calc(16 * var(--rem));
-    line-height: calc(22 * var(--rem));
+    line-height: calc(20 * var(--rem));
     color: #000;
   }
 
@@ -219,8 +211,8 @@
 
   .about-team__banner {
     width: 100%;
-    max-width: 100%;
-    height: auto;
+    max-width: calc(925 * var(--rem));
+    height: calc(269 * var(--rem));
     margin-top: calc(56 * var(--rem));
   }
 
@@ -228,7 +220,7 @@
   .about-team__banner-placeholder {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     margin: 0;
   }
 
@@ -236,7 +228,7 @@
   .about-team__banner-placeholder-svg {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     max-width: 100%;
     object-fit: contain;
     object-position: center left;
@@ -248,12 +240,8 @@
 
   @media screen and (min-width: 750px) and (max-width: 768px) {
     .about-team__grid {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: calc(180 * var(--rem)) minmax(0, 1fr);
       column-gap: calc(40 * var(--rem));
-    }
-
-    .about-team__body {
-      max-width: none;
     }
 
     .about-team__media,
@@ -270,7 +258,7 @@
     }
 
     .about-team__banner {
-      height: auto;
+      height: calc(220 * var(--rem));
     }
   }
 
@@ -308,8 +296,6 @@
 
     .about-team__body {
       order: 2;
-      width: 100%;
-      max-width: none;
       margin: 0;
       font-size: calc(24 * var(--rem));
       line-height: 1.55;
@@ -437,7 +423,7 @@
       "max": 200,
       "step": 2,
       "unit": "px",
-      "default": 100
+      "default": 86
     },
     {
       "type": "header",
