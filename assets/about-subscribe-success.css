@@ -86,7 +86,7 @@
 @media screen and (min-width: 750px) {
   .about-subscribe-shell--hero .about-subscribe-shell__success {
     height: calc(42 * var(--rem));
-    padding: 0 calc(12 * var(--rem)) 0 calc(14 * var(--rem));
+    padding: 0 calc(4 * var(--rem)) 0 calc(14 * var(--rem));
   }
 
   .about-subscribe-shell--cta .about-subscribe-shell__success {

@@ -7,7 +7,7 @@
   assign pad_t = section.settings.padding_top | default: 56
   assign pad_b = section.settings.padding_bottom | default: 80
   assign pad_t_mob = section.settings.padding_top_mob | default: 48
-  assign pad_b_mob = section.settings.padding_bottom_mob | default: 48
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 80
 
   assign accent = section.settings.accent_color | default: '#F5D421'
   assign anchor = section.settings.anchor_id | default: 'about-subscribe' | strip | replace: '#', ''
@@ -368,7 +368,7 @@
 
     .about-subscribe__inner {
       grid-template-columns: 1fr;
-      gap: calc(40 * var(--rem));
+      gap: calc(80 * var(--rem));
       padding: 0 calc(32 * var(--rem));
     }
 
@@ -611,7 +611,7 @@
       "max": 200,
       "step": 2,
       "unit": "px",
-      "default": 48
+      "default": 80
     }
   ],
   "presets": [

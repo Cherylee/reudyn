@@ -2,8 +2,8 @@
   assign max_w = section.settings.content_width | default: 1150
   assign pad_t = section.settings.padding_top | default: 122
   assign pad_b = section.settings.padding_bottom | default: 148
-  assign pad_t_mob = section.settings.padding_top_mob | default: 64
-  assign pad_b_mob = section.settings.padding_bottom_mob | default: 64
+  assign pad_t_mob = section.settings.padding_top_mob | default: 80
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 80
   assign accent = section.settings.accent_color | default: '#F5D421'
   assign anchor = section.settings.anchor_id | default: 'about-mission' | strip | replace: '#', ''
 -%}
@@ -318,7 +318,7 @@
     .about-our-mission__header {
       grid-template-columns: 1fr;
       gap: calc(28 * var(--rem));
-      margin-bottom: calc(40 * var(--rem));
+      margin-bottom: calc(80 * var(--rem));
     }
 
     .about-our-mission__side {
@@ -478,7 +478,7 @@
       "max": 200,
       "step": 2,
       "unit": "px",
-      "default": 64
+      "default": 80
     },
     {
       "type": "range",
@@ -488,7 +488,7 @@
       "max": 200,
       "step": 2,
       "unit": "px",
-      "default": 64
+      "default": 80
     }
   ],
   "blocks": [
