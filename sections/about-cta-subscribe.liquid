@@ -171,19 +171,23 @@
 
   .about-cta-subscribe__field {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
     height: calc(54 * var(--rem));
+    /* fixed px inset: rem fractions round unevenly at 1280 and break vertical centering */
+    padding: 4px;
     border: 1px solid #111;
     border-radius: calc(4 * var(--rem));
     overflow: hidden;
     background: #fff;
+    box-sizing: border-box;
   }
 
   .about-cta-subscribe__input {
     flex: 1 1 auto;
+    align-self: stretch;
     min-width: 0;
-    height: 100%;
+    height: auto;
     margin: 0;
     padding: 0 calc(17 * var(--rem));
     border: 0;
@@ -191,6 +195,7 @@
     font-family: var(--font-body-family);
     font-size: calc(14 * var(--rem));
     font-weight: 300;
+    line-height: 1;
     color: #111;
     outline: none;
   }
@@ -200,20 +205,33 @@
   }
 
   .about-cta-subscribe__button {
+    display: grid;
+    place-items: center;
     flex: 0 0 auto;
-    margin: calc(4 * var(--rem));
-    padding: 0 calc(22 * var(--rem));
+    align-self: stretch;
+    margin: 0;
+    padding: 0;
     width: calc(103 * var(--rem));
-    height: calc(46 * var(--rem));
+    height: auto;
     border: 0;
     border-radius: calc(4 * var(--rem));
     background: var(--about-cta-accent);
     font-family: var(--font-body-family);
     font-size: calc(12 * var(--rem));
     font-weight: 700;
+    line-height: 1;
     color: #111;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: none;
     transition: filter 0.2s ease;
+  }
+
+  .about-cta-subscribe__button > span {
+    display: block;
+    line-height: 1;
+    transform: translateY(0.08em);
   }
 
   @media (hover: hover) {

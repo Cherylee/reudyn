@@ -43,7 +43,9 @@
         "menu_team"
       ],
       "settings": {
-        "logo_height": 20,
+        "logo": "shopify://shop_images/Group_3_a1307cae-dd80-430f-b7ed-961cdcf1ed5a.webp",
+        "logo_link": "",
+        "logo_width": 189,
         "lang_label_en": "EN",
         "lang_label_zh": "CN"
       }
@@ -53,7 +55,7 @@
       "settings": {
         "anchor_id": "about-subscribe",
         "content_width": 1150,
-        "accent_color": "#F5D421",
+        "accent_color": "#f5d421",
         "eyebrow_en": "INTELLIGENT WEARABLE ROBOTICS",
         "heading_en": "Human, amplified.",
         "subheading_en": "UNVEILING THIS SEPTEMBER.",
@@ -66,6 +68,7 @@
         "placeholder_zh": "your@email.com",
         "button_zh": "订阅",
         "success_zh": "订阅成功，感谢关注！",
+        "image": "shopify://shop_images/image_9.webp",
         "padding_top": 56,
         "padding_bottom": 80,
         "padding_top_mob": 48,
@@ -76,16 +79,17 @@
       "type": "about-story",
       "settings": {
         "anchor_id": "about-story",
-        "accent_color": "#F5D421",
+        "accent_color": "#f5d421",
         "panel_background": "#000000",
-        "text_color": "#FFFFFF",
+        "text_color": "#ffffff",
         "index_label": "01",
         "label_en": "OUR STORY",
         "heading_en": "<p>Technology begins with <strong>humanity.</strong></p>",
         "body_en": "<p>At Reudyn, we innovate in wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p>",
         "label_zh": "我们的故事",
         "heading_zh": "<p>科技始于<strong>人性。</strong></p>",
-        "body_zh": "<p>在 Reudyn，我们通过融合航天级动力系统、自适应 AI、精密机器人与以人为本的设计，创新可穿戴机器人技术。</p><p>我们打造成为人体自然延伸的技术，放大人类潜能，开启全新可能。</p>"
+        "body_zh": "<p>在 Reudyn，我们通过融合航天级动力系统、自适应 AI、精密机器人与以人为本的设计，创新可穿戴机器人技术。</p><p>我们打造成为人体自然延伸的技术，放大人类潜能，开启全新可能。</p>",
+        "image": "shopify://shop_images/Mask_group_12.webp"
       }
     },
     "about_our_mission": {
@@ -95,6 +99,7 @@
           "type": "feature",
           "settings": {
             "number": "",
+            "image": "shopify://shop_images/Mask_group_9.webp",
             "title_en": "Sense",
             "description_en": "Understands intent.",
             "title_zh": "感知",
@@ -105,6 +110,7 @@
           "type": "feature",
           "settings": {
             "number": "",
+            "image": "shopify://shop_images/Mask_group_10.webp",
             "title_en": "Adapt",
             "description_en": "Responds to movement.",
             "title_zh": "适应",
@@ -115,6 +121,7 @@
           "type": "feature",
           "settings": {
             "number": "",
+            "image": "shopify://shop_images/Mask_group_11.webp",
             "title_en": "Amplify",
             "description_en": "Supports natural motion.",
             "title_zh": "放大",
@@ -130,7 +137,7 @@
       "settings": {
         "anchor_id": "about-mission",
         "content_width": 1150,
-        "accent_color": "#F5D421",
+        "accent_color": "#f5d421",
         "index_label": "02",
         "label_en": "OUR MISSION",
         "heading_en": "<p><strong>Amplifying</strong> what makes us human.</p>",
@@ -148,7 +155,7 @@
       "type": "about-our-team",
       "settings": {
         "anchor_id": "about-team",
-        "accent_color": "#F5D421",
+        "accent_color": "#f5d421",
         "index_label": "03",
         "label_en": "OUR TEAM",
         "heading_en": "<p>Engineering built around <strong>people</strong>.</p>",
@@ -156,6 +163,8 @@
         "label_zh": "我们的团队",
         "heading_zh": "<p>以人为本的<strong>工程</strong>。</p>",
         "body_zh": "<p>我们跨学科团队汇聚电机系统、自适应 AI、生物力学、人机交互与可穿戴机器人等领域专长，推动人体增强的未来。</p><p>依托与顶尖高校研究实验室的长期合作，我们的双核技术平台发挥在电机控制与人机智能领域数十年的经验，将先进机器人转化为可穿戴技术，帮助人们走得更远、探索更多，并以更大自由体验世界。</p>",
+        "image": "shopify://shop_images/Background.webp",
+        "banner_image": "shopify://shop_images/Mask_group_8.webp",
         "padding_top": 78,
         "padding_bottom": 0,
         "padding_top_mob": 64,
@@ -165,9 +174,10 @@
     "about_cta_subscribe": {
       "type": "about-cta-subscribe",
       "settings": {
+        "background_image": "shopify://shop_images/Group_15.webp",
         "anchor_id": "about-cta-subscribe",
         "content_width": 1150,
-        "accent_color": "#F5D421",
+        "accent_color": "#f5d421",
         "heading_en": "See what's next.",
         "subheading_en": "Join the list for the first reveal from Reudyn.",
         "placeholder_en": "your@email.com",

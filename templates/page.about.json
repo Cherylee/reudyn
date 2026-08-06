@@ -7,11 +7,6 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-/*
- * ------------------------------------------------------------
- * About Us — nav, subscribe, story, mission, team.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "about_nav": {
@@ -48,7 +43,9 @@
         "menu_team"
       ],
       "settings": {
-        "logo_height": 20,
+        "logo": "shopify://shop_images/Group_3_a1307cae-dd80-430f-b7ed-961cdcf1ed5a.webp",
+        "logo_link": "",
+        "logo_width": 189,
         "lang_label_en": "EN",
         "lang_label_zh": "CN"
       }

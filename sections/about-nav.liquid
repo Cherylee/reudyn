@@ -21,27 +21,37 @@
 
 {%- liquid
   assign logo = section.settings.logo
-  assign logo_height = section.settings.logo_height | default: 28
+  assign logo_width = section.settings.logo_width | default: 189
   assign home_url = section.settings.logo_link | default: routes.root_url
+  if logo != blank
+    assign logo_h = logo_width | times: logo.height | divided_by: logo.width | at_least: 1
+    assign logo_w_2x = logo_width | times: 2
+    assign logo_w_3x = logo_width | times: 3
+    assign logo_widths = logo_width | append: ', ' | append: logo_w_2x | append: ', ' | append: logo_w_3x
+    assign logo_sizes = 'calc(' | append: logo_width | append: ' * 100vw / 1440)'
+  endif
 -%}
 
 <about-nav-component
   class="about-nav"
   data-about-nav
-  style="--about-nav-logo-h: {{ logo_height }};"
+  style="--about-nav-logo-w: {{ logo_width }};"
 >
   <div class="about-nav__inner">
     <a class="about-nav__logo" href="{{ home_url }}" aria-label="{{ shop.name | escape }}">
       {%- if logo != blank -%}
         {{
           logo
-          | image_url: width: 600
+          | image_url: width: logo_w_2x
           | image_tag:
             class: 'about-nav__logo-img',
-            widths: '120, 180, 240, 360, 480, 600',
-            sizes: 'calc(140 * 100vw / 1440)',
+            widths: logo_widths,
+            sizes: logo_sizes,
+            width: logo_width,
+            height: logo_h,
             alt: shop.name,
-            loading: 'eager'
+            loading: 'eager',
+            fetchpriority: 'high'
         }}
       {%- else -%}
         <span class="about-nav__logo-text">{{ shop.name | escape }}</span>
@@ -86,7 +96,7 @@
           {{ section.settings.lang_label_en | default: 'EN' | escape }}
         </span>
         <span class="about-nav__lang-caret" aria-hidden="true">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
+          {{- 'about-nav-caret.svg' | inline_asset_content -}}
         </span>
       </button>
 
@@ -163,7 +173,8 @@
     align-items: center;
     width: 100%;
     min-height: calc(82 * var(--rem));
-    padding: 0 calc(97 * var(--rem));
+    /* Figma: logo inset 97, lang caret ends 72 from right */
+    padding: 0 calc(72 * var(--rem)) 0 calc(97 * var(--rem));
     box-sizing: border-box;
   }
 
@@ -171,14 +182,18 @@
     justify-self: start;
     display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
+    max-width: round(calc(var(--about-nav-logo-w) * var(--rem)), 1px);
     text-decoration: none;
     color: #111;
   }
 
   .about-nav__logo-img {
     display: block;
-    width: auto;
-    height: calc(var(--about-nav-logo-h) * var(--rem));
+    /* snap to whole px: rem fractions blur raster logos */
+    width: round(calc(var(--about-nav-logo-w) * var(--rem)), 1px);
+    max-width: 100%;
+    height: auto;
     object-fit: contain;
   }
 
@@ -232,17 +247,29 @@
     font-family: var(--font-body-family);
     font-size: calc(14 * var(--rem));
     font-weight: 400;
-    line-height: calc(14 * var(--rem));
+    line-height: 1;
     color: #616161;
   }
 
+  .about-nav__lang-label {
+    display: block;
+    flex: 0 0 auto;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
   .about-nav__lang-caret {
-    display: inline-flex;
+    display: block;
+    flex: 0 0 auto;
     width: calc(14 * var(--rem));
     height: calc(7 * var(--rem));
+    color: #616161;
+    /* Figma: caret center ~0.5px below label center at 1440 */
+    transform: translateY(calc(0.5 * var(--rem)));
   }
 
   .about-nav__lang-caret svg {
+    display: block;
     width: 100%;
     height: 100%;
   }
@@ -352,13 +379,14 @@
     },
     {
       "type": "range",
-      "id": "logo_height",
-      "label": "Logo height",
-      "min": 16,
-      "max": 64,
-      "step": 2,
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 120,
+      "max": 220,
+      "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 189,
+      "info": "Design width at 1440px viewport. Scales with --rem."
     },
     {
       "type": "header",
