@@ -63,8 +63,8 @@
         "button_en": "Subscribe",
         "success_en": "Thanks for subscribing!",
         "eyebrow_zh": "智能可穿戴机器人",
-        "heading_zh": "人类，被放大。",
-        "subheading_zh": "九月正式揭晓。",
+        "heading_zh": "人本 · 拓能",
+        "subheading_zh": "今年九月，首次亮相。",
         "placeholder_zh": "your@email.com",
         "button_zh": "订阅",
         "success_zh": "订阅成功，感谢关注！",
@@ -87,8 +87,8 @@
         "heading_en": "<p>Technology begins with <strong>humanity.</strong></p>",
         "body_en": "<p>At Reudyn, we innovate in wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p>",
         "label_zh": "我们的故事",
-        "heading_zh": "<p>科技始于<strong>人性。</strong></p>",
-        "body_zh": "<p>在 Reudyn，我们通过融合航天级动力系统、自适应 AI、精密机器人与以人为本的设计，创新可穿戴机器人技术。</p><p>我们打造成为人体自然延伸的技术，放大人类潜能，开启全新可能。</p>",
+        "heading_zh": "<p>科技，始终为<strong>人</strong>而生。</p>",
+        "body_zh": "<p>作为智能穿戴机器人创新者，睿动创新依托航天级动力系统、自适应 AI 算法与人本工程理念，深耕人体增强技术。</p><p>我们打造成为身体自然延伸的智能科技，放大人体本能，拓展人类潜能，开启更多可能。</p>",
         "image": "shopify://shop_images/Mask_group_12.webp"
       }
     },
@@ -125,7 +125,7 @@
             "title_en": "Amplify",
             "description_en": "Supports natural motion.",
             "title_zh": "放大",
-            "description_zh": "支持自然运动."
+            "description_zh": "自然助力。"
           }
         }
       },
@@ -161,8 +161,8 @@
         "heading_en": "<p>Engineering built around <strong>people</strong>.</p>",
         "body_en": "<p>Our multidisciplinary team combines expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics to advance human augmentation.</p><p>Through long-term collaborations with leading university research labs, our dual-core technology platform leverages decades of expertise in motor control systems and human-machine intelligence — transforming advanced robotics into wearable technology that helps people move farther, explore more, and experience greater freedom.</p>",
         "label_zh": "我们的团队",
-        "heading_zh": "<p>以人为本的<strong>工程</strong>。</p>",
-        "body_zh": "<p>我们跨学科团队汇聚电机系统、自适应 AI、生物力学、人机交互与可穿戴机器人等领域专长，推动人体增强的未来。</p><p>依托与顶尖高校研究实验室的长期合作，我们的双核技术平台发挥在电机控制与人机智能领域数十年的经验，将先进机器人转化为可穿戴技术，帮助人们走得更远、探索更多，并以更大自由体验世界。</p>",
+        "heading_zh": "<p>以<strong>人</strong>为本的工程。</p>",
+        "body_zh": "<p>我们汇聚电机系统、自适应 AI、生物力学、人机交互与可穿戴机器人等领域的专业力量，推动人体增强技术的发展。</p><p>通过与顶尖高校研究实验室的长期合作，我们以运动控制与人机智能为双核，赋予先进机器人技术更自然的形态，帮助人们拓展行动边界，探索更多可能。</p>",
         "image": "shopify://shop_images/Background.webp",
         "banner_image": "shopify://shop_images/Mask_group_8.webp",
         "padding_top": 78,
@@ -183,8 +183,8 @@
         "placeholder_en": "your@email.com",
         "button_en": "Subscribe",
         "success_en": "Thanks for subscribing!",
-        "heading_zh": "看看接下来会发生什么。",
-        "subheading_zh": "加入名单，抢先获悉 Reudyn 首次揭晓。",
+        "heading_zh": "探索未来。",
+        "subheading_zh": "订阅更新，率先了解 Reudyn 最新动态。",
         "placeholder_zh": "your@email.com",
         "button_zh": "订阅",
         "success_zh": "订阅成功，感谢关注！",
