@@ -199,56 +199,112 @@ if (!customElements.get('about-nav-component')) {
 }
 
 /**
- * Subscribe success overlay: Done returns to the email field.
+ * Subscribe success overlay: Done returns all forms to the email field.
  */
+function resetAboutSubscribeShell(shell, { focus = false } = {}) {
+  if (!(shell instanceof HTMLElement)) return;
+
+  const field = shell.querySelector('[data-about-subscribe-field]');
+  const success = shell.querySelector('[data-about-subscribe-success]');
+  const input = field?.querySelector('input[type="email"]');
+  const btn = field?.querySelector('button[type="submit"]');
+
+  shell.classList.remove('is-success');
+  if (success instanceof HTMLElement) {
+    success.setAttribute('hidden', '');
+  }
+  if (field instanceof HTMLElement) {
+    field.removeAttribute('aria-hidden');
+  }
+  if (input instanceof HTMLInputElement) {
+    input.value = '';
+    if (focus) input.focus();
+  }
+  if (btn instanceof HTMLButtonElement) {
+    btn.disabled = false;
+    btn.removeAttribute('aria-busy');
+    btn.classList.remove('is-loading');
+  }
+}
+
+function resetAllAboutSubscribeShells(focusShell) {
+  document.querySelectorAll('[data-about-subscribe-shell]').forEach((shell) => {
+    if (!(shell instanceof HTMLElement)) return;
+    resetAboutSubscribeShell(shell, { focus: shell === focusShell });
+  });
+}
+
 function initAboutSubscribeShells() {
   document.querySelectorAll('[data-about-subscribe-shell]').forEach((shell) => {
     if (!(shell instanceof HTMLElement)) return;
     if (shell.dataset.aboutSubscribeBound === 'true') return;
     shell.dataset.aboutSubscribeBound = 'true';
 
-    const field = shell.querySelector('[data-about-subscribe-field]');
-    const success = shell.querySelector('[data-about-subscribe-success]');
     const doneBtn = shell.querySelector('[data-about-subscribe-done]');
-    const input = field?.querySelector('input[type="email"]');
-
-    if (!(field instanceof HTMLElement) || !(success instanceof HTMLElement) || !(doneBtn instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    const hideSuccess = () => {
-      shell.classList.remove('is-success');
-      success.setAttribute('hidden', '');
-      field.removeAttribute('aria-hidden');
-
-      if (input instanceof HTMLInputElement) {
-        input.value = '';
-        input.focus();
-      }
-    };
+    if (!(doneBtn instanceof HTMLButtonElement)) return;
 
     doneBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      hideSuccess();
+      resetAllAboutSubscribeShells(shell);
     });
   });
 }
 
 /**
- * Lock subscribe buttons while the customer form posts to Shopify.
+ * Validate email + lock subscribe buttons while posting to Shopify.
+ * Uses custom under-form error copy instead of native browser tooltips.
  */
+function isAboutSubscribeEmailValid(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+}
+
 function initAboutSubscribeSubmitLock() {
   document.querySelectorAll('.about-subscribe__form, .about-cta-subscribe__form').forEach((form) => {
     if (!(form instanceof HTMLFormElement)) return;
     if (form.dataset.aboutSubmitBound === 'true') return;
     form.dataset.aboutSubmitBound = 'true';
 
-    form.addEventListener('submit', () => {
-      if (!form.checkValidity()) return;
+    form.noValidate = true;
 
-      const btn = form.querySelector('button[type="submit"]');
+    const input = form.querySelector('input[name="contact[email]"]');
+    const errorEl = form.querySelector('[data-about-subscribe-error]');
+    const btn = form.querySelector('button[type="submit"]');
+
+    const hideError = () => {
+      if (errorEl instanceof HTMLElement) {
+        errorEl.setAttribute('hidden', '');
+      }
+      if (input instanceof HTMLInputElement) {
+        input.removeAttribute('aria-invalid');
+      }
+    };
+
+    const showError = () => {
+      if (errorEl instanceof HTMLElement) {
+        errorEl.removeAttribute('hidden');
+      }
+      if (input instanceof HTMLInputElement) {
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+      }
+    };
+
+    if (input instanceof HTMLInputElement) {
+      input.addEventListener('input', hideError);
+      input.addEventListener('change', hideError);
+    }
+
+    form.addEventListener('submit', (event) => {
+      const value = input instanceof HTMLInputElement ? input.value : '';
+      if (!isAboutSubscribeEmailValid(value)) {
+        event.preventDefault();
+        showError();
+        return;
+      }
+
+      hideError();
+
       if (!(btn instanceof HTMLButtonElement) || btn.disabled) return;
-
       btn.disabled = true;
       btn.setAttribute('aria-busy', 'true');
       btn.classList.add('is-loading');

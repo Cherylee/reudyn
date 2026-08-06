@@ -4,6 +4,8 @@
   assign msg_zh = success_zh | default: '您已成功订阅。'
   assign done_label_en = done_en | default: 'Done'
   assign done_label_zh = done_zh | default: '完成'
+  assign err_en = error_en | default: 'Please enter a valid email address.'
+  assign err_zh = error_zh | default: '请输入有效的邮箱地址。'
 -%}
 
 <div
@@ -41,3 +43,17 @@
     </button>
   </div>
 </div>
+
+<p
+  class="about-subscribe-shell__error"
+  data-about-subscribe-error
+  role="alert"
+  {% unless show_server_error %}hidden{% endunless %}
+>
+  {%- if show_server_error -%}
+    {{ server_error_html }}
+  {%- else -%}
+    <span data-lang-en>{{ err_en | escape }}</span>
+    <span data-lang-zh>{{ err_zh | escape }}</span>
+  {%- endif -%}
+</p>

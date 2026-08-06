@@ -59,7 +59,7 @@
         </p>
       {%- endif -%}
 
-      {%- form 'customer', class: 'about-subscribe__form' -%}
+      {%- form 'customer', class: 'about-subscribe__form', novalidate: true -%}
         <input type="hidden" name="contact[tags]" value="newsletter,about">
         <label class="visually-hidden" for="AboutSubscribeEmail-{{ section.id }}">
           <span data-lang-en>{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}</span>
@@ -86,6 +86,12 @@
             </button>
           </div>
         {%- endcapture -%}
+        {%- capture server_error_html -%}
+          {%- if form.errors -%}
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          {%- endif -%}
+        {%- endcapture -%}
         {%- render 'about-subscribe-success',
           variant: 'hero',
           field: subscribe_field,
@@ -93,15 +99,12 @@
           success_en: section.settings.success_en,
           success_zh: section.settings.success_zh,
           done_en: section.settings.done_en,
-          done_zh: section.settings.done_zh
+          done_zh: section.settings.done_zh,
+          error_en: section.settings.error_en,
+          error_zh: section.settings.error_zh,
+          show_server_error: form.errors,
+          server_error_html: server_error_html
         -%}
-
-        {%- if form.errors -%}
-          <p class="about-subscribe__message about-subscribe__message--error" role="alert">
-            {{ form.errors.translated_fields.email | capitalize }}
-            {{ form.errors.messages.email }}
-          </p>
-        {%- endif -%}
       {%- endform -%}
     </div>
 
@@ -530,6 +533,12 @@
       "default": "Done"
     },
     {
+      "type": "text",
+      "id": "error_en",
+      "label": "Invalid email message (EN)",
+      "default": "Please enter a valid email address."
+    },
+    {
       "type": "header",
       "content": "Copy (ZH)"
     },
@@ -574,6 +583,12 @@
       "id": "done_zh",
       "label": "Done button (ZH)",
       "default": "完成"
+    },
+    {
+      "type": "text",
+      "id": "error_zh",
+      "label": "Invalid email message (ZH)",
+      "default": "请输入有效的邮箱地址。"
     },
     {
       "type": "header",

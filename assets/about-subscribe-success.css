@@ -13,6 +13,27 @@
   pointer-events: none;
 }
 
+.about-subscribe-shell__error {
+  margin: calc(10 * var(--rem)) 0 0;
+  font-family: var(--font-body-family);
+  font-size: calc(12 * var(--rem));
+  font-weight: 500;
+  line-height: 1.4;
+  color: #b42318;
+}
+
+.about-subscribe-shell__error[hidden] {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .about-subscribe-shell__error {
+    margin-top: calc(16 * var(--rem));
+    font-size: calc(24 * var(--rem));
+    text-align: center;
+  }
+}
+
 .about-subscribe-shell.is-success .about-subscribe-shell__field {
   display: none;
 }
