@@ -157,4 +157,41 @@ if (!customElements.get('about-nav-component')) {
   customElements.define('about-nav-component', AboutNavComponent);
 }
 
+/**
+ * Subscribe success overlay: Done returns to the email field.
+ */
+function initAboutSubscribeShells() {
+  document.querySelectorAll('[data-about-subscribe-shell]').forEach((shell) => {
+    if (!(shell instanceof HTMLElement)) return;
+    if (shell.dataset.aboutSubscribeBound === 'true') return;
+    shell.dataset.aboutSubscribeBound = 'true';
+
+    const field = shell.querySelector('[data-about-subscribe-field]');
+    const success = shell.querySelector('[data-about-subscribe-success]');
+    const doneBtn = shell.querySelector('[data-about-subscribe-done]');
+    const input = field?.querySelector('input[type="email"]');
+
+    if (!(field instanceof HTMLElement) || !(success instanceof HTMLElement) || !(doneBtn instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const hideSuccess = () => {
+      shell.classList.remove('is-success');
+      success.setAttribute('hidden', '');
+      field.removeAttribute('aria-hidden');
+
+      if (input instanceof HTMLInputElement) {
+        input.value = '';
+        input.focus();
+      }
+    };
+
+    doneBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      hideSuccess();
+    });
+  });
+}
+
+initAboutSubscribeShells();
 setAboutLang(getInitialAboutLang());

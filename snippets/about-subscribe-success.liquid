@@ -1,0 +1,43 @@
+{%- liquid
+  assign shell_variant = variant | default: 'hero'
+  assign msg_en = success_en | default: "You're on the list."
+  assign msg_zh = success_zh | default: '您已成功订阅。'
+  assign done_label_en = done_en | default: 'Done'
+  assign done_label_zh = done_zh | default: '完成'
+-%}
+
+<div
+  class="about-subscribe-shell about-subscribe-shell--{{ shell_variant }}{% if is_success %} is-success{% endif %}"
+  data-about-subscribe-shell
+>
+  <div class="about-subscribe-shell__field" data-about-subscribe-field{% if is_success %} aria-hidden="true"{% endif %}>
+    {{ field }}
+  </div>
+
+  <div
+    class="about-subscribe-shell__success"
+    data-about-subscribe-success
+    role="status"
+    {% unless is_success %}hidden{% endunless %}
+  >
+    <div class="about-subscribe-shell__success-copy">
+      <img
+        class="about-subscribe-shell__check"
+        src="{{ 'about-subscribe-check.svg' | asset_url }}"
+        alt=""
+        width="19"
+        height="13"
+        loading="lazy"
+        decoding="async"
+      >
+      <p class="about-subscribe-shell__message">
+        <span data-lang-en>{{ msg_en | escape }}</span>
+        <span data-lang-zh>{{ msg_zh | escape }}</span>
+      </p>
+    </div>
+    <button type="button" class="about-subscribe-shell__done" data-about-subscribe-done>
+      <span data-lang-en>{{ done_label_en | escape }}</span>
+      <span data-lang-zh>{{ done_label_zh | escape }}</span>
+    </button>
+  </div>
+</div>

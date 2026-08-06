@@ -18,6 +18,7 @@
   src="{{ 'about-page.js' | asset_url }}"
   type="module"
 ></script>
+{{ 'about-subscribe-success.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
   assign logo = section.settings.logo

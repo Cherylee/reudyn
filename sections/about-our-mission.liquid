@@ -63,9 +63,6 @@
           -%}
           <article
             class="about-our-mission__card{% if feature_image != blank %} about-our-mission__card--has-bg{% endif %}"
-            {% if feature_image != blank %}
-              style="--about-our-mission-card-bg: url({{ feature_image | image_url: width: 1200 }});"
-            {% endif %}
             {{ block.shopify_attributes }}
           >
             {%- if feature_image != blank -%}
@@ -206,12 +203,25 @@
     padding: calc(24 * var(--rem)) calc(20 * var(--rem));
     box-sizing: border-box;
     background-color: #fff;
-    background-image: var(--about-our-mission-card-bg, none);
-    background-repeat: no-repeat;
-    background-position: center calc(50% - 12 * var(--rem));
-    background-size: 100% 100%;
     border: 1px solid #999;
     overflow: hidden;
+  }
+
+  .about-our-mission__card--has-bg {
+    display: block;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .about-our-mission__card--has-bg .about-our-mission__card-foot {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    padding: calc(24 * var(--rem)) calc(20 * var(--rem));
+    box-sizing: border-box;
   }
 
   .about-our-mission__card + .about-our-mission__card {
@@ -259,6 +269,13 @@
   }
 
   .about-our-mission__card-media {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: top;
+  }
+
+  .about-our-mission__card:not(.about-our-mission__card--has-bg) .about-our-mission__card-media {
     display: none;
   }
 
@@ -282,7 +299,7 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .about-our-mission__card {
+    .about-our-mission__card:not(.about-our-mission__card--has-bg) {
       height: auto;
       min-height: calc(320 * var(--rem));
     }
@@ -309,7 +326,7 @@
     }
 
     .about-our-mission__heading {
-      font-size: calc(48 * var(--rem));
+      font-size: calc(68 * var(--rem));
       line-height: 1.1;
       letter-spacing: calc(-2 * var(--rem));
       margin-bottom: calc(28 * var(--rem));
@@ -324,26 +341,12 @@
       grid-template-columns: 1fr;
     }
 
-    .about-our-mission__card {
-      height: auto;
-      min-height: 0;
-      margin-left: 0;
-      padding: 0;
-      flex-direction: column;
-      justify-content: flex-start;
-      overflow: visible;
-      background-image: none;
-      border: 1px solid #d2d2d2;
+    .about-our-mission__card:not(.about-our-mission__card--has-bg) {
+      min-height: calc(376 * var(--rem));
     }
 
-    .about-our-mission__card-media {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .about-our-mission__card-foot {
-      padding: calc(24 * var(--rem)) calc(20 * var(--rem));
+    .about-our-mission__card--has-bg {
+      border-color: #d2d2d2;
     }
 
     .about-our-mission__card + .about-our-mission__card {

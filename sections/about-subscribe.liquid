@@ -57,37 +57,41 @@
           <span data-lang-en>{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}</span>
           <span data-lang-zh>{{ section.settings.placeholder_zh | default: 'your@email.com' | escape }}</span>
         </label>
-        <div class="about-subscribe__field">
-          <input
-            id="AboutSubscribeEmail-{{ section.id }}"
-            class="about-subscribe__input"
-            type="email"
-            name="contact[email]"
-            autocomplete="email"
-            autocorrect="off"
-            autocapitalize="off"
-            required
-            placeholder="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
-            data-placeholder-en="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
-            data-placeholder-zh="{{ section.settings.placeholder_zh | default: section.settings.placeholder_en | default: 'your@email.com' | escape }}"
-          >
-          <button type="submit" class="about-subscribe__button">
-            <span data-lang-en>{{ section.settings.button_en | default: 'Subscribe' | escape }}</span>
-            <span data-lang-zh>{{ section.settings.button_zh | default: '订阅' | escape }}</span>
-          </button>
-        </div>
+        {%- capture subscribe_field -%}
+          <div class="about-subscribe__field">
+            <input
+              id="AboutSubscribeEmail-{{ section.id }}"
+              class="about-subscribe__input"
+              type="email"
+              name="contact[email]"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              required
+              placeholder="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+              data-placeholder-en="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+              data-placeholder-zh="{{ section.settings.placeholder_zh | default: section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+            >
+            <button type="submit" class="about-subscribe__button">
+              <span data-lang-en>{{ section.settings.button_en | default: 'Subscribe' | escape }}</span>
+              <span data-lang-zh>{{ section.settings.button_zh | default: '订阅' | escape }}</span>
+            </button>
+          </div>
+        {%- endcapture -%}
+        {%- render 'about-subscribe-success',
+          variant: 'hero',
+          field: subscribe_field,
+          is_success: form.posted_successfully?,
+          success_en: section.settings.success_en,
+          success_zh: section.settings.success_zh,
+          done_en: section.settings.done_en,
+          done_zh: section.settings.done_zh
+        -%}
 
         {%- if form.errors -%}
           <p class="about-subscribe__message about-subscribe__message--error" role="alert">
             {{ form.errors.translated_fields.email | capitalize }}
             {{ form.errors.messages.email }}
-          </p>
-        {%- endif -%}
-
-        {%- if form.posted_successfully? -%}
-          <p class="about-subscribe__message about-subscribe__message--success" role="status">
-            <span data-lang-en>{{ section.settings.success_en | default: 'Thanks for subscribing!' | escape }}</span>
-            <span data-lang-zh>{{ section.settings.success_zh | default: '订阅成功，感谢关注！' | escape }}</span>
           </p>
         {%- endif -%}
       {%- endform -%}
@@ -310,10 +314,6 @@
     color: #b42318;
   }
 
-  .about-subscribe__message--success {
-    color: #027a48;
-  }
-
   .about-subscribe__media {
     min-width: 0;
     width: calc(480 * var(--rem));
@@ -377,7 +377,7 @@
     }
 
     .about-subscribe__heading {
-      font-size: calc(64 * var(--rem));
+      font-size: calc(80 * var(--rem));
       line-height: 1.05;
       letter-spacing: calc(-2 * var(--rem));
       margin-bottom: calc(32 * var(--rem));
@@ -501,7 +501,13 @@
       "type": "text",
       "id": "success_en",
       "label": "Success message (EN)",
-      "default": "Thanks for subscribing!"
+      "default": "You're on the list."
+    },
+    {
+      "type": "text",
+      "id": "done_en",
+      "label": "Done button (EN)",
+      "default": "Done"
     },
     {
       "type": "header",
@@ -541,7 +547,13 @@
       "type": "text",
       "id": "success_zh",
       "label": "Success message (ZH)",
-      "default": "订阅成功，感谢关注！"
+      "default": "您已成功订阅。"
+    },
+    {
+      "type": "text",
+      "id": "done_zh",
+      "label": "Done button (ZH)",
+      "default": "完成"
     },
     {
       "type": "header",
