@@ -333,6 +333,23 @@
       grid-area: logo;
     }
 
+    .about-nav__logo,
+    .about-nav__logo-img {
+      max-width: round(calc(var(--about-nav-logo-w) * 1.22 * var(--rem)), 1px);
+      width: round(calc(var(--about-nav-logo-w) * 1.22 * var(--rem)), 1px);
+    }
+
+    .about-nav__lang-button {
+      gap: calc(14 * var(--rem));
+      font-size: calc(22 * var(--rem));
+    }
+
+    .about-nav__lang-caret {
+      width: calc(22 * var(--rem));
+      height: calc(11 * var(--rem));
+      transform: translateY(calc(0.5 * var(--rem)));
+    }
+
     .about-nav__lang {
       grid-area: lang;
     }

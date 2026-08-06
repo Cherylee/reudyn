@@ -294,17 +294,31 @@
 
   @media screen and (max-width: 749px) {
     .about-our-team {
+      display: flex;
+      flex-direction: column;
       padding-bottom: calc(var(--about-our-team-pb-mob) * var(--rem));
     }
 
     .about-our-team__top {
-      grid-template-columns: 1fr;
-      min-height: 0;
+      display: contents;
+    }
+
+    .about-our-team__media {
+      order: 1;
+      min-height: calc(520 * var(--rem));
+    }
+
+    .about-our-team__copy {
+      order: 2;
+    }
+
+    .about-our-team__banner {
+      order: 3;
     }
 
     .about-our-team__copy-inner {
       max-width: none;
-      padding: calc(var(--about-our-team-pt-mob) * var(--rem)) calc(32 * var(--rem));
+      padding: calc(48 * var(--rem)) calc(32 * var(--rem));
     }
 
     .about-our-team__label {
@@ -322,10 +336,6 @@
     .about-our-team__body {
       font-size: calc(28 * var(--rem));
       line-height: 1.45;
-    }
-
-    .about-our-team__media {
-      min-height: calc(640 * var(--rem));
     }
 
     .about-our-team__banner-picture,

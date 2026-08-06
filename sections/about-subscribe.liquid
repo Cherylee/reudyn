@@ -398,6 +398,36 @@
     .about-subscribe__media {
       order: -1;
     }
+
+    .about-subscribe__field {
+      flex-direction: column;
+      height: auto;
+      padding: 4px;
+      border: 1px solid #d2d2d2;
+      border-radius: calc(8 * var(--rem));
+    }
+
+    .about-subscribe__input {
+      min-height: calc(88 * var(--rem));
+      padding: 0 calc(28 * var(--rem));
+      font-size: calc(28 * var(--rem));
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .about-subscribe__input::placeholder {
+      color: #5e5e5e;
+    }
+
+    .about-subscribe__button {
+      width: auto;
+      margin: 0 calc(8 * var(--rem)) calc(8 * var(--rem));
+      min-height: calc(80 * var(--rem));
+      font-size: calc(28 * var(--rem));
+      font-weight: 700;
+      letter-spacing: 0;
+      border-radius: calc(6 * var(--rem));
+    }
   }
 {% endstylesheet %}
 
