@@ -14,6 +14,56 @@
     }
   })();
 </script>
+<script>
+  (function () {
+    var posted =
+      /(?:^|[?&])customer_posted=true(?:&|$)/.test(window.location.search) ||
+      window.location.hash === '#contact_form';
+    if (!posted) return;
+
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    function getScrollRoot() {
+      var wrapper = document.querySelector('.page-wrapper');
+      if (!wrapper) return document.scrollingElement || document.documentElement;
+      var style = window.getComputedStyle(wrapper);
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll') return wrapper;
+      return document.scrollingElement || document.documentElement;
+    }
+
+    function scrollToPostedShell() {
+      var shell = document.querySelector('[data-about-subscribe-shell].is-success');
+      var nav = document.querySelector('[data-about-nav]');
+      if (!shell || !nav) return;
+
+      var root = getScrollRoot();
+      var gap = 24;
+      var rootTop = root === document.scrollingElement || root === document.documentElement
+        ? 0
+        : root.getBoundingClientRect().top;
+      var currentScroll = root === document.scrollingElement || root === document.documentElement
+        ? window.scrollY || document.documentElement.scrollTop
+        : root.scrollTop;
+      var top = currentScroll + (shell.getBoundingClientRect().top - rootTop) - nav.offsetHeight - gap;
+
+      if (typeof root.scrollTo === 'function') {
+        root.scrollTo(0, Math.max(0, top));
+      } else {
+        window.scrollTo(0, Math.max(0, top));
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', scrollToPostedShell);
+    } else {
+      scrollToPostedShell();
+    }
+
+    window.addEventListener('load', scrollToPostedShell);
+  })();
+</script>
 <script
   src="{{ 'about-page.js' | asset_url }}"
   type="module"

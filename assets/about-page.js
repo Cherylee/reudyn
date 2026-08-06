@@ -4,6 +4,7 @@
  */
 
 const STORAGE_KEY = 'reudyn-about-lang';
+const ABOUT_SCROLL_GAP = 24;
 
 /**
  * @returns {Element}
@@ -67,17 +68,21 @@ function getInitialAboutLang() {
 }
 
 /**
- * @param {string} anchor
+ * @returns {number}
  */
-function scrollToAboutAnchor(anchor) {
-  if (!anchor) return;
-  const id = anchor.replace(/^#/, '');
-  const target = document.getElementById(id) || document.querySelector(`[data-about-anchor="${id}"]`);
-  if (!(target instanceof HTMLElement)) return;
-
-  const root = getAboutScrollRoot();
+function getAboutNavOffset() {
   const nav = document.querySelector('[data-about-nav]');
   const navHeight = nav instanceof HTMLElement ? nav.offsetHeight : 0;
+  return navHeight + ABOUT_SCROLL_GAP;
+}
+
+/**
+ * @param {HTMLElement} target
+ * @param {{ behavior?: ScrollBehavior }} [options]
+ */
+function scrollToAboutElement(target, options = {}) {
+  const root = getAboutScrollRoot();
+  const offset = getAboutNavOffset();
   const rootRect = root === document.scrollingElement || root === document.documentElement
     ? { top: 0 }
     : root.getBoundingClientRect();
@@ -87,13 +92,49 @@ function scrollToAboutAnchor(anchor) {
       ? window.scrollY || document.documentElement.scrollTop
       : /** @type {HTMLElement} */ (root).scrollTop;
 
-  const top = currentScroll + (targetRect.top - rootRect.top) - navHeight;
+  const top = currentScroll + (targetRect.top - rootRect.top) - offset;
+  const behavior = options.behavior ?? 'smooth';
 
   if (typeof root.scrollTo === 'function') {
-    root.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    root.scrollTo({ top: Math.max(0, top), behavior });
   } else {
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    window.scrollTo({ top: Math.max(0, top), behavior });
   }
+}
+
+/**
+ * @param {string} anchor
+ */
+function scrollToAboutAnchor(anchor) {
+  if (!anchor) return;
+  const id = anchor.replace(/^#/, '');
+  const target = document.getElementById(id) || document.querySelector(`[data-about-anchor="${id}"]`);
+  if (!(target instanceof HTMLElement)) return;
+
+  scrollToAboutElement(target);
+}
+
+function syncAboutNavHeight() {
+  const nav = document.querySelector('[data-about-nav]');
+  if (nav instanceof HTMLElement) {
+    document.documentElement.style.setProperty('--about-nav-height', `${nav.offsetHeight}px`);
+  }
+}
+
+function handlePostedSubscribeScroll() {
+  const params = new URLSearchParams(window.location.search);
+  const isPosted = params.get('customer_posted') === 'true' || window.location.hash === '#contact_form';
+  if (!isPosted) return;
+
+  const scrollToSuccess = () => {
+    const shell = document.querySelector('[data-about-subscribe-shell].is-success');
+    if (!(shell instanceof HTMLElement)) return;
+    scrollToAboutElement(shell, { behavior: 'auto' });
+  };
+
+  scrollToSuccess();
+  requestAnimationFrame(scrollToSuccess);
+  window.addEventListener('load', scrollToSuccess, { once: true });
 }
 
 class AboutNavComponent extends HTMLElement {
@@ -194,4 +235,7 @@ function initAboutSubscribeShells() {
 }
 
 initAboutSubscribeShells();
+syncAboutNavHeight();
+handlePostedSubscribeScroll();
+window.addEventListener('resize', syncAboutNavHeight);
 setAboutLang(getInitialAboutLang());
