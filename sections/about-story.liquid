@@ -1,0 +1,410 @@
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign image_alt = image.alt | default: section.settings.heading_en | default: ''
+
+  assign accent = section.settings.accent_color | default: '#F5D421'
+  assign bg = section.settings.panel_background | default: '#000000'
+  assign fg = section.settings.text_color | default: '#FFFFFF'
+  assign anchor = section.settings.anchor_id | default: 'about-story' | strip | replace: '#', ''
+-%}
+
+<section
+  id="{{ anchor }}"
+  class="about-story"
+  data-about-anchor="{{ anchor }}"
+  style="
+    --about-story-accent: {{ accent }};
+    --about-story-bg: {{ bg }};
+    --about-story-fg: {{ fg }};
+  "
+>
+  <div class="about-story__grid">
+    <div class="about-story__media">
+      {%- if image != blank -%}
+        <picture class="about-story__picture">
+          {%- if image_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ image_mobile | image_url: width: 375 }} 375w,
+                {{ image_mobile | image_url: width: 550 }} 550w,
+                {{ image_mobile | image_url: width: 750 }} 750w,
+                {{ image_mobile | image_url: width: 1100 }} 1100w,
+                {{ image_mobile | image_url: width: 1500 }} 1500w
+              "
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+          {%- endif -%}
+          {{
+            image
+            | image_url: width: 2400
+            | image_tag:
+              class: 'about-story__img',
+              widths: '750, 1100, 1500, 1800, 2200, 2400',
+              sizes: '(max-width: 749px) 100vw, 50vw',
+              alt: image_alt,
+              loading: 'lazy'
+          }}
+        </picture>
+      {%- else -%}
+        <div class="about-story__placeholder" aria-hidden="true">
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'about-story__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="about-story__panel">
+      <div class="about-story__panel-inner">
+        {%- if section.settings.label_en != blank or section.settings.label_zh != blank or section.settings.index_label != blank -%}
+          <p class="about-story__label">
+            {%- if section.settings.index_label != blank -%}
+              <span class="about-story__index">{{ section.settings.index_label | escape }}</span>
+            {%- endif -%}
+            <span data-lang-en>{{ section.settings.label_en | escape }}</span>
+            <span data-lang-zh>{{ section.settings.label_zh | default: section.settings.label_en | escape }}</span>
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.heading_en != blank or section.settings.heading_zh != blank -%}
+          <h2 class="about-story__heading">
+            <span class="rte" data-lang-en>{{ section.settings.heading_en }}</span>
+            <span class="rte" data-lang-zh>{{ section.settings.heading_zh | default: section.settings.heading_en }}</span>
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.body_en != blank or section.settings.body_zh != blank -%}
+          <div class="about-story__body">
+            <div class="about-story__body-rule" aria-hidden="true"></div>
+            <div class="about-story__body-text">
+              <div class="rte" data-lang-en>
+                {{ section.settings.body_en }}
+              </div>
+              <div class="rte" data-lang-zh>
+                {{ section.settings.body_zh | default: section.settings.body_en }}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .about-story {
+    display: block;
+    width: 100%;
+    background: var(--about-story-bg);
+  }
+
+  .shopify-section.about-story-section {
+    margin: 0;
+  }
+
+  .about-story__grid {
+    display: grid;
+    grid-template-columns: calc(648 * var(--rem)) minmax(0, 1fr);
+    width: 100%;
+    min-height: calc(696 * var(--rem));
+  }
+
+  .about-story__media,
+  .about-story__panel {
+    min-width: 0;
+    min-height: 100%;
+  }
+
+  .about-story__media {
+    position: relative;
+    background: #111;
+  }
+
+  .about-story__picture,
+  .about-story__placeholder {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .about-story__img,
+  .about-story__placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .about-story__panel {
+    display: flex;
+    align-items: flex-start;
+    background: var(--about-story-bg);
+    color: var(--about-story-fg);
+  }
+
+  .about-story__panel-inner {
+    width: 100%;
+    margin: 0;
+    /* panel 792: left 83 + heading 591 + right 118 */
+    padding: calc(61 * var(--rem)) calc(118 * var(--rem)) calc(80 * var(--rem)) calc(83 * var(--rem));
+    box-sizing: border-box;
+  }
+
+  .about-story__label {
+    display: flex;
+    align-items: baseline;
+    gap: calc(14 * var(--rem));
+    margin: 0 0 calc(110 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(20 * var(--rem));
+    font-weight: 500;
+    line-height: calc(20 * var(--rem));
+    letter-spacing: calc(-1 * var(--rem));
+    text-transform: uppercase;
+    color: var(--about-story-fg);
+  }
+
+  .about-story__index {
+    color: var(--about-story-accent);
+    font-weight: 500;
+  }
+
+  .about-story__heading {
+    display: block;
+    width: calc(591 * var(--rem));
+    max-width: 100%;
+    margin: 0 0 calc(150 * var(--rem));
+    font-family: var(--font-heading-family);
+    font-size: calc(68 * var(--rem));
+    font-weight: 600;
+    line-height: calc(68 * var(--rem));
+    letter-spacing: calc(-3.4 * var(--rem));
+    color: var(--about-story-fg);
+  }
+
+  .about-story__heading .rte,
+  .about-story__heading p {
+    display: block;
+    width: 100%;
+    margin: 0;
+  }
+
+  .about-story__heading strong,
+  .about-story__heading b {
+    color: var(--about-story-accent);
+    font-weight: inherit;
+  }
+
+  /* heading x731 → body x762 / rule x740 */
+  .about-story__body {
+    display: grid;
+    grid-template-columns: calc(4 * var(--rem)) minmax(0, 1fr);
+    gap: calc(18 * var(--rem));
+    align-items: start;
+    width: calc(559 * var(--rem));
+    max-width: 100%;
+    margin-left: calc(9 * var(--rem));
+  }
+
+  .about-story__body-rule {
+    width: calc(4 * var(--rem));
+    height: calc(108 * var(--rem));
+    background: var(--about-story-accent);
+  }
+
+  .about-story__body-text {
+    width: calc(537 * var(--rem));
+    max-width: 100%;
+    font-family: var(--font-body-family);
+    font-size: calc(16 * var(--rem));
+    font-weight: 500;
+    line-height: calc(22 * var(--rem));
+    color: #fff;
+  }
+
+  .about-story__body-text .rte,
+  .about-story__body-text p {
+    margin: 0;
+  }
+
+  .about-story__body-text p + p {
+    margin-top: 0;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-story__grid {
+      grid-template-columns: calc(480 * var(--rem)) minmax(0, 1fr);
+      min-height: calc(560 * var(--rem));
+    }
+
+    .about-story__panel-inner {
+      padding: calc(48 * var(--rem)) calc(40 * var(--rem));
+    }
+
+    .about-story__label {
+      margin-bottom: calc(48 * var(--rem));
+    }
+
+    .about-story__heading {
+      font-size: calc(48 * var(--rem));
+      line-height: 1.1;
+      letter-spacing: calc(-2 * var(--rem));
+      margin-bottom: calc(48 * var(--rem));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-story__grid {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .about-story__media {
+      min-height: calc(560 * var(--rem));
+    }
+
+    .about-story__picture,
+    .about-story__placeholder {
+      position: relative;
+      min-height: calc(560 * var(--rem));
+    }
+
+    .about-story__panel-inner {
+      max-width: none;
+      padding: calc(64 * var(--rem)) calc(32 * var(--rem));
+    }
+
+    .about-story__label {
+      margin-bottom: calc(40 * var(--rem));
+      font-size: calc(28 * var(--rem));
+    }
+
+    .about-story__heading {
+      font-size: calc(48 * var(--rem));
+      line-height: 1.1;
+      letter-spacing: calc(-2 * var(--rem));
+      margin-bottom: calc(40 * var(--rem));
+    }
+
+    .about-story__body-text {
+      font-size: calc(28 * var(--rem));
+      line-height: 1.45;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About story",
+  "tag": "section",
+  "class": "about-story-section",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "default": "about-story",
+      "info": "Used by About nav menu scroll targets."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#F5D421"
+    },
+    {
+      "type": "color",
+      "id": "panel_background",
+      "label": "Panel background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Copy (EN)"
+    },
+    {
+      "type": "text",
+      "id": "index_label",
+      "label": "Index label",
+      "default": "01"
+    },
+    {
+      "type": "text",
+      "id": "label_en",
+      "label": "Section label (EN)",
+      "default": "OUR STORY"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_en",
+      "label": "Heading (EN)",
+      "default": "<p>Technology begins with <strong>humanity.</strong></p>",
+      "info": "Wrap highlight words in bold for yellow accent."
+    },
+    {
+      "type": "richtext",
+      "id": "body_en",
+      "label": "Body (EN)",
+      "default": "<p>At Reudyn, we innovate in wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Copy (ZH)"
+    },
+    {
+      "type": "text",
+      "id": "label_zh",
+      "label": "Section label (ZH)",
+      "default": "我们的故事"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_zh",
+      "label": "Heading (ZH)",
+      "default": "<p>科技始于<strong>人性。</strong></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body_zh",
+      "label": "Body (ZH)",
+      "default": "<p>在 Reudyn，我们通过融合航天级动力系统、自适应 AI、精密机器人与以人为本的设计，创新可穿戴机器人技术。</p><p>我们打造成为人体自然延伸的技术，放大人类潜能，开启全新可能。</p>"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image mobile"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About story",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,467 @@
+{%- liquid
+  assign bg = section.settings.background_image
+  assign bg_mobile = section.settings.background_image_mobile
+
+  assign max_w = section.settings.content_width | default: 1150
+  assign pad_t = section.settings.padding_top | default: 248
+  assign pad_b = section.settings.padding_bottom | default: 248
+  assign pad_t_mob = section.settings.padding_top_mob | default: 120
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 120
+  assign accent = section.settings.accent_color | default: '#F5D421'
+  assign anchor = section.settings.anchor_id | default: 'about-cta-subscribe' | strip | replace: '#', ''
+-%}
+
+<section
+  id="{{ anchor }}"
+  class="about-cta-subscribe{% if bg != blank %} about-cta-subscribe--has-bg{% endif %}"
+  data-about-anchor="{{ anchor }}"
+  style="
+    --about-cta-max: {{ max_w }};
+    --about-cta-pt: {{ pad_t }};
+    --about-cta-pb: {{ pad_b }};
+    --about-cta-pt-mob: {{ pad_t_mob }};
+    --about-cta-pb-mob: {{ pad_b_mob }};
+    --about-cta-accent: {{ accent }};
+    {%- if bg != blank -%}
+      --about-cta-bg: url({{ bg | image_url: width: 2880 }});
+    {%- endif -%}
+    {%- if bg_mobile != blank -%}
+      --about-cta-bg-mob: url({{ bg_mobile | image_url: width: 1500 }});
+    {%- endif -%}
+  "
+>
+  <div class="about-cta-subscribe__inner">
+    {%- if section.settings.heading_en != blank or section.settings.heading_zh != blank -%}
+      <h2 class="about-cta-subscribe__heading">
+        <span data-lang-en>{{ section.settings.heading_en | escape }}</span>
+        <span data-lang-zh>{{ section.settings.heading_zh | default: section.settings.heading_en | escape }}</span>
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading_en != blank or section.settings.subheading_zh != blank -%}
+      <p class="about-cta-subscribe__subheading">
+        <span data-lang-en>{{ section.settings.subheading_en | escape }}</span>
+        <span data-lang-zh>{{ section.settings.subheading_zh | default: section.settings.subheading_en | escape }}</span>
+      </p>
+    {%- endif -%}
+
+    {%- form 'customer', class: 'about-cta-subscribe__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter,about-cta">
+      <label class="visually-hidden" for="AboutCtaEmail-{{ section.id }}">
+        <span data-lang-en>{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}</span>
+        <span data-lang-zh>{{ section.settings.placeholder_zh | default: 'your@email.com' | escape }}</span>
+      </label>
+
+      <div class="about-cta-subscribe__field">
+        <input
+          id="AboutCtaEmail-{{ section.id }}"
+          class="about-cta-subscribe__input"
+          type="email"
+          name="contact[email]"
+          autocomplete="email"
+          autocorrect="off"
+          autocapitalize="off"
+          required
+          placeholder="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+          data-placeholder-en="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+          data-placeholder-zh="{{ section.settings.placeholder_zh | default: section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+        >
+        <button type="submit" class="about-cta-subscribe__button">
+          <span data-lang-en>{{ section.settings.button_en | default: 'Subscribe' | escape }}</span>
+          <span data-lang-zh>{{ section.settings.button_zh | default: '订阅' | escape }}</span>
+        </button>
+      </div>
+
+      {%- if form.errors -%}
+        <p class="about-cta-subscribe__message about-cta-subscribe__message--error" role="alert">
+          {{ form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email }}
+        </p>
+      {%- endif -%}
+
+      {%- if form.posted_successfully? -%}
+        <p class="about-cta-subscribe__message about-cta-subscribe__message--success" role="status">
+          <span data-lang-en>{{ section.settings.success_en | default: 'Thanks for subscribing!' | escape }}</span>
+          <span data-lang-zh>{{ section.settings.success_zh | default: '订阅成功，感谢关注！' | escape }}</span>
+        </p>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+<script type="module">
+  const root = document.documentElement;
+  const input = document.getElementById('AboutCtaEmail-{{ section.id }}');
+  if (input) {
+    const syncPlaceholder = () => {
+      const lang = root.getAttribute('data-about-lang') === 'zh' ? 'zh' : 'en';
+      const next = input.getAttribute(`data-placeholder-${lang}`);
+      if (next) input.setAttribute('placeholder', next);
+    };
+    syncPlaceholder();
+    new MutationObserver(syncPlaceholder).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-about-lang'],
+    });
+  }
+</script>
+
+{% stylesheet %}
+  .about-cta-subscribe {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: calc(690 * var(--rem));
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #111;
+    background-image: linear-gradient(-66.74deg, #000 0.89%, #666 113.05%);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding-top: calc(var(--about-cta-pt) * var(--rem));
+    padding-bottom: calc(var(--about-cta-pb) * var(--rem));
+  }
+
+  .about-cta-subscribe--has-bg {
+    background-image: var(--about-cta-bg);
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-cta-subscribe--has-bg {
+      background-image: var(--about-cta-bg-mob, var(--about-cta-bg));
+    }
+  }
+
+  .about-cta-subscribe__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(100%, calc(var(--about-cta-max) * var(--rem)));
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .about-cta-subscribe__heading {
+    margin: 0 0 calc(24 * var(--rem));
+    font-family: var(--font-heading-family);
+    font-size: calc(64 * var(--rem));
+    font-weight: 700;
+    line-height: calc(48 * var(--rem));
+    color: #fff;
+  }
+
+  .about-cta-subscribe__subheading {
+    margin: 0 0 calc(33 * var(--rem));
+    max-width: calc(336 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(16 * var(--rem));
+    font-weight: 500;
+    line-height: calc(22 * var(--rem));
+    color: #fff;
+  }
+
+  .about-cta-subscribe__form {
+    width: 100%;
+    max-width: calc(485 * var(--rem));
+  }
+
+  .about-cta-subscribe__field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: calc(54 * var(--rem));
+    border: 1px solid #111;
+    border-radius: calc(4 * var(--rem));
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .about-cta-subscribe__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0 calc(17 * var(--rem));
+    border: 0;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: calc(14 * var(--rem));
+    font-weight: 300;
+    color: #111;
+    outline: none;
+  }
+
+  .about-cta-subscribe__input::placeholder {
+    color: #5e5e5e;
+  }
+
+  .about-cta-subscribe__button {
+    flex: 0 0 auto;
+    margin: calc(4 * var(--rem));
+    padding: 0 calc(22 * var(--rem));
+    width: calc(103 * var(--rem));
+    height: calc(46 * var(--rem));
+    border: 0;
+    border-radius: calc(4 * var(--rem));
+    background: var(--about-cta-accent);
+    font-family: var(--font-body-family);
+    font-size: calc(12 * var(--rem));
+    font-weight: 700;
+    color: #111;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+  }
+
+  @media (hover: hover) {
+    .about-cta-subscribe__button:hover {
+      filter: brightness(0.96);
+    }
+  }
+
+  .about-cta-subscribe__message {
+    margin: calc(12 * var(--rem)) 0 0;
+    font-size: calc(13 * var(--rem));
+  }
+
+  .about-cta-subscribe__message--error {
+    color: #b42318;
+  }
+
+  .about-cta-subscribe__message--success {
+    color: #027a48;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-cta-subscribe__inner {
+      padding: 0 calc(24 * var(--rem));
+    }
+
+    .about-cta-subscribe__heading {
+      font-size: calc(40 * var(--rem));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-cta-subscribe {
+      padding-top: calc(var(--about-cta-pt-mob) * var(--rem));
+      padding-bottom: calc(var(--about-cta-pb-mob) * var(--rem));
+    }
+
+    .about-cta-subscribe__inner {
+      padding: 0 calc(32 * var(--rem));
+    }
+
+    .about-cta-subscribe {
+      min-height: 0;
+    }
+
+    .about-cta-subscribe__heading {
+      font-size: calc(48 * var(--rem));
+      line-height: 1.15;
+    }
+
+    .about-cta-subscribe__subheading {
+      max-width: none;
+      font-size: calc(28 * var(--rem));
+      line-height: 1.4;
+      margin-bottom: calc(36 * var(--rem));
+    }
+
+    .about-cta-subscribe__form {
+      max-width: none;
+    }
+
+    .about-cta-subscribe__field {
+      flex-direction: column;
+      height: auto;
+      border-radius: calc(8 * var(--rem));
+    }
+
+    .about-cta-subscribe__input {
+      min-height: calc(88 * var(--rem));
+      padding: 0 calc(28 * var(--rem));
+      font-size: calc(28 * var(--rem));
+      text-align: center;
+    }
+
+    .about-cta-subscribe__button {
+      width: auto;
+      margin: 0 calc(8 * var(--rem)) calc(8 * var(--rem));
+      min-height: calc(80 * var(--rem));
+      font-size: calc(28 * var(--rem));
+      border-radius: calc(6 * var(--rem));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About CTA subscribe",
+  "tag": "section",
+  "class": "about-cta-subscribe-section",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Upload the section background. Falls back to a dark gradient when empty."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "default": "about-cta-subscribe"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 960,
+      "max": 1440,
+      "step": 10,
+      "unit": "px",
+      "default": 1150
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Button color",
+      "default": "#F5D421"
+    },
+    {
+      "type": "header",
+      "content": "Copy (EN)"
+    },
+    {
+      "type": "text",
+      "id": "heading_en",
+      "label": "Heading (EN)",
+      "default": "See what's next."
+    },
+    {
+      "type": "text",
+      "id": "subheading_en",
+      "label": "Subheading (EN)",
+      "default": "Join the list for the first reveal from Reudyn."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_en",
+      "label": "Email placeholder (EN)",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "button_en",
+      "label": "Button (EN)",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_en",
+      "label": "Success message (EN)",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "header",
+      "content": "Copy (ZH)"
+    },
+    {
+      "type": "text",
+      "id": "heading_zh",
+      "label": "Heading (ZH)",
+      "default": "看看接下来会发生什么。"
+    },
+    {
+      "type": "text",
+      "id": "subheading_zh",
+      "label": "Subheading (ZH)",
+      "default": "加入名单，抢先获悉 Reudyn 首次揭晓。"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_zh",
+      "label": "Email placeholder (ZH)",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "button_zh",
+      "label": "Button (ZH)",
+      "default": "订阅"
+    },
+    {
+      "type": "text",
+      "id": "success_zh",
+      "label": "Success message (ZH)",
+      "default": "订阅成功，感谢关注！"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 280,
+      "step": 4,
+      "unit": "px",
+      "default": 248
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 280,
+      "step": 4,
+      "unit": "px",
+      "default": 248
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "presets": [
+    {
+      "name": "About CTA subscribe",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

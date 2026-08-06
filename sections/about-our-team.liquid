@@ -1,0 +1,486 @@
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign image_alt = image.alt | default: section.settings.heading_en | default: ''
+
+  assign banner = section.settings.banner_image
+  assign banner_mobile = section.settings.banner_image_mobile
+  assign banner_alt = banner.alt | default: section.settings.heading_en | default: ''
+
+  assign pad_t = section.settings.padding_top | default: 78
+  assign pad_b = section.settings.padding_bottom | default: 0
+  assign pad_t_mob = section.settings.padding_top_mob | default: 64
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 0
+  assign accent = section.settings.accent_color | default: '#F5D421'
+  assign anchor = section.settings.anchor_id | default: 'about-team' | strip | replace: '#', ''
+-%}
+
+<section
+  id="{{ anchor }}"
+  class="about-our-team"
+  data-about-anchor="{{ anchor }}"
+  style="
+    --about-our-team-pt: {{ pad_t }};
+    --about-our-team-pb: {{ pad_b }};
+    --about-our-team-pt-mob: {{ pad_t_mob }};
+    --about-our-team-pb-mob: {{ pad_b_mob }};
+    --about-our-team-accent: {{ accent }};
+  "
+>
+  <div class="about-our-team__top">
+    <div class="about-our-team__copy">
+      <div class="about-our-team__copy-inner">
+        <div class="about-our-team__label">
+          {%- if section.settings.index_label != blank -%}
+            <span class="about-our-team__index">{{ section.settings.index_label | escape }}</span>
+          {%- endif -%}
+          <span class="about-our-team__label-text">
+            <span data-lang-en>{{ section.settings.label_en | escape }}</span>
+            <span data-lang-zh>{{ section.settings.label_zh | default: section.settings.label_en | escape }}</span>
+          </span>
+        </div>
+
+        {%- if section.settings.heading_en != blank or section.settings.heading_zh != blank -%}
+          <h2 class="about-our-team__heading">
+            <span class="rte" data-lang-en>{{ section.settings.heading_en }}</span>
+            <span class="rte" data-lang-zh>{{ section.settings.heading_zh | default: section.settings.heading_en }}</span>
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.body_en != blank or section.settings.body_zh != blank -%}
+          <div class="about-our-team__body">
+            <div class="rte" data-lang-en>{{ section.settings.body_en }}</div>
+            <div class="rte" data-lang-zh>{{ section.settings.body_zh | default: section.settings.body_en }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="about-our-team__media">
+      {%- if image != blank -%}
+        <picture class="about-our-team__picture">
+          {%- if image_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ image_mobile | image_url: width: 375 }} 375w,
+                {{ image_mobile | image_url: width: 550 }} 550w,
+                {{ image_mobile | image_url: width: 750 }} 750w,
+                {{ image_mobile | image_url: width: 1100 }} 1100w
+              "
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+          {%- endif -%}
+          {{
+            image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'about-our-team__img',
+              widths: '400, 600, 800, 1000, 1200, 1600',
+              sizes: '(max-width: 749px) 100vw, calc(593 * 100vw / 1440)',
+              alt: image_alt,
+              loading: 'lazy'
+          }}
+        </picture>
+      {%- else -%}
+        <div class="about-our-team__placeholder" aria-hidden="true">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'about-our-team__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="about-our-team__banner">
+    {%- if banner != blank -%}
+      <picture class="about-our-team__banner-picture">
+        {%- if banner_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {{ banner_mobile | image_url: width: 375 }} 375w,
+              {{ banner_mobile | image_url: width: 550 }} 550w,
+              {{ banner_mobile | image_url: width: 750 }} 750w,
+              {{ banner_mobile | image_url: width: 1100 }} 1100w,
+              {{ banner_mobile | image_url: width: 1500 }} 1500w
+            "
+            sizes="100vw"
+            width="{{ banner_mobile.width }}"
+            height="{{ banner_mobile.height }}"
+          >
+        {%- endif -%}
+        {{
+          banner
+          | image_url: width: 2400
+          | image_tag:
+            class: 'about-our-team__banner-img',
+            widths: '750, 1100, 1500, 1800, 2200, 2400',
+            sizes: '100vw',
+            alt: banner_alt,
+            loading: 'lazy'
+        }}
+      </picture>
+    {%- else -%}
+      <div class="about-our-team__banner-placeholder" aria-hidden="true">
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'about-our-team__banner-placeholder-svg' }}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .about-our-team {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    padding-bottom: calc(var(--about-our-team-pb) * var(--rem));
+  }
+
+  .about-our-team__top {
+    display: grid;
+    grid-template-columns: calc(847 * var(--rem)) minmax(0, 1fr);
+    align-items: stretch;
+    min-height: calc(722 * var(--rem));
+  }
+
+  .about-our-team__copy {
+    background: #f7f8fa;
+    box-sizing: border-box;
+  }
+
+  .about-our-team__copy-inner {
+    width: 100%;
+    /* left col 847: left 145 + heading 579 + right 123 */
+    padding: calc(var(--about-our-team-pt) * var(--rem)) calc(123 * var(--rem)) calc(64 * var(--rem)) calc(145 * var(--rem));
+    box-sizing: border-box;
+  }
+
+  .about-our-team__label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: calc(10 * var(--rem));
+    margin: 0 0 calc(84 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(20 * var(--rem));
+    font-weight: 500;
+    line-height: calc(20 * var(--rem));
+    letter-spacing: calc(-1 * var(--rem));
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  .about-our-team__index {
+    color: var(--about-our-team-accent);
+    font-weight: 500;
+  }
+
+  .about-our-team__heading {
+    display: block;
+    width: calc(579 * var(--rem));
+    max-width: 100%;
+    margin: 0 0 calc(120 * var(--rem));
+    font-family: var(--font-heading-family);
+    font-size: calc(68 * var(--rem));
+    font-weight: 700;
+    line-height: calc(68 * var(--rem));
+    letter-spacing: calc(-2.04 * var(--rem));
+    color: #000;
+  }
+
+  .about-our-team__heading .rte,
+  .about-our-team__heading p {
+    display: block;
+    width: 100%;
+    margin: 0;
+  }
+
+  .about-our-team__heading strong,
+  .about-our-team__heading b {
+    color: var(--about-our-team-accent);
+    font-weight: inherit;
+  }
+
+  .about-our-team__body {
+    display: block;
+    width: calc(551 * var(--rem));
+    max-width: 100%;
+    font-family: var(--font-body-family);
+    font-size: calc(16 * var(--rem));
+    font-weight: 500;
+    line-height: calc(22 * var(--rem));
+    color: #000;
+  }
+
+  .about-our-team__body .rte,
+  .about-our-team__body p {
+    margin: 0;
+  }
+
+  .about-our-team__body p + p {
+    margin-top: calc(22 * var(--rem));
+  }
+
+  .about-our-team__media,
+  .about-our-team__banner {
+    min-width: 0;
+  }
+
+  .about-our-team__media {
+    position: relative;
+    background: #111;
+    overflow: hidden;
+  }
+
+  .about-our-team__picture,
+  .about-our-team__placeholder {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: rgb(0 0 0 / 0.04);
+  }
+
+  .about-our-team__img,
+  .about-our-team__placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+
+  .about-our-team__banner-picture,
+  .about-our-team__banner-placeholder {
+    display: block;
+    width: 100%;
+    height: calc(418 * var(--rem));
+    overflow: hidden;
+    background: rgb(0 0 0 / 0.04);
+  }
+
+  .about-our-team__banner-img,
+  .about-our-team__banner-placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-our-team__top {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      min-height: calc(560 * var(--rem));
+    }
+
+    .about-our-team__copy-inner {
+      padding: calc(48 * var(--rem)) calc(32 * var(--rem));
+    }
+
+    .about-our-team__heading {
+      font-size: calc(44 * var(--rem));
+      line-height: 1.1;
+      margin-bottom: calc(48 * var(--rem));
+    }
+
+    .about-our-team__label {
+      margin-bottom: calc(40 * var(--rem));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-our-team {
+      padding-bottom: calc(var(--about-our-team-pb-mob) * var(--rem));
+    }
+
+    .about-our-team__top {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .about-our-team__copy-inner {
+      max-width: none;
+      padding: calc(var(--about-our-team-pt-mob) * var(--rem)) calc(32 * var(--rem));
+    }
+
+    .about-our-team__label {
+      margin-bottom: calc(32 * var(--rem));
+      font-size: calc(28 * var(--rem));
+    }
+
+    .about-our-team__heading {
+      font-size: calc(48 * var(--rem));
+      line-height: 1.1;
+      letter-spacing: calc(-2 * var(--rem));
+      margin-bottom: calc(40 * var(--rem));
+    }
+
+    .about-our-team__body {
+      font-size: calc(28 * var(--rem));
+      line-height: 1.45;
+    }
+
+    .about-our-team__media {
+      min-height: calc(640 * var(--rem));
+    }
+
+    .about-our-team__banner-picture,
+    .about-our-team__banner-placeholder {
+      height: calc(360 * var(--rem));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About our team",
+  "tag": "section",
+  "class": "about-our-team-section",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "default": "about-team"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#F5D421"
+    },
+    {
+      "type": "header",
+      "content": "Copy (EN)"
+    },
+    {
+      "type": "text",
+      "id": "index_label",
+      "label": "Index label",
+      "default": "03"
+    },
+    {
+      "type": "text",
+      "id": "label_en",
+      "label": "Section label (EN)",
+      "default": "OUR TEAM"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_en",
+      "label": "Heading (EN)",
+      "default": "<p>Engineering built around <strong>people</strong>.</p>",
+      "info": "Wrap highlight words in bold for yellow accent."
+    },
+    {
+      "type": "richtext",
+      "id": "body_en",
+      "label": "Body (EN)",
+      "default": "<p>Our multidisciplinary team combines expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics to advance human augmentation.</p><p>Through long-term collaborations with leading university research labs, our dual-core technology platform leverages decades of expertise in motor control systems and human-machine intelligence — transforming advanced robotics into wearable technology that helps people move farther, explore more, and experience greater freedom.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Copy (ZH)"
+    },
+    {
+      "type": "text",
+      "id": "label_zh",
+      "label": "Section label (ZH)",
+      "default": "我们的团队"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_zh",
+      "label": "Heading (ZH)",
+      "default": "<p>以人为本的<strong>工程</strong>。</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body_zh",
+      "label": "Body (ZH)",
+      "default": "<p>我们跨学科团队汇聚电机系统、自适应 AI、生物力学、人机交互与可穿戴机器人等领域专长，推动人体增强的未来。</p><p>依托与顶尖高校研究实验室的长期合作，我们的双核技术平台发挥在电机控制与人机智能领域数十年的经验，将先进机器人转化为可穿戴技术，帮助人们走得更远、探索更多，并以更大自由体验世界。</p>"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Portrait image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Portrait image mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Bottom banner image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image_mobile",
+      "label": "Bottom banner image mobile"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 78
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "About our team",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

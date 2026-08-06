@@ -1,0 +1,564 @@
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign image_alt = image.alt | default: section.settings.heading_en | default: ''
+
+  assign max_w = section.settings.content_width | default: 1150
+  assign pad_t = section.settings.padding_top | default: 56
+  assign pad_b = section.settings.padding_bottom | default: 80
+  assign pad_t_mob = section.settings.padding_top_mob | default: 48
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 48
+
+  assign accent = section.settings.accent_color | default: '#F5D421'
+  assign anchor = section.settings.anchor_id | default: 'about-subscribe' | strip | replace: '#', ''
+-%}
+
+<section
+  id="{{ anchor }}"
+  class="about-subscribe"
+  data-about-anchor="{{ anchor }}"
+  style="
+    --about-subscribe-max: {{ max_w }};
+    --about-subscribe-pt: {{ pad_t }};
+    --about-subscribe-pb: {{ pad_b }};
+    --about-subscribe-pt-mob: {{ pad_t_mob }};
+    --about-subscribe-pb-mob: {{ pad_b_mob }};
+    --about-subscribe-accent: {{ accent }};
+  "
+>
+  <div class="about-subscribe__inner">
+    <div class="about-subscribe__copy">
+      {%- if section.settings.eyebrow_en != blank or section.settings.eyebrow_zh != blank -%}
+        <p class="about-subscribe__eyebrow">
+          <span class="about-subscribe__dot" aria-hidden="true"></span>
+          <span data-lang-en>{{ section.settings.eyebrow_en | escape }}</span>
+          <span data-lang-zh>{{ section.settings.eyebrow_zh | default: section.settings.eyebrow_en | escape }}</span>
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.heading_en != blank or section.settings.heading_zh != blank -%}
+        <h1 class="about-subscribe__heading">
+          <span data-lang-en>{{ section.settings.heading_en | escape }}</span>
+          <span data-lang-zh>{{ section.settings.heading_zh | default: section.settings.heading_en | escape }}</span>
+        </h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading_en != blank or section.settings.subheading_zh != blank -%}
+        <p class="about-subscribe__subheading">
+          <span class="about-subscribe__rule" aria-hidden="true"></span>
+          <span data-lang-en>{{ section.settings.subheading_en | escape }}</span>
+          <span data-lang-zh>{{ section.settings.subheading_zh | default: section.settings.subheading_en | escape }}</span>
+        </p>
+      {%- endif -%}
+
+      {%- form 'customer', class: 'about-subscribe__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter,about">
+        <label class="visually-hidden" for="AboutSubscribeEmail-{{ section.id }}">
+          <span data-lang-en>{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}</span>
+          <span data-lang-zh>{{ section.settings.placeholder_zh | default: 'your@email.com' | escape }}</span>
+        </label>
+        <div class="about-subscribe__field">
+          <input
+            id="AboutSubscribeEmail-{{ section.id }}"
+            class="about-subscribe__input"
+            type="email"
+            name="contact[email]"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+            placeholder="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+            data-placeholder-en="{{ section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+            data-placeholder-zh="{{ section.settings.placeholder_zh | default: section.settings.placeholder_en | default: 'your@email.com' | escape }}"
+          >
+          <button type="submit" class="about-subscribe__button">
+            <span data-lang-en>{{ section.settings.button_en | default: 'Subscribe' | escape }}</span>
+            <span data-lang-zh>{{ section.settings.button_zh | default: '订阅' | escape }}</span>
+          </button>
+        </div>
+
+        {%- if form.errors -%}
+          <p class="about-subscribe__message about-subscribe__message--error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </p>
+        {%- endif -%}
+
+        {%- if form.posted_successfully? -%}
+          <p class="about-subscribe__message about-subscribe__message--success" role="status">
+            <span data-lang-en>{{ section.settings.success_en | default: 'Thanks for subscribing!' | escape }}</span>
+            <span data-lang-zh>{{ section.settings.success_zh | default: '订阅成功，感谢关注！' | escape }}</span>
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <div class="about-subscribe__media">
+      {%- if image != blank -%}
+        <picture class="about-subscribe__picture">
+          {%- if image_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ image_mobile | image_url: width: 375 }} 375w,
+                {{ image_mobile | image_url: width: 550 }} 550w,
+                {{ image_mobile | image_url: width: 750 }} 750w,
+                {{ image_mobile | image_url: width: 1100 }} 1100w
+              "
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+          {%- endif -%}
+          {{
+            image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'about-subscribe__img',
+              widths: '400, 600, 800, 1000, 1200, 1600',
+              sizes: '(max-width: 749px) 100vw, calc(560 * 100vw / 1440)',
+              alt: image_alt,
+              loading: 'eager',
+              fetchpriority: 'high'
+          }}
+        </picture>
+      {%- else -%}
+        <div class="about-subscribe__placeholder" aria-hidden="true">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'about-subscribe__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script type="module">
+  const root = document.documentElement;
+  const input = document.getElementById('AboutSubscribeEmail-{{ section.id }}');
+  if (input) {
+    const syncPlaceholder = () => {
+      const lang = root.getAttribute('data-about-lang') === 'zh' ? 'zh' : 'en';
+      const next = input.getAttribute(`data-placeholder-${lang}`);
+      if (next) input.setAttribute('placeholder', next);
+    };
+    syncPlaceholder();
+    new MutationObserver(syncPlaceholder).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-about-lang'],
+    });
+  }
+</script>
+
+{% stylesheet %}
+  .about-subscribe {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    padding-top: calc(var(--about-subscribe-pt) * var(--rem));
+    padding-bottom: calc(var(--about-subscribe-pb) * var(--rem));
+  }
+
+  .about-subscribe__inner {
+    display: grid;
+    grid-template-columns: calc(462 * var(--rem)) calc(480 * var(--rem));
+    align-items: start;
+    justify-content: space-between;
+    column-gap: calc(208 * var(--rem));
+    width: min(100%, calc(var(--about-subscribe-max) * var(--rem)));
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .about-subscribe__copy {
+    min-width: 0;
+    padding-top: calc(44 * var(--rem));
+  }
+
+  .about-subscribe__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(9 * var(--rem));
+    margin: 0 0 calc(23 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(12 * var(--rem));
+    font-weight: 400;
+    line-height: calc(12 * var(--rem));
+    color: #7b7b7b;
+    text-transform: uppercase;
+  }
+
+  .about-subscribe__dot {
+    width: calc(10 * var(--rem));
+    height: calc(10 * var(--rem));
+    border-radius: 50%;
+    background: var(--about-subscribe-accent);
+    flex-shrink: 0;
+  }
+
+  .about-subscribe__heading {
+    margin: 0 0 calc(48 * var(--rem));
+    font-family: var(--font-heading-family);
+    font-size: calc(100 * var(--rem));
+    font-weight: 700;
+    line-height: calc(100 * var(--rem));
+    letter-spacing: calc(-3 * var(--rem));
+    color: #000;
+  }
+
+  .about-subscribe__subheading {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(11 * var(--rem));
+    margin: 0 0 calc(26 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(16 * var(--rem));
+    font-weight: 400;
+    line-height: calc(24 * var(--rem));
+    color: #303030;
+    text-transform: uppercase;
+  }
+
+  .about-subscribe__rule {
+    width: calc(29 * var(--rem));
+    height: calc(3 * var(--rem));
+    background: var(--about-subscribe-accent);
+    flex-shrink: 0;
+  }
+
+  .about-subscribe__form {
+    width: 100%;
+    max-width: calc(462 * var(--rem));
+  }
+
+  .about-subscribe__field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: calc(42 * var(--rem));
+    border: 1px solid #d2d2d2;
+    border-radius: calc(4 * var(--rem));
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .about-subscribe__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0 calc(15 * var(--rem));
+    border: 0;
+    background: transparent;
+    font-family: var(--font-body-family);
+    font-size: calc(12 * var(--rem));
+    color: #111;
+    outline: none;
+  }
+
+  .about-subscribe__input::placeholder {
+    color: #b6b6b6;
+  }
+
+  .about-subscribe__button {
+    flex: 0 0 auto;
+    margin: 0 calc(3 * var(--rem));
+    padding: 0;
+    width: calc(120 * var(--rem));
+    height: calc(36 * var(--rem));
+    border: 0;
+    border-radius: calc(4 * var(--rem));
+    background: var(--about-subscribe-accent);
+    font-family: var(--font-body-family);
+    font-size: calc(12 * var(--rem));
+    font-weight: 600;
+    letter-spacing: calc(-0.6 * var(--rem));
+    color: #303030;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+  }
+
+  @media (hover: hover) {
+    .about-subscribe__button:hover {
+      filter: brightness(0.96);
+    }
+  }
+
+  .about-subscribe__message {
+    margin: calc(12 * var(--rem)) 0 0;
+    font-size: calc(13 * var(--rem));
+  }
+
+  .about-subscribe__message--error {
+    color: #b42318;
+  }
+
+  .about-subscribe__message--success {
+    color: #027a48;
+  }
+
+  .about-subscribe__media {
+    min-width: 0;
+    width: calc(480 * var(--rem));
+  }
+
+  .about-subscribe__picture,
+  .about-subscribe__placeholder {
+    display: block;
+    width: 100%;
+    height: calc(518 * var(--rem));
+    overflow: hidden;
+    background: rgb(0 0 0 / 0.04);
+  }
+
+  .about-subscribe__img,
+  .about-subscribe__placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-subscribe__inner {
+      grid-template-columns: minmax(0, 1fr) calc(360 * var(--rem));
+      column-gap: calc(40 * var(--rem));
+      padding: 0 calc(24 * var(--rem));
+    }
+
+    .about-subscribe__heading {
+      font-size: calc(64 * var(--rem));
+      line-height: 1.05;
+      letter-spacing: calc(-2 * var(--rem));
+    }
+
+    .about-subscribe__media {
+      width: 100%;
+    }
+
+    .about-subscribe__picture,
+    .about-subscribe__placeholder {
+      height: auto;
+      aspect-ratio: 480 / 518;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-subscribe {
+      padding-top: calc(var(--about-subscribe-pt-mob) * var(--rem));
+      padding-bottom: calc(var(--about-subscribe-pb-mob) * var(--rem));
+    }
+
+    .about-subscribe__inner {
+      grid-template-columns: 1fr;
+      gap: calc(40 * var(--rem));
+      padding: 0 calc(32 * var(--rem));
+    }
+
+    .about-subscribe__copy {
+      padding-top: 0;
+    }
+
+    .about-subscribe__heading {
+      font-size: calc(64 * var(--rem));
+      line-height: 1.05;
+      letter-spacing: calc(-2 * var(--rem));
+      margin-bottom: calc(32 * var(--rem));
+    }
+
+    .about-subscribe__form,
+    .about-subscribe__media {
+      max-width: none;
+      width: 100%;
+    }
+
+    .about-subscribe__picture,
+    .about-subscribe__placeholder {
+      height: auto;
+      aspect-ratio: 480 / 518;
+    }
+
+    .about-subscribe__media {
+      order: -1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About subscribe",
+  "tag": "section",
+  "class": "about-subscribe-section",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "default": "about-subscribe",
+      "info": "Used by About nav menu scroll targets."
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 960,
+      "max": 1440,
+      "step": 10,
+      "unit": "px",
+      "default": 1150
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#F5D421"
+    },
+    {
+      "type": "header",
+      "content": "Copy (EN)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_en",
+      "label": "Eyebrow (EN)",
+      "default": "INTELLIGENT WEARABLE ROBOTICS"
+    },
+    {
+      "type": "text",
+      "id": "heading_en",
+      "label": "Heading (EN)",
+      "default": "Human, amplified."
+    },
+    {
+      "type": "text",
+      "id": "subheading_en",
+      "label": "Subheading (EN)",
+      "default": "UNVEILING THIS SEPTEMBER."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_en",
+      "label": "Email placeholder (EN)",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "button_en",
+      "label": "Button (EN)",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_en",
+      "label": "Success message (EN)",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "header",
+      "content": "Copy (ZH)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_zh",
+      "label": "Eyebrow (ZH)",
+      "default": "智能可穿戴机器人"
+    },
+    {
+      "type": "text",
+      "id": "heading_zh",
+      "label": "Heading (ZH)",
+      "default": "人类，被放大。"
+    },
+    {
+      "type": "text",
+      "id": "subheading_zh",
+      "label": "Subheading (ZH)",
+      "default": "九月正式揭晓。"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_zh",
+      "label": "Email placeholder (ZH)",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "button_zh",
+      "label": "Button (ZH)",
+      "default": "订阅"
+    },
+    {
+      "type": "text",
+      "id": "success_zh",
+      "label": "Success message (ZH)",
+      "default": "订阅成功，感谢关注！"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image mobile"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "About subscribe",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

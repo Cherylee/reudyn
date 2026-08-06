@@ -9,51 +9,193 @@
  */
 /*
  * ------------------------------------------------------------
- * About Us — unified hero+mission, then team.
+ * About Us — nav, subscribe, story, mission, team.
  * ------------------------------------------------------------
  */
 {
   "sections": {
-    "about_mission": {
-      "type": "about-mission",
+    "about_nav": {
+      "type": "about-nav",
+      "blocks": {
+        "menu_story": {
+          "type": "menu_item",
+          "settings": {
+            "label_en": "Our story",
+            "label_zh": "我们的故事",
+            "anchor": "about-story"
+          }
+        },
+        "menu_mission": {
+          "type": "menu_item",
+          "settings": {
+            "label_en": "Our mission",
+            "label_zh": "我们的使命",
+            "anchor": "about-mission"
+          }
+        },
+        "menu_team": {
+          "type": "menu_item",
+          "settings": {
+            "label_en": "Our team",
+            "label_zh": "我们的团队",
+            "anchor": "about-team"
+          }
+        }
+      },
+      "block_order": [
+        "menu_story",
+        "menu_mission",
+        "menu_team"
+      ],
       "settings": {
-        "banner_image": "shopify://shop_images/Mask_group_1.webp",
-        "banner_image_mobile": "shopify://shop_images/Mask_group_2.webp",
-        "heading": "Human, amplified.",
-        "subheading": "Intelligent support that moves with you.",
-        "title": "Our Mission",
-        "image": "shopify://shop_images/XAOTOS_1.webp",
-        "image_mobile": "shopify://shop_images/Rectangle_40_2.webp",
-        "headline": "<p>Technology isn't about replacing humans.</p><p>It's about <strong>amplifying</strong> what makes us <strong>human.</strong></p>",
-        "subtitle": "<p>Our curiosity. Our strength. Our freedom to explore. Our ability to become more than we ever imagined.</p>",
-        "body": "<p>At Reudyn, we pioneer wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p><p>Technology begins with humanity. It always has. It always will.</p>",
-        "padding_top": 100,
-        "padding_bottom": 100,
-        "padding_top_mob": 64,
-        "padding_bottom_mob": 64,
-        "padding_left_mob": 32,
-        "padding_right_mob": 32
+        "logo_height": 20,
+        "lang_label_en": "EN",
+        "lang_label_zh": "CN"
       }
     },
-    "about_team": {
-      "type": "about-team",
+    "about_subscribe": {
+      "type": "about-subscribe",
       "settings": {
-        "title": "Our Team",
-        "image": "shopify://shop_images/1_1.webp",
-        "body": "<p>At Reudyn, engineering begins with people.</p><p>Our multidisciplinary team brings together expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics, advancing the future of human augmentation. Backed by long-term collaborations with leading university research labs, our dual-core technology platform is led by experts with decades of experience in motor control systems and in human-machine intelligence. We believe breakthrough technology belongs in everyday life.</p><p>That's why we're turning advanced robotics into wearable technology that helps people move farther, explore more, and experience the world with greater freedom.</p>",
-        "banner_image": "shopify://shop_images/Mask_group_3.webp",
-        "banner_image_mobile": "shopify://shop_images/Mask_group_4.webp",
-        "padding_top": 86,
-        "padding_bottom": 100,
+        "anchor_id": "about-subscribe",
+        "content_width": 1150,
+        "accent_color": "#F5D421",
+        "eyebrow_en": "INTELLIGENT WEARABLE ROBOTICS",
+        "heading_en": "Human, amplified.",
+        "subheading_en": "UNVEILING THIS SEPTEMBER.",
+        "placeholder_en": "your@email.com",
+        "button_en": "Subscribe",
+        "success_en": "Thanks for subscribing!",
+        "eyebrow_zh": "智能可穿戴机器人",
+        "heading_zh": "人类，被放大。",
+        "subheading_zh": "九月正式揭晓。",
+        "placeholder_zh": "your@email.com",
+        "button_zh": "订阅",
+        "success_zh": "订阅成功，感谢关注！",
+        "padding_top": 56,
+        "padding_bottom": 80,
+        "padding_top_mob": 48,
+        "padding_bottom_mob": 48
+      }
+    },
+    "about_story": {
+      "type": "about-story",
+      "settings": {
+        "anchor_id": "about-story",
+        "accent_color": "#F5D421",
+        "panel_background": "#000000",
+        "text_color": "#FFFFFF",
+        "index_label": "01",
+        "label_en": "OUR STORY",
+        "heading_en": "<p>Technology begins with <strong>humanity.</strong></p>",
+        "body_en": "<p>At Reudyn, we innovate in wearable robotics by combining aerospace-grade power systems, adaptive AI, precision robotics, and human-centered design.</p><p>We create technologies that become a natural extension of the human body, amplifying human potential and unlocking new possibilities.</p>",
+        "label_zh": "我们的故事",
+        "heading_zh": "<p>科技始于<strong>人性。</strong></p>",
+        "body_zh": "<p>在 Reudyn，我们通过融合航天级动力系统、自适应 AI、精密机器人与以人为本的设计，创新可穿戴机器人技术。</p><p>我们打造成为人体自然延伸的技术，放大人类潜能，开启全新可能。</p>"
+      }
+    },
+    "about_our_mission": {
+      "type": "about-our-mission",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "number": "",
+            "title_en": "Sense",
+            "description_en": "Understands intent.",
+            "title_zh": "感知",
+            "description_zh": "理解意图。"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "number": "",
+            "title_en": "Adapt",
+            "description_en": "Responds to movement.",
+            "title_zh": "适应",
+            "description_zh": "响应动作。"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "number": "",
+            "title_en": "Amplify",
+            "description_en": "Supports natural motion.",
+            "title_zh": "放大",
+            "description_zh": "支持自然运动."
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3"
+      ],
+      "settings": {
+        "anchor_id": "about-mission",
+        "content_width": 1150,
+        "accent_color": "#F5D421",
+        "index_label": "02",
+        "label_en": "OUR MISSION",
+        "heading_en": "<p><strong>Amplifying</strong> what makes us human.</p>",
+        "body_en": "<p>We build intelligent wearable robotics designed to move with your body. Our goal: enable more people to venture further, explore without constraint, and reclaim greater independence in every part of life.</p>",
+        "label_zh": "我们的使命",
+        "heading_zh": "<p><strong>放大</strong>人性之所在。</p>",
+        "body_zh": "<p>我们打造智能可穿戴机器人，与身体同步而行。目标是让更多人走得更远、无拘探索，并在生活的每个面向重获更大独立。</p>",
+        "padding_top": 122,
+        "padding_bottom": 148,
         "padding_top_mob": 64,
-        "padding_bottom_mob": 64,
-        "padding_left_mob": 32,
-        "padding_right_mob": 32
+        "padding_bottom_mob": 64
+      }
+    },
+    "about_our_team": {
+      "type": "about-our-team",
+      "settings": {
+        "anchor_id": "about-team",
+        "accent_color": "#F5D421",
+        "index_label": "03",
+        "label_en": "OUR TEAM",
+        "heading_en": "<p>Engineering built around <strong>people</strong>.</p>",
+        "body_en": "<p>Our multidisciplinary team combines expertise in motor systems, adaptive AI, biomechanics, human-machine interaction, and wearable robotics to advance human augmentation.</p><p>Through long-term collaborations with leading university research labs, our dual-core technology platform leverages decades of expertise in motor control systems and human-machine intelligence — transforming advanced robotics into wearable technology that helps people move farther, explore more, and experience greater freedom.</p>",
+        "label_zh": "我们的团队",
+        "heading_zh": "<p>以人为本的<strong>工程</strong>。</p>",
+        "body_zh": "<p>我们跨学科团队汇聚电机系统、自适应 AI、生物力学、人机交互与可穿戴机器人等领域专长，推动人体增强的未来。</p><p>依托与顶尖高校研究实验室的长期合作，我们的双核技术平台发挥在电机控制与人机智能领域数十年的经验，将先进机器人转化为可穿戴技术，帮助人们走得更远、探索更多，并以更大自由体验世界。</p>",
+        "padding_top": 78,
+        "padding_bottom": 0,
+        "padding_top_mob": 64,
+        "padding_bottom_mob": 0
+      }
+    },
+    "about_cta_subscribe": {
+      "type": "about-cta-subscribe",
+      "settings": {
+        "anchor_id": "about-cta-subscribe",
+        "content_width": 1150,
+        "accent_color": "#F5D421",
+        "heading_en": "See what's next.",
+        "subheading_en": "Join the list for the first reveal from Reudyn.",
+        "placeholder_en": "your@email.com",
+        "button_en": "Subscribe",
+        "success_en": "Thanks for subscribing!",
+        "heading_zh": "看看接下来会发生什么。",
+        "subheading_zh": "加入名单，抢先获悉 Reudyn 首次揭晓。",
+        "placeholder_zh": "your@email.com",
+        "button_zh": "订阅",
+        "success_zh": "订阅成功，感谢关注！",
+        "padding_top": 248,
+        "padding_bottom": 248,
+        "padding_top_mob": 120,
+        "padding_bottom_mob": 120
       }
     }
   },
   "order": [
-    "about_mission",
-    "about_team"
+    "about_nav",
+    "about_subscribe",
+    "about_story",
+    "about_our_mission",
+    "about_our_team",
+    "about_cta_subscribe"
   ]
 }

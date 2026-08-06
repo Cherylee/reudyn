@@ -1,0 +1,542 @@
+{%- liquid
+  assign max_w = section.settings.content_width | default: 1150
+  assign pad_t = section.settings.padding_top | default: 122
+  assign pad_b = section.settings.padding_bottom | default: 148
+  assign pad_t_mob = section.settings.padding_top_mob | default: 64
+  assign pad_b_mob = section.settings.padding_bottom_mob | default: 64
+  assign accent = section.settings.accent_color | default: '#F5D421'
+  assign anchor = section.settings.anchor_id | default: 'about-mission' | strip | replace: '#', ''
+-%}
+
+<section
+  id="{{ anchor }}"
+  class="about-our-mission"
+  data-about-anchor="{{ anchor }}"
+  style="
+    --about-our-mission-max: {{ max_w }};
+    --about-our-mission-pt: {{ pad_t }};
+    --about-our-mission-pb: {{ pad_b }};
+    --about-our-mission-pt-mob: {{ pad_t_mob }};
+    --about-our-mission-pb-mob: {{ pad_b_mob }};
+    --about-our-mission-accent: {{ accent }};
+  "
+>
+  <div class="about-our-mission__inner">
+    <div class="about-our-mission__header">
+      <div class="about-our-mission__side">
+        <div class="about-our-mission__label">
+          {%- if section.settings.index_label != blank -%}
+            <span class="about-our-mission__index">{{ section.settings.index_label | escape }}</span>
+          {%- endif -%}
+          <span class="about-our-mission__label-text">
+            <span data-lang-en>{{ section.settings.label_en | escape }}</span>
+            <span data-lang-zh>{{ section.settings.label_zh | default: section.settings.label_en | escape }}</span>
+          </span>
+        </div>
+        <div class="about-our-mission__side-rule" aria-hidden="true"></div>
+      </div>
+
+      <div class="about-our-mission__intro">
+        {%- if section.settings.heading_en != blank or section.settings.heading_zh != blank -%}
+          <h2 class="about-our-mission__heading">
+            <span class="rte" data-lang-en>{{ section.settings.heading_en }}</span>
+            <span class="rte" data-lang-zh>{{ section.settings.heading_zh | default: section.settings.heading_en }}</span>
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.body_en != blank or section.settings.body_zh != blank -%}
+          <div class="about-our-mission__body">
+            <div class="rte" data-lang-en>{{ section.settings.body_en }}</div>
+            <div class="rte" data-lang-zh>{{ section.settings.body_zh | default: section.settings.body_en }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="about-our-mission__grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'feature' -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign feature_image = block.settings.image
+            assign feature_alt = feature_image.alt | default: block.settings.title_en | default: ''
+          -%}
+          <article
+            class="about-our-mission__card{% if feature_image != blank %} about-our-mission__card--has-bg{% endif %}"
+            {% if feature_image != blank %}
+              style="--about-our-mission-card-bg: url({{ feature_image | image_url: width: 1200 }});"
+              role="img"
+              aria-label="{{ feature_alt | escape }}"
+            {% endif %}
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.number != blank -%}
+              <span class="about-our-mission__card-num">{{ block.settings.number | escape }}</span>
+            {%- endif -%}
+
+            <div class="about-our-mission__card-foot">
+              <strong class="about-our-mission__card-title">
+                <span data-lang-en>{{ block.settings.title_en | escape }}</span>
+                <span data-lang-zh>{{ block.settings.title_zh | default: block.settings.title_en | escape }}</span>
+              </strong>
+              <span class="about-our-mission__card-desc">
+                <span data-lang-en>{{ block.settings.description_en | escape }}</span>
+                <span data-lang-zh>{{ block.settings.description_zh | default: block.settings.description_en | escape }}</span>
+              </span>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .about-our-mission {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    padding-top: calc(var(--about-our-mission-pt) * var(--rem));
+    padding-bottom: calc(var(--about-our-mission-pb) * var(--rem));
+  }
+
+  .about-our-mission__inner {
+    width: min(100%, calc(var(--about-our-mission-max) * var(--rem)));
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .about-our-mission__header {
+    display: grid;
+    grid-template-columns: calc(553 * var(--rem)) calc(552 * var(--rem));
+    column-gap: calc(45 * var(--rem));
+    align-items: start;
+    margin-bottom: calc(99 * var(--rem));
+  }
+
+  .about-our-mission__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(190 * var(--rem));
+  }
+
+  .about-our-mission__label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: calc(10 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(20 * var(--rem));
+    font-weight: 500;
+    line-height: calc(20 * var(--rem));
+    letter-spacing: calc(-1 * var(--rem));
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  .about-our-mission__index {
+    color: var(--about-our-mission-accent);
+    font-weight: 500;
+  }
+
+  .about-our-mission__side-rule {
+    width: calc(4 * var(--rem));
+    height: calc(57 * var(--rem));
+    background: var(--about-our-mission-accent);
+  }
+
+  .about-our-mission__heading {
+    margin: 0 0 calc(82 * var(--rem));
+    font-family: var(--font-heading-family);
+    font-size: calc(68 * var(--rem));
+    font-weight: 600;
+    line-height: calc(68 * var(--rem));
+    letter-spacing: calc(-3.4 * var(--rem));
+    color: #000;
+  }
+
+  .about-our-mission__heading .rte,
+  .about-our-mission__heading p {
+    margin: 0;
+  }
+
+  .about-our-mission__heading strong,
+  .about-our-mission__heading b {
+    color: var(--about-our-mission-accent);
+    font-weight: inherit;
+  }
+
+  .about-our-mission__body {
+    max-width: calc(552 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(16 * var(--rem));
+    font-weight: 500;
+    line-height: calc(22 * var(--rem));
+    color: #000;
+  }
+
+  .about-our-mission__body .rte,
+  .about-our-mission__body p {
+    margin: 0;
+  }
+
+  .about-our-mission__grid {
+    display: grid;
+    grid-template-columns: calc(385 * var(--rem)) calc(384 * var(--rem)) calc(385 * var(--rem));
+  }
+
+  .about-our-mission__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: calc(376 * var(--rem));
+    padding: calc(24 * var(--rem)) calc(20 * var(--rem));
+    box-sizing: border-box;
+    background-color: #fff;
+    background-image: var(--about-our-mission-card-bg, none);
+    background-repeat: no-repeat;
+    background-position: center calc(50% - 12 * var(--rem));
+    background-size: auto calc(245 * var(--rem));
+    border: 1px solid #999;
+    overflow: hidden;
+  }
+
+  .about-our-mission__card + .about-our-mission__card {
+    margin-left: calc(-1 * var(--rem));
+  }
+
+  .about-our-mission__card-num {
+    position: absolute;
+    top: calc(16 * var(--rem));
+    left: calc(14 * var(--rem));
+    z-index: 1;
+    font-family: var(--font-body-family);
+    font-size: calc(14 * var(--rem));
+    font-weight: 500;
+    color: #111;
+  }
+
+  .about-our-mission__card-foot {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: calc(12 * var(--rem));
+    width: 100%;
+  }
+
+  .about-our-mission__card-title {
+    font-family: var(--font-heading-family);
+    font-size: calc(24 * var(--rem));
+    font-weight: 800;
+    line-height: calc(20 * var(--rem));
+    letter-spacing: calc(-1.2 * var(--rem));
+    color: #000;
+  }
+
+  .about-our-mission__card-desc {
+    font-family: var(--font-body-family);
+    font-size: calc(20 * var(--rem));
+    font-weight: 400;
+    line-height: calc(20 * var(--rem));
+    letter-spacing: calc(-1 * var(--rem));
+    color: #000;
+    text-align: right;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .about-our-mission__inner {
+      padding: 0 calc(24 * var(--rem));
+    }
+
+    .about-our-mission__header {
+      grid-template-columns: 1fr 1.2fr;
+      column-gap: calc(28 * var(--rem));
+    }
+
+    .about-our-mission__heading {
+      font-size: calc(44 * var(--rem));
+      line-height: 1.1;
+      letter-spacing: calc(-2 * var(--rem));
+    }
+
+    .about-our-mission__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .about-our-mission__card {
+      height: auto;
+      min-height: calc(320 * var(--rem));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-our-mission {
+      padding-top: calc(var(--about-our-mission-pt-mob) * var(--rem));
+      padding-bottom: calc(var(--about-our-mission-pb-mob) * var(--rem));
+    }
+
+    .about-our-mission__inner {
+      padding: 0 calc(32 * var(--rem));
+    }
+
+    .about-our-mission__header {
+      grid-template-columns: 1fr;
+      gap: calc(28 * var(--rem));
+      margin-bottom: calc(40 * var(--rem));
+    }
+
+    .about-our-mission__side {
+      gap: calc(24 * var(--rem));
+    }
+
+    .about-our-mission__heading {
+      font-size: calc(48 * var(--rem));
+      line-height: 1.1;
+      letter-spacing: calc(-2 * var(--rem));
+      margin-bottom: calc(28 * var(--rem));
+    }
+
+    .about-our-mission__body {
+      font-size: calc(28 * var(--rem));
+      line-height: 1.45;
+    }
+
+    .about-our-mission__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-our-mission__card {
+      height: auto;
+      min-height: calc(480 * var(--rem));
+      margin-left: 0;
+    }
+
+    .about-our-mission__card + .about-our-mission__card {
+      margin-top: calc(-1 * var(--rem));
+      margin-left: 0;
+    }
+
+    .about-our-mission__card-title {
+      font-size: calc(32 * var(--rem));
+    }
+
+    .about-our-mission__card-desc {
+      font-size: calc(28 * var(--rem));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About our mission",
+  "tag": "section",
+  "class": "about-our-mission-section",
+  "enabled_on": {
+    "templates": ["index", "page"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "default": "about-mission"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 960,
+      "max": 1440,
+      "step": 10,
+      "unit": "px",
+      "default": 1150
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#F5D421"
+    },
+    {
+      "type": "header",
+      "content": "Copy (EN)"
+    },
+    {
+      "type": "text",
+      "id": "index_label",
+      "label": "Index label",
+      "default": "02"
+    },
+    {
+      "type": "text",
+      "id": "label_en",
+      "label": "Section label (EN)",
+      "default": "OUR MISSION"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_en",
+      "label": "Heading (EN)",
+      "default": "<p><strong>Amplifying</strong> what makes us human.</p>",
+      "info": "Wrap highlight words in bold for yellow accent."
+    },
+    {
+      "type": "richtext",
+      "id": "body_en",
+      "label": "Body (EN)",
+      "default": "<p>We build intelligent wearable robotics designed to move with your body. Our goal: enable more people to venture further, explore without constraint, and reclaim greater independence in every part of life.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Copy (ZH)"
+    },
+    {
+      "type": "text",
+      "id": "label_zh",
+      "label": "Section label (ZH)",
+      "default": "我们的使命"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_zh",
+      "label": "Heading (ZH)",
+      "default": "<p><strong>放大</strong>人性之所在。</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body_zh",
+      "label": "Body (ZH)",
+      "default": "<p>我们打造智能可穿戴机器人，与身体同步而行。目标是让更多人走得更远、无拘探索，并在生活的每个面向重获更大独立。</p>"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 122
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 148
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mob",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mob",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "01"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Illustration"
+        },
+        {
+          "type": "text",
+          "id": "title_en",
+          "label": "Title (EN)",
+          "default": "Sense"
+        },
+        {
+          "type": "text",
+          "id": "description_en",
+          "label": "Description (EN)",
+          "default": "Understands intent."
+        },
+        {
+          "type": "text",
+          "id": "title_zh",
+          "label": "Title (ZH)",
+          "default": "感知"
+        },
+        {
+          "type": "text",
+          "id": "description_zh",
+          "label": "Description (ZH)",
+          "default": "理解意图。"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About our mission",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "number": "01",
+            "title_en": "Sense",
+            "description_en": "Understands intent.",
+            "title_zh": "感知",
+            "description_zh": "理解意图。"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "number": "01",
+            "title_en": "Adapt",
+            "description_en": "Responds to movement.",
+            "title_zh": "适应",
+            "description_zh": "响应动作。"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "number": "01",
+            "title_en": "Amplify",
+            "description_en": "Supports natural motion.",
+            "title_zh": "放大",
+            "description_zh": "支持自然运动。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
