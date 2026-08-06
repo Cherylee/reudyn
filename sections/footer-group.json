@@ -48,7 +48,7 @@
         "social_instagram"
       ],
       "settings": {
-        "logo": "shopify://shop_images/logo-3x.webp",
+        "logo": "shopify://shop_images/Group_4_4828096b-1f65-48c9-b456-be6c20e7960f.webp",
         "menu": "footer",
         "tagline_text": "Human, Amplified. Intelligent Wearable Robotics.",
         "show_copyright": false,
@@ -58,7 +58,7 @@
         "text_color": "#ffffff",
         "muted_color": "#bdbdbd",
         "line_color": "#3a3a3a",
-        "icon_bg": "transparent",
+        "icon_bg": "rgba(0,0,0,0)",
         "icon_color": "#ffffff",
         "padding_top": 64,
         "padding_bottom": 64,
