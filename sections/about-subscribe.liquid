@@ -1,6 +1,8 @@
 {%- liquid
   assign image = section.settings.image
   assign image_mobile = section.settings.image_mobile
+  assign bg = section.settings.background_image
+  assign bg_mobile = section.settings.background_image_mobile
   assign image_alt = image.alt | default: section.settings.heading_en | default: ''
 
   assign max_w = section.settings.content_width | default: 1150
@@ -15,7 +17,7 @@
 
 <section
   id="{{ anchor }}"
-  class="about-subscribe"
+  class="about-subscribe{% if bg != blank %} about-subscribe--has-bg{% endif %}"
   data-about-anchor="{{ anchor }}"
   style="
     --about-subscribe-max: {{ max_w }};
@@ -24,6 +26,12 @@
     --about-subscribe-pt-mob: {{ pad_t_mob }};
     --about-subscribe-pb-mob: {{ pad_b_mob }};
     --about-subscribe-accent: {{ accent }};
+    {%- if bg != blank -%}
+      --about-subscribe-bg: url({{ bg | image_url: width: 2880 }});
+    {%- endif -%}
+    {%- if bg_mobile != blank -%}
+      --about-subscribe-bg-mob: url({{ bg_mobile | image_url: width: 1500 }});
+    {%- endif -%}
   "
 >
   <div class="about-subscribe__inner">
@@ -160,6 +168,14 @@
     background: #fff;
     padding-top: calc(var(--about-subscribe-pt) * var(--rem));
     padding-bottom: calc(var(--about-subscribe-pb) * var(--rem));
+  }
+
+  .about-subscribe--has-bg {
+    background-color: #fff;
+    background-image: var(--about-subscribe-bg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
   }
 
   .about-subscribe__inner {
@@ -366,6 +382,10 @@
       padding-bottom: calc(var(--about-subscribe-pb-mob) * var(--rem));
     }
 
+    .about-subscribe--has-bg {
+      background-image: var(--about-subscribe-bg-mob, var(--about-subscribe-bg));
+    }
+
     .about-subscribe__inner {
       grid-template-columns: 1fr;
       gap: calc(80 * var(--rem));
@@ -554,6 +574,22 @@
       "id": "done_zh",
       "label": "Done button (ZH)",
       "default": "完成"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Full-width background for the entire subscribe section."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image (mobile)",
+      "info": "Optional. Falls back to desktop background when empty."
     },
     {
       "type": "header",
