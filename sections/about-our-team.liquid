@@ -305,7 +305,28 @@
 
     .about-our-team__media {
       order: 1;
-      min-height: calc(520 * var(--rem));
+      position: static;
+      min-height: 0;
+      height: auto;
+      overflow: visible;
+      background: #fff;
+    }
+
+    .about-our-team__picture,
+    .about-our-team__placeholder {
+      position: static;
+      inset: auto;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .about-our-team__img,
+    .about-our-team__placeholder-svg {
+      width: 100%;
+      height: auto;
+      object-fit: unset;
+      object-position: center;
     }
 
     .about-our-team__copy {

@@ -324,7 +324,7 @@
       grid-template-areas:
         'logo lang'
         'menu menu';
-      gap: calc(12 * var(--rem)) 0;
+      gap: calc(32 * var(--rem)) 0;
       min-height: auto;
       padding: calc(20 * var(--rem)) calc(32 * var(--rem));
     }
@@ -350,6 +350,18 @@
       transform: translateY(calc(0.5 * var(--rem)));
     }
 
+    .about-nav__lang-panel {
+      min-width: calc(120 * var(--rem));
+      padding: calc(10 * var(--rem));
+      border-radius: calc(8 * var(--rem));
+    }
+
+    .about-nav__lang-option {
+      padding: calc(14 * var(--rem)) calc(16 * var(--rem));
+      font-size: calc(22 * var(--rem));
+      border-radius: calc(6 * var(--rem));
+    }
+
     .about-nav__lang {
       grid-area: lang;
     }
@@ -357,7 +369,7 @@
     .about-nav__menu {
       grid-area: menu;
       justify-self: stretch;
-      justify-content: flex-start;
+      justify-content: center;
       gap: calc(28 * var(--rem));
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;

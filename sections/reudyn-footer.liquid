@@ -2,21 +2,24 @@
   assign logo = section.settings.logo
   assign menu = section.settings.menu
   assign copyright = section.settings.copyright_text
+  assign tagline = section.settings.tagline_text | default: 'Human, Amplified. Intelligent Wearable Robotics.'
+  assign show_copyright = section.settings.show_copyright
   if copyright == blank
     assign year_now = 'now' | date: '%Y'
     assign copyright = 'Copyright © ' | append: year_now | append: ' reudyn.'
   endif
 
-  assign bg_start = section.settings.bg_start | default: '#F0F0F0'
-  assign bg_end = section.settings.bg_end | default: '#D8D8D8'
-  assign text_color = section.settings.text_color | default: '#2B2B2B'
-  assign muted_color = section.settings.muted_color | default: '#6B6B6B'
+  assign bg_start = section.settings.bg_start | default: '#000000'
+  assign bg_end = section.settings.bg_end | default: '#000000'
+  assign text_color = section.settings.text_color | default: '#FFFFFF'
+  assign muted_color = section.settings.muted_color | default: '#BDBDBD'
   assign line_color = section.settings.line_color | default: '#3A3A3A'
-  assign icon_bg = section.settings.icon_bg | default: '#3A3A3A'
+  assign icon_bg = section.settings.icon_bg | default: 'transparent'
   assign icon_color = section.settings.icon_color | default: '#FFFFFF'
 
   assign pad_t = section.settings.padding_top | default: 64
-  assign pad_b = section.settings.padding_bottom | default: 48
+  assign pad_b = section.settings.padding_bottom | default: 64
+  assign pad_x = section.settings.padding_x | default: 95
 
   assign pad_t_mob = section.settings.padding_top_mob | default: 48
   assign pad_b_mob = section.settings.padding_bottom_mob | default: 40
@@ -36,6 +39,7 @@
     --rf-icon: {{ icon_color }};
     --rf-pt: {{ pad_t }};
     --rf-pb: {{ pad_b }};
+    --rf-px: {{ pad_x }};
     --rf-pt-mob: {{ pad_t_mob }};
     --rf-pb-mob: {{ pad_b_mob }};
     --rf-px-mob: {{ pad_x_mob }};
@@ -52,7 +56,7 @@
               | image_tag:
                 class: 'reudyn-footer__logo-img',
                 widths: '160, 240, 320, 400',
-                sizes: 'calc(160 * 100vw / 1440)',
+                sizes: 'calc(189 * 100vw / 1440)',
                 alt: shop.name,
                 loading: 'lazy'
             }}
@@ -63,7 +67,7 @@
               | image_tag:
                 class: 'reudyn-footer__logo-img',
                 widths: '160, 240, 320, 400',
-                sizes: 'calc(160 * 100vw / 1440)',
+                sizes: 'calc(189 * 100vw / 1440)',
                 alt: shop.name,
                 loading: 'lazy'
             }}
@@ -71,6 +75,9 @@
             <span class="reudyn-footer__logo-text">{{ shop.name | upcase }}</span>
           {%- endif -%}
         </a>
+        {%- if tagline != blank -%}
+          <p class="reudyn-footer__tagline">{{ tagline | escape }}</p>
+        {%- endif -%}
       </div>
 
       <nav class="reudyn-footer__nav" aria-label="Footer">
@@ -101,9 +108,9 @@
       </div>
     </div>
 
-    <hr class="reudyn-footer__rule">
-
-    <p class="reudyn-footer__copyright">{{ copyright | escape }}</p>
+    {%- if show_copyright -%}
+      <p class="reudyn-footer__copyright">{{ copyright | escape }}</p>
+    {%- endif -%}
   </div>
 </div>
 
@@ -112,12 +119,16 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
-    background: linear-gradient(90deg, var(--rf-bg-start), var(--rf-bg-end));
+    min-height: calc(225 * var(--rem));
+    background: var(--rf-bg-start);
     color: var(--rf-text);
-    padding-top: calc(var(--rf-pt) * var(--rem));
-    padding-right: calc(241 * var(--rem));
-    padding-bottom: calc(var(--rf-pb) * var(--rem));
-    padding-left: calc(241 * var(--rem));
+    padding: calc(var(--rf-pt) * var(--rem)) calc(var(--rf-px) * var(--rem)) calc(var(--rf-pb) * var(--rem));
+  }
+
+  @supports (background: linear-gradient(90deg, #000, #000)) {
+    .reudyn-footer {
+      background: linear-gradient(90deg, var(--rf-bg-start), var(--rf-bg-end));
+    }
   }
 
   .shopify-section.reudyn-footer-section {
@@ -134,16 +145,16 @@
     display: flex;
     align-items: flex-start;
     gap: 0;
-    min-height: calc(72 * var(--rem));
   }
 
   .reudyn-footer__brand {
     flex: 0 0 auto;
+    max-width: calc(305 * var(--rem));
   }
 
   .reudyn-footer__nav {
     flex: 0 0 auto;
-    margin-left: calc(128 * var(--rem));
+    margin-left: calc(309 * var(--rem));
   }
 
   .reudyn-footer__social {
@@ -151,7 +162,7 @@
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: calc(14 * var(--rem));
+    gap: calc(9 * var(--rem));
   }
 
   .reudyn-footer__logo-link {
@@ -163,10 +174,20 @@
 
   .reudyn-footer__logo-img {
     display: block;
-    width: calc(131 * var(--rem));
+    width: calc(189 * var(--rem));
     height: auto;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  .reudyn-footer__tagline {
+    margin: calc(8 * var(--rem)) 0 0;
+    max-width: calc(305 * var(--rem));
+    font-family: var(--font-body-family);
+    font-size: calc(12 * var(--rem));
+    font-weight: 500;
+    line-height: calc(22 * var(--rem));
+    color: var(--rf-muted);
   }
 
   .reudyn-footer__logo-text {
@@ -182,18 +203,17 @@
   .reudyn-footer__menu {
     display: flex;
     flex-direction: column;
-    gap: calc(12 * var(--rem));
+    gap: calc(13 * var(--rem));
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .reudyn-footer__nav .reudyn-footer__menu-link {
-    font-family: var(--font-paragraph--family);
-    font-style: var(--font-paragraph--style);
+    font-family: var(--font-body-family);
     font-weight: 500;
     font-size: calc(16 * var(--rem));
-    line-height: 1.3;
+    line-height: calc(22 * var(--rem));
     color: var(--rf-text);
     text-decoration: none;
   }
@@ -216,6 +236,10 @@
     transition: opacity 0.2s ease;
   }
 
+  .reudyn-footer__social-link:has(.reudyn-footer__social-img) {
+    background: transparent;
+  }
+
   .reudyn-footer__social-link:hover {
     opacity: 0.8;
   }
@@ -224,7 +248,7 @@
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .reudyn-footer__social-placeholder {
@@ -238,38 +262,39 @@
     opacity: 0.55;
   }
 
-  .reudyn-footer__rule {
-    display: block;
-    width: 100%;
-    height: 1px;
-    margin: calc(100 * var(--rem)) 0 calc(28 * var(--rem));
-    border: 0;
-    background: var(--rf-line);
-    opacity: 0.85;
+  .reudyn-footer__copyright {
+    margin: calc(24 * var(--rem)) 0 0;
+    font-family: var(--font-body-family);
+    font-weight: 400;
+    font-size: calc(12 * var(--rem));
+    line-height: calc(22 * var(--rem));
+    color: var(--rf-muted);
   }
 
-  .reudyn-footer__copyright {
-    margin: 0;
-    font-family: var(--font-paragraph--family);
-    font-style: var(--font-paragraph--style);
-    font-weight: 400;
-    font-size: calc(14 * var(--rem));
-    line-height: 1.4;
-    color: var(--rf-muted);
+  @media screen and (min-width: 750px) and (max-width: 768px) {
+    .reudyn-footer {
+      padding-inline: calc(40 * var(--rem));
+    }
+
+    .reudyn-footer__nav {
+      margin-left: calc(48 * var(--rem));
+    }
   }
 
   @media screen and (max-width: 749px) {
     .reudyn-footer {
-      padding-top: calc(var(--rf-pt-mob) * var(--rem));
-      padding-right: calc(var(--rf-px-mob) * var(--rem));
-      padding-bottom: calc(var(--rf-pb-mob) * var(--rem));
-      padding-left: calc(var(--rf-px-mob) * var(--rem));
+      min-height: 0;
+      padding: calc(var(--rf-pt-mob) * var(--rem)) calc(var(--rf-px-mob) * var(--rem)) calc(var(--rf-pb-mob) * var(--rem));
     }
 
     .reudyn-footer__top {
       flex-direction: column;
       align-items: flex-start;
-      gap: calc(28 * var(--rem));
+      gap: calc(36 * var(--rem));
+    }
+
+    .reudyn-footer__brand {
+      max-width: none;
     }
 
     .reudyn-footer__nav,
@@ -277,16 +302,23 @@
       margin-left: 0;
     }
 
-    .reudyn-footer__nav {
-      margin-bottom: calc(152 * var(--rem));
+    .reudyn-footer__tagline {
+      max-width: none;
+      font-size: calc(24 * var(--rem));
+      line-height: 1.45;
     }
 
     .reudyn-footer__logo-img {
-      width: calc(220 * var(--rem));
+      width: calc(189 * var(--rem));
     }
 
     .reudyn-footer__nav .reudyn-footer__menu-link {
-      font-size: calc(24 * var(--rem));
+      font-size: calc(28 * var(--rem));
+      line-height: 1.45;
+    }
+
+    .reudyn-footer__menu {
+      gap: calc(20 * var(--rem));
     }
 
     .reudyn-footer__social-link {
@@ -294,9 +326,8 @@
       height: calc(72 * var(--rem));
     }
 
-    .reudyn-footer__rule {
-      margin-top: calc(38 * var(--rem));
-      margin-bottom: calc(20 * var(--rem));
+    .reudyn-footer__social {
+      gap: calc(16 * var(--rem));
     }
   }
 {% endstylesheet %}
@@ -323,8 +354,20 @@
       "info": "Select a navigation menu for the center links."
     },
     {
+      "type": "text",
+      "id": "tagline_text",
+      "label": "Tagline",
+      "default": "Human, Amplified. Intelligent Wearable Robotics."
+    },
+    {
       "type": "header",
       "content": "Copyright"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_copyright",
+      "label": "Show copyright line",
+      "default": false
     },
     {
       "type": "text",
@@ -340,25 +383,25 @@
       "type": "color",
       "id": "bg_start",
       "label": "Background start",
-      "default": "#F0F0F0"
+      "default": "#000000"
     },
     {
       "type": "color",
       "id": "bg_end",
       "label": "Background end",
-      "default": "#D8D8D8"
+      "default": "#000000"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text",
-      "default": "#2B2B2B"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "muted_color",
-      "label": "Copyright text",
-      "default": "#6B6B6B"
+      "label": "Tagline / muted text",
+      "default": "#BDBDBD"
     },
     {
       "type": "color",
@@ -370,7 +413,7 @@
       "type": "color",
       "id": "icon_bg",
       "label": "Social icon background",
-      "default": "#3A3A3A"
+      "default": "transparent"
     },
     {
       "type": "color",
@@ -400,7 +443,17 @@
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 48
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Horizontal",
+      "min": 40,
+      "max": 280,
+      "step": 5,
+      "unit": "px",
+      "default": 95
     },
     {
       "type": "header",

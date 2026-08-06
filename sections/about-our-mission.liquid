@@ -65,11 +65,22 @@
             class="about-our-mission__card{% if feature_image != blank %} about-our-mission__card--has-bg{% endif %}"
             {% if feature_image != blank %}
               style="--about-our-mission-card-bg: url({{ feature_image | image_url: width: 1200 }});"
-              role="img"
-              aria-label="{{ feature_alt | escape }}"
             {% endif %}
             {{ block.shopify_attributes }}
           >
+            {%- if feature_image != blank -%}
+              {{
+                feature_image
+                | image_url: width: 1200
+                | image_tag:
+                  class: 'about-our-mission__card-media',
+                  widths: '375, 550, 750, 1100, 1200',
+                  sizes: '100vw',
+                  alt: feature_alt,
+                  loading: 'lazy'
+              }}
+            {%- endif -%}
+
             {%- if block.settings.number != blank -%}
               <span class="about-our-mission__card-num">{{ block.settings.number | escape }}</span>
             {%- endif -%}
@@ -247,6 +258,10 @@
     text-align: right;
   }
 
+  .about-our-mission__card-media {
+    display: none;
+  }
+
   @media screen and (min-width: 750px) and (max-width: 768px) {
     .about-our-mission__inner {
       padding: 0 calc(24 * var(--rem));
@@ -311,9 +326,24 @@
 
     .about-our-mission__card {
       height: auto;
-      min-height: calc(480 * var(--rem));
+      min-height: 0;
       margin-left: 0;
+      padding: 0;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow: visible;
+      background-image: none;
       border: 1px solid #d2d2d2;
+    }
+
+    .about-our-mission__card-media {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .about-our-mission__card-foot {
+      padding: calc(24 * var(--rem)) calc(20 * var(--rem));
     }
 
     .about-our-mission__card + .about-our-mission__card {
