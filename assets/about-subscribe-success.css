@@ -99,9 +99,9 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 0;
+    gap: calc(8 * var(--rem));
     height: auto;
-    padding: 4px;
+    padding: 4px calc(8 * var(--rem)) calc(8 * var(--rem));
     border-radius: calc(8 * var(--rem));
     background: #fff;
     overflow: hidden;
@@ -119,8 +119,11 @@
     flex: 0 0 auto;
     justify-content: center;
     gap: calc(12 * var(--rem));
-    min-height: calc(88 * var(--rem));
-    padding: 0 calc(28 * var(--rem));
+    width: 100%;
+    min-height: calc(80 * var(--rem));
+    margin: 0;
+    padding: 0 calc(20 * var(--rem));
+    border-radius: calc(6 * var(--rem));
     background: #f5d421;
     box-sizing: border-box;
   }
@@ -139,10 +142,10 @@
   }
 
   .about-subscribe-shell__done {
-    width: auto;
+    width: 100%;
     height: auto;
     min-height: calc(80 * var(--rem));
-    margin: 0 calc(8 * var(--rem)) calc(8 * var(--rem));
+    margin: 0;
     font-size: calc(28 * var(--rem));
     font-weight: 700;
     letter-spacing: 0;

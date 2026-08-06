@@ -168,6 +168,17 @@
     color: #fff;
   }
 
+  html[data-about-lang='zh'] .about-cta-subscribe__heading,
+  html[data-about-lang='zh'] .about-cta-subscribe__subheading {
+    width: 100%;
+    max-width: calc(485 * var(--rem));
+    text-align: left;
+  }
+
+  html[data-about-lang='zh'] .about-cta-subscribe__subheading {
+    max-width: calc(485 * var(--rem));
+  }
+
   .about-cta-subscribe__form {
     width: 100%;
     max-width: calc(485 * var(--rem));
@@ -287,6 +298,13 @@
       font-size: calc(28 * var(--rem));
       line-height: 1.4;
       margin-bottom: calc(36 * var(--rem));
+    }
+
+    html[data-about-lang='zh'] .about-cta-subscribe__heading,
+    html[data-about-lang='zh'] .about-cta-subscribe__subheading {
+      max-width: none;
+      align-self: stretch;
+      text-align: left;
     }
 
     .about-cta-subscribe__form {
