@@ -234,7 +234,30 @@ function initAboutSubscribeShells() {
   });
 }
 
+/**
+ * Lock subscribe buttons while the customer form posts to Shopify.
+ */
+function initAboutSubscribeSubmitLock() {
+  document.querySelectorAll('.about-subscribe__form, .about-cta-subscribe__form').forEach((form) => {
+    if (!(form instanceof HTMLFormElement)) return;
+    if (form.dataset.aboutSubmitBound === 'true') return;
+    form.dataset.aboutSubmitBound = 'true';
+
+    form.addEventListener('submit', () => {
+      if (!form.checkValidity()) return;
+
+      const btn = form.querySelector('button[type="submit"]');
+      if (!(btn instanceof HTMLButtonElement) || btn.disabled) return;
+
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      btn.classList.add('is-loading');
+    });
+  });
+}
+
 initAboutSubscribeShells();
+initAboutSubscribeSubmitLock();
 syncAboutNavHeight();
 handlePostedSubscribeScroll();
 window.addEventListener('resize', syncAboutNavHeight);

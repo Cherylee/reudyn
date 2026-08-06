@@ -3,6 +3,16 @@
   scroll-margin-top: calc(var(--about-nav-height, 82px) + 24px);
 }
 
+.about-subscribe__button:disabled,
+.about-subscribe__button.is-loading,
+.about-cta-subscribe__button:disabled,
+.about-cta-subscribe__button.is-loading {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+  pointer-events: none;
+}
+
 .about-subscribe-shell.is-success .about-subscribe-shell__field {
   display: none;
 }
