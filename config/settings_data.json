@@ -9,11 +9,11 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/logo-reudyn.webp",
-    "logo_inverse": "shopify://shop_images/logo-reudyn_3c3c86c3-f606-4f3d-b181-a2589c2d79fd.webp",
+    "logo": "shopify://shop_images/Group_3_a1307cae-dd80-430f-b7ed-961cdcf1ed5a.webp",
+    "logo_inverse": "shopify://shop_images/Group_4_4828096b-1f65-48c9-b456-be6c20e7960f.webp",
     "logo_height": 14,
     "logo_height_mobile": 12,
-    "favicon": "shopify://shop_images/logo-1.png",
+    "favicon": "shopify://shop_images/Group.webp",
     "page_text_color": "{{ settings.color_palette.foreground }}",
     "type_body_font": "inter_n4",
     "type_subheading_font": "inter_n5",
