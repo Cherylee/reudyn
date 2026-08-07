@@ -57,6 +57,20 @@
     ]
   },
   {
+    "name": "Social sharing",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Image shown when links to your store are shared on social media (Feishu, WeChat, Twitter, etc.). Recommended size: 1200 x 630 px"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Social sharing image"
+      }
+    ]
+  },
+  {
     "name": "t:names.colors",
     "settings": [
       {
